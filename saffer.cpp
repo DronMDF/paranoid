@@ -1,4 +1,6 @@
 
+#include <iostream>
+
 #include <llvm/Support/raw_ostream.h>
 #include <llvm/Support/Host.h>
 
@@ -11,10 +13,11 @@
 #include <clang/Lex/HeaderSearch.h>
 #include <clang/Lex/Preprocessor.h>
 
+using namespace std;
 using namespace llvm;
 using namespace clang;
 
-int main(int, char **)
+int main(int argc, char **argv)
 {
 	DiagnosticOptions diagnosticOptions;
 	TextDiagnosticPrinter *pTextDiagnosticPrinter =
@@ -35,6 +38,22 @@ int main(int, char **)
 	
 	Preprocessor preprocessor(diagnostic, languageOptions, *pTargetInfo,
 		sourceManager, headerSearch);
-	
+
+	const FileEntry *pFile = fileManager.getFile(argv[1]);
+	sourceManager.createMainFileID(pFile);
+	preprocessor.EnterMainSourceFile();
+	pTextDiagnosticPrinter->BeginSourceFile(languageOptions, &preprocessor);
+
+	Token token;
+	do {
+		preprocessor.Lex(token);
+		if (diagnostic.hasErrorOccurred()) {
+			break;
+		}
+		preprocessor.DumpToken(token);
+		cerr << endl;
+	} while (token.isNot(tok::eof));
+	pTextDiagnosticPrinter->EndSourceFile();
+		
 	return 0;
 }
