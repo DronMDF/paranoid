@@ -16,6 +16,10 @@
 #include <clang/Basic/FileSystemOptions.h>
 #include <clang/Lex/HeaderSearch.h>
 #include <clang/Lex/Preprocessor.h>
+#include <clang/AST/ASTContext.h>
+#include <clang/AST/ASTConsumer.h>
+#include <clang/Sema/Sema.h>
+#include <clang/Parse/Parser.h>
 
 using namespace std;
 using namespace llvm;
@@ -43,11 +47,15 @@ int main(int argc, char **argv)
 	Preprocessor preprocessor(diagnostic, languageOptions, *pTargetInfo,
 		sourceManager, headerSearch);
 
-		
 	PreprocessorOptions preprocessorOptions;
-	preprocessorOptions.UsePredefines = false;
 
 	HeaderSearchOptions headerSearchOptions;
+	// platform specific
+	headerSearchOptions.AddPath("/usr/lib/gcc/i686-pc-linux-gnu/4.4.5/include/g++-v4",
+			frontend::Angled, false, false, false);
+	headerSearchOptions.AddPath("/usr/lib/gcc/i686-pc-linux-gnu/4.4.5/include/g++-v4/i686-pc-linux-gnu",
+			frontend::Angled, false, false, false);
+
 	ApplyHeaderSearchOptions(headerSearch, headerSearchOptions,
 		languageOptions, pTargetInfo->getTriple());
 	
@@ -59,18 +67,21 @@ int main(int argc, char **argv)
 	const FileEntry *pFile = fileManager.getFile(argv[1]);
 	sourceManager.createMainFileID(pFile);
 	preprocessor.EnterMainSourceFile();
-	pTextDiagnosticPrinter->BeginSourceFile(languageOptions, &preprocessor);
 
-	Token token;
-	do {
-		preprocessor.Lex(token);
-		if (diagnostic.hasErrorOccurred()) {
-			break;
-		}
-		preprocessor.DumpToken(token);
-		cerr << endl;
-	} while (token.isNot(tok::eof));
+	IdentifierTable identifierTable(languageOptions);
+	SelectorTable selectorTable;
+	Builtin::Context builtinContext(*pTargetInfo);
+	ASTContext astContext(languageOptions, sourceManager, *pTargetInfo,
+		identifierTable, selectorTable, builtinContext, 0);
+	ASTConsumer astConsumer;
+	Sema sema(preprocessor, astContext, astConsumer);
+
+	Parser parser(preprocessor, sema);
+    
+	pTextDiagnosticPrinter->BeginSourceFile(languageOptions, &preprocessor);
+	parser.ParseTranslationUnit();
 	pTextDiagnosticPrinter->EndSourceFile();
-		
+	identifierTable.PrintStats();
+
 	return 0;
 }
