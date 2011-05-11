@@ -1,6 +1,8 @@
 
 #include <iostream>
 
+#include <boost/foreach.hpp>
+
 #include <llvm/Support/Host.h>
 #include <llvm/Support/raw_ostream.h>
 
@@ -34,6 +36,8 @@ int main(int argc, char **argv)
 	Diagnostic diagnostic(pDiagIDs, pTextDiagnosticPrinter);
 
 	LangOptions languageOptions;
+	languageOptions.Bool = 1;
+	languageOptions.CPlusPlus = 1;
 
 	TargetOptions targetOptions;
 	targetOptions.Triple = sys::getHostTriple();
@@ -50,15 +54,12 @@ int main(int argc, char **argv)
 	PreprocessorOptions preprocessorOptions;
 
 	HeaderSearchOptions headerSearchOptions;
-	// platform specific
-	headerSearchOptions.AddPath("/usr/lib/gcc/i686-pc-linux-gnu/4.4.5/include/g++-v4",
-			frontend::Angled, false, false, false);
-	headerSearchOptions.AddPath("/usr/lib/gcc/i686-pc-linux-gnu/4.4.5/include/g++-v4/i686-pc-linux-gnu",
-			frontend::Angled, false, false, false);
-
+	headerSearchOptions.UseStandardIncludes = 1;
+	headerSearchOptions.UseStandardCXXIncludes = 1;
+	
 	ApplyHeaderSearchOptions(headerSearch, headerSearchOptions,
 		languageOptions, pTargetInfo->getTriple());
-	
+
 	FrontendOptions frontendOptions;
 	
 	InitializePreprocessor(preprocessor, preprocessorOptions,
