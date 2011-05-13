@@ -38,6 +38,11 @@ int main(int argc, char **argv)
 	LangOptions languageOptions;
 	languageOptions.Bool = 1;
 	languageOptions.CPlusPlus = 1;
+	languageOptions.CPlusPlus0x = 1;
+	languageOptions.NoBuiltin = 0;
+	languageOptions.Exceptions = 1;
+	languageOptions.CXXExceptions = 1;
+	languageOptions.RTTI = 1;
 
 	TargetOptions targetOptions;
 	targetOptions.Triple = sys::getHostTriple();
@@ -72,6 +77,10 @@ int main(int argc, char **argv)
 	IdentifierTable identifierTable(languageOptions);
 	SelectorTable selectorTable;
 	Builtin::Context builtinContext(*pTargetInfo);
+	//builtinContext.InitializeBuiltins(identifierTable, languageOptions);
+	preprocessor.getBuiltinInfo().InitializeBuiltins(
+		preprocessor.getIdentifierTable(), preprocessor.getLangOptions());
+	
 	ASTContext astContext(languageOptions, sourceManager, *pTargetInfo,
 		identifierTable, selectorTable, builtinContext, 0);
 	ASTConsumer astConsumer;
