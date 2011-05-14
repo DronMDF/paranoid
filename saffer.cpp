@@ -1,97 +1,30 @@
 
-#include <iostream>
-
-#include <boost/foreach.hpp>
+#include <boost/scoped_ptr.hpp>
 
 #include <llvm/Support/Host.h>
-#include <llvm/Support/raw_ostream.h>
+#include <llvm/Support/ManagedStatic.h>
 
-#include <clang/Frontend/Utils.h>
-#include <clang/Frontend/FrontendOptions.h>
-#include <clang/Frontend/DiagnosticOptions.h>
-#include <clang/Frontend/PreprocessorOptions.h>
-#include <clang/Frontend/HeaderSearchOptions.h>
-#include <clang/Frontend/TextDiagnosticPrinter.h>
-#include <clang/Basic/TargetInfo.h>
-#include <clang/Basic/FileManager.h>
-#include <clang/Basic/TargetOptions.h>
-#include <clang/Basic/FileSystemOptions.h>
-#include <clang/Lex/HeaderSearch.h>
-#include <clang/Lex/Preprocessor.h>
-#include <clang/AST/ASTContext.h>
-#include <clang/AST/ASTConsumer.h>
-#include <clang/Sema/Sema.h>
-#include <clang/Parse/Parser.h>
+#include <clang/Frontend/CompilerInstance.h>
+#include <clang/Frontend/FrontendActions.h>
 
 using namespace std;
+using namespace boost;
 using namespace llvm;
 using namespace clang;
 
 int main(int argc, char **argv)
 {
-	DiagnosticOptions diagnosticOptions;
-	TextDiagnosticPrinter *pTextDiagnosticPrinter =
-		new TextDiagnosticPrinter(outs(), diagnosticOptions);
-	IntrusiveRefCntPtr<DiagnosticIDs> pDiagIDs;
-	Diagnostic diagnostic(pDiagIDs, pTextDiagnosticPrinter);
-
-	LangOptions languageOptions;
-	languageOptions.Bool = 1;
-	languageOptions.CPlusPlus = 1;
-	languageOptions.CPlusPlus0x = 1;
-	languageOptions.NoBuiltin = 0;
-	languageOptions.Exceptions = 1;
-	languageOptions.CXXExceptions = 1;
-	languageOptions.RTTI = 1;
-
-	TargetOptions targetOptions;
-	targetOptions.Triple = sys::getHostTriple();
-	TargetInfo *pTargetInfo = TargetInfo::CreateTargetInfo(diagnostic, targetOptions);
-
-	FileSystemOptions fileSystemOptions;
-	FileManager fileManager(fileSystemOptions);
-	SourceManager sourceManager(diagnostic, fileManager);
-	HeaderSearch headerSearch(fileManager);
-
-	Preprocessor preprocessor(diagnostic, languageOptions, *pTargetInfo,
-		sourceManager, headerSearch);
-
-	PreprocessorOptions preprocessorOptions;
-
-	HeaderSearchOptions headerSearchOptions;
-	headerSearchOptions.UseStandardIncludes = 1;
-	headerSearchOptions.UseStandardCXXIncludes = 1;
+	CompilerInstance compiler;
+	compiler.getTargetOpts().Triple = sys::getHostTriple();
+	compiler.createDiagnostics(argc, argv);
+	//compiler.createFileManager();
+	//compiler.createSourceManager(compiler.getFileManager());
+	//compiler.createPreprocessor();
+	//compiler.createASTContext();
 	
-	ApplyHeaderSearchOptions(headerSearch, headerSearchOptions,
-		languageOptions, pTargetInfo->getTriple());
+	DumpTokensAction action/*(compiler, argv[1])*/;
+	compiler.ExecuteAction(action);
 
-	FrontendOptions frontendOptions;
-	
-	InitializePreprocessor(preprocessor, preprocessorOptions,
-		headerSearchOptions, frontendOptions);
-		
-	const FileEntry *pFile = fileManager.getFile(argv[1]);
-	sourceManager.createMainFileID(pFile);
-	preprocessor.EnterMainSourceFile();
-
-	IdentifierTable identifierTable(languageOptions);
-	SelectorTable selectorTable;
-	Builtin::Context builtinContext(*pTargetInfo);
-	//builtinContext.InitializeBuiltins(identifierTable, languageOptions);
-	preprocessor.getBuiltinInfo().InitializeBuiltins(
-		preprocessor.getIdentifierTable(), preprocessor.getLangOptions());
-	
-	ASTContext astContext(languageOptions, sourceManager, *pTargetInfo,
-		identifierTable, selectorTable, builtinContext, 0);
-	ASTConsumer astConsumer;
-	Sema sema(preprocessor, astContext, astConsumer);
-
-	Parser parser(preprocessor, sema);
-    
-	pTextDiagnosticPrinter->BeginSourceFile(languageOptions, &preprocessor);
-	parser.ParseTranslationUnit();
-	pTextDiagnosticPrinter->EndSourceFile();
-	identifierTable.PrintStats();
-
+	llvm_shutdown();
 	return 0;
 }
