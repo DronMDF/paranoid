@@ -4,6 +4,7 @@
 #include <llvm/Support/Host.h>
 #include <llvm/Support/ManagedStatic.h>
 
+#include <clang/Basic/TargetInfo.h>
 #include <clang/Frontend/CompilerInstance.h>
 #include <clang/Frontend/FrontendActions.h>
 
@@ -17,9 +18,11 @@ int main(int argc, char **argv)
 	CompilerInstance compiler;
 	compiler.getTargetOpts().Triple = sys::getHostTriple();
 	compiler.createDiagnostics(argc, argv);
-	//compiler.createFileManager();
-	//compiler.createSourceManager(compiler.getFileManager());
-	//compiler.createPreprocessor();
+	compiler.createFileManager();
+	compiler.createSourceManager(compiler.getFileManager());
+	compiler.setTarget(TargetInfo::CreateTargetInfo(
+		compiler.getDiagnostics(), compiler.getTargetOpts()));
+	compiler.createPreprocessor();
 	//compiler.createASTContext();
 	
 	DumpTokensAction action/*(compiler, argv[1])*/;
