@@ -23,7 +23,7 @@ int main(int argc, char **argv)
 	compiler.setTarget(TargetInfo::CreateTargetInfo(
 		compiler.getDiagnostics(), compiler.getTargetOpts()));
 	compiler.createPreprocessor();
-	//compiler.createASTContext();
+	compiler.createASTContext();
 	
 	DumpTokensAction action/*(compiler, argv[1])*/;
 	compiler.ExecuteAction(action);
