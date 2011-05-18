@@ -16,16 +16,25 @@ using namespace clang;
 int main(int argc, char **argv)
 {
 	CompilerInstance compiler;
-	compiler.getTargetOpts().Triple = sys::getHostTriple();
+	//compiler.getTargetOpts().Triple = sys::getHostTriple();
 	compiler.createDiagnostics(argc, argv);
-	compiler.createFileManager();
-	compiler.createSourceManager(compiler.getFileManager());
-	compiler.setTarget(TargetInfo::CreateTargetInfo(
-		compiler.getDiagnostics(), compiler.getTargetOpts()));
-	compiler.createPreprocessor();
-	compiler.createASTContext();
+	//compiler.createFileManager();
+	//compiler.createSourceManager(compiler.getFileManager());
+	//compiler.setTarget(TargetInfo::CreateTargetInfo(
+	//	compiler.getDiagnostics(), compiler.getTargetOpts()));
+	//compiler.createPreprocessor();
+	//compiler.createASTContext();
+
+	const char *args[] =
+	{
+		"-cc1", // вызов LLVM Clang
+		"saffer.cpp" // входной файл
+	};
+
+	CompilerInvocation::CreateFromArgs(compiler.getInvocation(),
+		args, args + 2, compiler.getDiagnostics());
 	
-	DumpTokensAction action/*(compiler, argv[1])*/;
+	ASTPrintAction action;
 	compiler.ExecuteAction(action);
 
 	llvm_shutdown();
