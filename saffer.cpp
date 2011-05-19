@@ -34,13 +34,13 @@ int main(int argc, char **argv)
 	compiler.getPreprocessorOpts().addMacroDef("__STDC_CONSTANT_MACROS");
 	
 	compiler.getHeaderSearchOpts().AddPath("/usr/lib/clang/2.9/include/",
-		clang::frontend::System, true, false, false);
+		frontend::System, false, false, false);
 	compiler.getHeaderSearchOpts().Verbose = 1;
 
 	//compiler.createPreprocessor();
 	//compiler.createASTContext();
 
-	ASTDumpXMLAction action;
+	ASTDumpAction action;
 	compiler.ExecuteAction(action);
 
 	llvm_shutdown();
