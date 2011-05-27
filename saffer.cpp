@@ -1,9 +1,12 @@
 
+#include <stdio.h>
 #include <boost/scoped_ptr.hpp>
 
 #include <llvm/Support/Host.h>
 #include <llvm/Support/ManagedStatic.h>
 
+#include <clang/AST/ASTContext.h>
+#include <clang/AST/ASTConsumer.h>
 #include <clang/Basic/TargetInfo.h>
 #include <clang/Frontend/CompilerInstance.h>
 #include <clang/Frontend/FrontendActions.h>
@@ -12,6 +15,26 @@ using namespace std;
 using namespace boost;
 using namespace llvm;
 using namespace clang;
+
+class MyConsumer : public ASTConsumer {
+public:
+	MyConsumer() 
+	{ 
+	}
+
+	virtual void HandleTranslationUnit(ASTContext &Context) 
+	{
+		//Context.getFullLoc(SourceLocation()).dump();
+		printf("test");
+	}
+};
+
+class MyAction : public ASTFrontendAction {
+protected:
+	virtual ASTConsumer *CreateASTConsumer(CompilerInstance &CI, StringRef InFile) {
+		return new MyConsumer();
+	}
+};
 
 int main(int argc, char **argv)
 {
@@ -40,7 +63,7 @@ int main(int argc, char **argv)
 	//compiler.createPreprocessor();
 	//compiler.createASTContext();
 
-	ASTDumpAction action;
+	MyAction action;
 	compiler.ExecuteAction(action);
 
 	llvm_shutdown();
