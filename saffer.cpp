@@ -5,6 +5,7 @@
 #include <llvm/Support/Host.h>
 #include <llvm/Support/ManagedStatic.h>
 
+#include <clang/AST/DeclGroup.h>
 #include <clang/AST/ASTContext.h>
 #include <clang/AST/ASTConsumer.h>
 #include <clang/Basic/TargetInfo.h>
@@ -22,16 +23,18 @@ public:
 	{ 
 	}
 
-	virtual void HandleTranslationUnit(ASTContext &Context) 
+	virtual void HandleTopLevelDecl(DeclGroupRef)
 	{
-		//Context.getFullLoc(SourceLocation()).dump();
-		printf("test");
 	}
+
+// 	virtual void HandleTranslationUnit(ASTContext &Context) 
+// 	{
+// 	}
 };
 
 class MyAction : public ASTFrontendAction {
 protected:
-	virtual ASTConsumer *CreateASTConsumer(CompilerInstance &CI, StringRef InFile) {
+	virtual ASTConsumer *CreateASTConsumer(CompilerInstance &, StringRef) {
 		return new MyConsumer();
 	}
 };
