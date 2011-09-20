@@ -1,3 +1,4 @@
 syntax: glob
 saffer
 *.o
+libtest.a
