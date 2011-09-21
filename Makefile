@@ -23,5 +23,8 @@ libtest.a:
 		-c google-mock/src/gmock-all.cc -o gmock-all.o
 	ar -rv $@ gtest-all.o gmock-all.o
 
+check:
+	functional.test/runner.py $(realpath saffer)
+
 clean:
 	rm -f saffer *.o libtest.a
