@@ -1,0 +1,3 @@
+test0001.cpp:2:10: warning: 'stdio.h' file not used
+#include <stdio.h>
+         ^

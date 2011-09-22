@@ -3,10 +3,8 @@ LIBS = -lclangFrontend -lclangLex -lclangParse -lclangSema -lclangAnalysis \
 	-lclangAST -lclangSerialization -lclangDriver -lclangBasic \
 	-lLLVMMC -lLLVMSupport
 
-#CXX=clang++
-#CXXFLAGS=
-
-CXX=g++
+CXX=clang++
+#CXX=g++
 CXXFLAGS=-Wall -Wextra -ggdb3 -O0
 
 saffer: saffer.o
@@ -21,9 +19,9 @@ libtest.a:
 	${CXX} ${CXXFLAGS} -Igoogle-test/include -Igoogle-test \
 		-Igoogle-mock/include -Igoogle-mock \
 		-c google-mock/src/gmock-all.cc -o gmock-all.o
-	ar -rv $@ gtest-all.o gmock-all.o
+	ar -r $@ gtest-all.o gmock-all.o
 
-check:
+check: saffer
 	functional.test/runner.py $(realpath saffer)
 
 clean:
