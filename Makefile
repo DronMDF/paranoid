@@ -22,6 +22,7 @@ libtest.a:
 	ar -r $@ gtest-all.o gmock-all.o
 
 check: saffer
+	make -C clang.unittest check
 	functional.test/runner.py $(realpath saffer)
 
 clean:
