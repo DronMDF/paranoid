@@ -1,17 +1,16 @@
 
-LIBS = -lclangFrontend -lclangLex -lclangParse -lclangSema -lclangAnalysis \
-	-lclangAST -lclangSerialization -lclangDriver -lclangBasic \
-	-lLLVMMC -lLLVMSupport
-
 CXX=clang++
 #CXX=g++
 CXXFLAGS=-Wall -Wextra -ggdb3 -O0
 
-saffer: saffer.o
-	${CXX} `llvm-config --ldflags` -o $@ $< ${LIBS}
+saffer: saffer.o analizer.o
+	${CXX} -o $@ saffer.o analizer.o
+
+analizer.o : 
+	make -C analizer
 
 %.o : %.cpp
-	${CXX} `llvm-config --cxxflags` ${CXXFLAGS} -Weffc++ -c -o $@ $<
+	${CXX} ${CXXFLAGS} -Weffc++ -c -o $@ $<
 
 libtest.a:
 	${CXX} ${CXXFLAGS} -Igoogle-test/include -Igoogle-test \
@@ -21,9 +20,10 @@ libtest.a:
 		-c google-mock/src/gmock-all.cc -o gmock-all.o
 	ar -r $@ gtest-all.o gmock-all.o
 
-check: saffer
-	make -C clang.unittest check
+check:  libtest.a saffer
+	make -C analizer.test check
 	functional.test/runner.py $(realpath saffer)
 
 clean:
-	rm -f saffer *.o libtest.a
+	find ./ -name "*.o" | xargs rm
+	rm -f saffer libtest.a
