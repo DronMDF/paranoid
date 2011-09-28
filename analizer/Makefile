@@ -6,9 +6,9 @@ OBJECTS=${addsuffix .o, ${basename ${SOURCES}}}
 CXX?=clang++
 CXXFLAGS=-Wall -Wextra -ggdb3 -O0 -I../google-test/include
 
-all: ../analizer.o
+all: analizer.o
 
-../analizer.o: ${OBJECTS}
+analizer.o: ${OBJECTS}
 	ld -Ur -o $@ ${OBJECTS}
 
 %.o : %.cpp

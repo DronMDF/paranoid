@@ -3,10 +3,10 @@ CXX=clang++
 #CXX=g++
 CXXFLAGS=-Wall -Wextra -ggdb3 -O0
 
-saffer: saffer.o analizer.o
-	${CXX} -o $@ saffer.o analizer.o
+saffer: saffer.o analizer/analizer.o
+	${CXX} -o $@ saffer.o analizer/analizer.o
 
-analizer.o : 
+analizer/analizer.o : 
 	make -C analizer
 
 %.o : %.cpp
