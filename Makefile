@@ -6,6 +6,7 @@ CXXFLAGS=-Wall -Wextra -ggdb3 -O0
 saffer: saffer.o analizer/analizer.o
 	${CXX} -o $@ saffer.o analizer/analizer.o
 
+.PHONY: analizer/analizer.o
 analizer/analizer.o : 
 	make -C analizer
 
