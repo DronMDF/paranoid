@@ -23,7 +23,7 @@ libtest.a:
 
 check:  libtest.a saffer
 	make -C analizer.test check
-	functional.test/runner.py $(realpath saffer)
+	#functional.test/runner.py $(realpath saffer)
 
 clean:
 	find ./ -name "*.o" -exec rm {} \;
