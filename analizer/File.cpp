@@ -10,7 +10,7 @@ File::File(istream &in)
 	for (unsigned i = 1; !in.eof(); i++) {
 		string line;
 		getline(in, line);
-		lines.push_back(Line(i, line));
+		lines.push_back(Line(i, line, this));
 	}
 }
 

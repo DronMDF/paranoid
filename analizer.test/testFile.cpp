@@ -8,7 +8,7 @@
 using namespace std;
 using namespace boost;
 
-TEST(FileTest, Construction1)
+TEST(File, Construction1)
 {
 	istringstream in("line1\nline2\nline3\n");
 	const File file(in);
@@ -28,7 +28,7 @@ TEST(FileTest, Construction1)
 	ASSERT_EQ(it, file.end());
 }
 
-TEST(FileTest, Foreach)
+TEST(File, Foreach)
 {
 	istringstream in("line1\nline2\nline3\n");
 	const File file(in);
