@@ -1,7 +1,7 @@
  
 
 SOURCES=${wildcard *.cpp}
-OBJECTS=${addsuffix .o, ${basename ${SOURCES}}}
+OBJECTS=${SOURCES:.cpp=.o}
 LIBS=-L../ -ltest
 
 CXX?=clang++
@@ -12,12 +12,10 @@ all: runner
 check: runner
 	./$< --gtest_shuffle --gtest_random_seed=0 
 
-
 runner: ${OBJECTS}
 	${CXX} -pthread -o $@ ${OBJECTS} ../analizer/analizer.o ${LIBS}
 
 %.o : %.cpp
-	${CXX} ${CXXFLAGS} -c -o $@ $<
+	${CXX} -MMD -MF ${<:.cpp=.dep} ${CXXFLAGS} -c -o $@ $<
 
-clean:
-	rm -rf runner *.o
+-include ${SOURCES:.cpp=.dep}

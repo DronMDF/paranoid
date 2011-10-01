@@ -11,7 +11,7 @@ analizer/analizer.o :
 	make -C analizer
 
 %.o : %.cpp
-	${CXX} ${CXXFLAGS} -Weffc++ -c -o $@ $<
+	${CXX} -MMD -MF ${<:.cpp=.dep} ${CXXFLAGS} -Weffc++ -c -o $@ $<
 
 libtest.a:
 	${CXX} ${CXXFLAGS} -Igoogle-test/include -Igoogle-test \
@@ -26,5 +26,8 @@ check:  libtest.a saffer
 	functional.test/runner.py $(realpath saffer)
 
 clean:
-	find ./ -name "*.o" | xargs rm
+	find ./ -name "*.o" -exec rm {} \;
+	find ./ -name "*.dep" -exec rm {} \;
 	rm -f saffer libtest.a
+
+-include ${SOURCES:.cpp=.dep}

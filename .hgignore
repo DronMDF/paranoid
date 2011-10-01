@@ -3,3 +3,4 @@ saffer
 runner
 *.o
 *.a
+*.dep
