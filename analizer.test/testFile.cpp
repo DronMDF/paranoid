@@ -1,14 +1,17 @@
 
 #include <sstream>
+#include <boost/foreach.hpp>
+#include <boost/lexical_cast.hpp>
 #include <gtest/gtest.h>
 #include <File.h>
 
 using namespace std;
+using namespace boost;
 
 TEST(FileTest, Construction1)
 {
 	istringstream in("line1\nline2\nline3\n");
-	File file(in);
+	const File file(in);
 	File::const_iterator it = file.begin();
 	ASSERT_EQ(it->getNumber(), 1U);
 	ASSERT_EQ(it->getText(), "line1");
@@ -23,4 +26,20 @@ TEST(FileTest, Construction1)
 	ASSERT_TRUE(it->getText().empty());
 	++it;
 	ASSERT_EQ(it, file.end());
+}
+
+TEST(FileTest, Foreach)
+{
+	istringstream in("line1\nline2\nline3\n");
+	const File file(in);
+	unsigned number = 1;
+	BOOST_FOREACH(const Line &line, file) {
+		ASSERT_EQ(line.getNumber(), number);
+		if (number < 4) {
+			ASSERT_EQ(line.getText(), "line" + lexical_cast<string>(number));
+		} else {
+			ASSERT_TRUE(line.getText().empty());
+		}
+		number++;
+	}
 }
