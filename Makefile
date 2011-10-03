@@ -8,7 +8,7 @@ saffer: saffer.o analizer/analizer.o
 
 .PHONY: analizer/analizer.o
 analizer/analizer.o : 
-	make -C analizer
+	make -C analizer CXX="${CXX}" CXXFLAGS="${CXXFLAGS}"
 
 %.o : %.cpp
 	${CXX} -MMD -MF ${<:.cpp=.dep} ${CXXFLAGS} -Weffc++ -c -o $@ $<
@@ -22,7 +22,7 @@ libtest.a:
 	ar -r $@ gtest-all.o gmock-all.o
 
 check:  libtest.a saffer
-	make -C analizer.test check
+	make -C analizer.test CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" check
 	#functional.test/runner.py $(realpath saffer)
 
 clean:

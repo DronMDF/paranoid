@@ -3,9 +3,6 @@
 SOURCES=${wildcard *.cpp}
 OBJECTS=${SOURCES:.cpp=.o}
 
-CXX?=clang++
-CXXFLAGS=-Wall -Wextra -Weffc++ -ggdb3 -O0 -I../google-test/include
-
 all: analizer.o
 
 analizer.o: ${OBJECTS}

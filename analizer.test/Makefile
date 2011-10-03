@@ -4,8 +4,7 @@ SOURCES=${wildcard *.cpp}
 OBJECTS=${SOURCES:.cpp=.o}
 LIBS=-L../ -ltest
 
-CXX?=clang++
-CXXFLAGS=-Wall -Wextra -ggdb3 -O0 -I../google-test/include -I../analizer
+IFLAGS = -I../google-test/include -I../analizer
 
 all: runner
 
@@ -16,6 +15,6 @@ runner: ${OBJECTS}
 	${CXX} -pthread -o $@ ${OBJECTS} ../analizer/analizer.o ${LIBS}
 
 %.o : %.cpp
-	${CXX} -MMD -MF ${<:.cpp=.dep} ${CXXFLAGS} -c -o $@ $<
+	${CXX} -MMD -MF ${<:.cpp=.dep} ${CXXFLAGS} ${IFLAGS} -c -o $@ $<
 
 -include ${SOURCES:.cpp=.dep}
