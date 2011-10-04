@@ -11,7 +11,7 @@ all: runner
 check: runner
 	./$< --gtest_shuffle --gtest_random_seed=0 --gtest_print_time=0
 
-runner: ${OBJECTS}
+runner: ${OBJECTS} ../analizer/analizer.o
 	${CXX} -pthread -o $@ ${OBJECTS} ../analizer/analizer.o ${LIBS}
 
 %.o : %.cpp
