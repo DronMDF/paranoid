@@ -16,25 +16,32 @@ Preprocessor::Preprocessor(const File &file)
 	: tokens()
 {
 	BOOST_FOREACH(const Line &line, file) {
-		string text = line.getText();
-		vector<string> toks;
-		split(toks, text, is_space(), token_compress_on);
-		BOOST_FOREACH(const string &tok, toks) {
-			if (tok.empty()) {
-				continue;
-			}
-			
-			if (tok == " " && !tokens.empty() && tokens.back().getText() == " ") {
-				continue;
-			}
-			
-			tokens.push_back(Token(tok));
-			tokens.push_back(Token(" "));
+		const string text = line.getText();
+		
+		if (!text.empty() && !tokens.empty() && tokens.back().getText() != " ") {
+			tokens.push_back(Token());
 		}
-	}
-	
-	if (!tokens.empty() && tokens.back().getText() == " ") {
-		tokens.pop_back();
+		
+		for (size_t eword = 0;;) {
+			size_t sword = text.find_first_not_of(" \t", eword);
+			if (sword == string::npos) {
+				break;
+			}
+			
+			if (sword > eword && !tokens.empty() && tokens.back().getText() != " ") {
+				tokens.push_back(Token());
+			}
+			
+			eword = text.find_first_of(" \t", sword);
+			if (eword == string::npos) {
+				if (text.size() > sword) {
+					tokens.push_back(Token(&line, sword, text.size() - sword));
+				}
+				break;
+			}
+				
+			tokens.push_back(Token(&line, sword, eword - sword));
+		}
 	}
 }
 

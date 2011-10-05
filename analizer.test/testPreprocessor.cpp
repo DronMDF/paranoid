@@ -24,6 +24,6 @@ TEST(Preprocessor, Tokenizer)
 
 	list<string> pp_tok;
 	transform(pp, back_inserter(pp_tok), bind(&Token::getText, _1));
-
+	
 	ASSERT_TRUE(equal(pp_tok, expected));
 }

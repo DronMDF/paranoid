@@ -3,11 +3,17 @@
 
 #include <string>
 
+class Line;
+
 class Token {
 public:
-	explicit Token(const std::string &tok);
+	Token();
+	Token(const Line *line, unsigned offset, unsigned len);
+	
 	std::string getText() const;
 	
 private:
-	std::string token;
+	const Line *line;
+	unsigned offset;
+	unsigned lenght;
 };

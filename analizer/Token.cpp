@@ -1,14 +1,24 @@
 
 #include "Token.h"
+#include "Line.h"
 
 using namespace std;
 
-Token::Token(const std::string &token)
-	: token(token)
+Token::Token()
+	: line(0), offset(0), lenght(0)
+{
+}
+
+Token::Token(const Line *line, unsigned offset, unsigned len)
+	: line(line), offset(offset), lenght(len)
 {
 }
 
 string Token::getText() const
 {
-	return token;
+	if (line == 0) {
+		return " ";
+	}
+	
+	return string(line->getText(), offset, lenght);
 }
