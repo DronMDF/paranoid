@@ -3,8 +3,8 @@ CXX=clang++
 #CXX=g++
 CXXFLAGS=-Wall -Wextra -ggdb3 -O0
 
-saffer: saffer.o analizer/analizer.o
-	${CXX} -o $@ saffer.o analizer/analizer.o
+paranoid: paranoid.o analizer/analizer.o
+	${CXX} -o $@ paranoid.o analizer/analizer.o
 
 .PHONY: analizer/analizer.o
 analizer/analizer.o : 
@@ -21,13 +21,13 @@ libtest.a:
 		-c google-mock/src/gmock-all.cc -o gmock-all.o
 	ar -r $@ gtest-all.o gmock-all.o
 
-check:  libtest.a saffer
+check:  libtest.a paranoid
 	make -C analizer.test CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" check
-	#functional.test/runner.py $(realpath saffer)
+	#functional.test/runner.py $(realpath paranoid)
 
 clean:
 	find ./ -name "*.o" -exec rm {} \;
 	find ./ -name "*.dep" -exec rm {} \;
-	rm -f saffer libtest.a
+	rm -f paranoid libtest.a
 
 -include ${SOURCES:.cpp=.dep}

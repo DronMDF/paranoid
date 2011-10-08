@@ -1,5 +1,5 @@
 syntax: glob
-saffer
+paranoid
 runner
 *.o
 *.a
