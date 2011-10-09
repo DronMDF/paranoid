@@ -1,10 +1,13 @@
 
+SOURCES=${wildcard *.cpp}
+OBJECTS=${SOURCES:.cpp=.o}
+
 CXX=clang++
 #CXX=g++
 CXXFLAGS=-Wall -Wextra -ggdb3 -O0
 
-paranoid: paranoid.o analizer/analizer.o
-	${CXX} -o $@ paranoid.o analizer/analizer.o
+paranoid: ${OBJECTS} analizer/analizer.o
+	${CXX} -o $@  ${OBJECTS} analizer/analizer.o
 
 .PHONY: analizer/analizer.o
 analizer/analizer.o : 
