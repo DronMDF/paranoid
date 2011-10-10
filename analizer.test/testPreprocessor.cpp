@@ -21,13 +21,13 @@ BOOST_AUTO_TEST_CASE(Tokenizer)
 	const Preprocessor pp(file);
 	
 	// Текст разбивается на слова и пробелы, к которым относятся так же табы и переносы строк
-	const char * expected[] = { "int", " ", "main(int", " ", "argc,", " ", 
+	list<const char *> expected = { "int", " ", "main(int", " ", "argc,", " ", 
 		"char", " ", "**argv)", " ", "{", " ", "return", " ", "0;", " ", "}" };
 
 	list<string> pp_tok;
 	transform(pp, back_inserter(pp_tok), bind(&Token::getText, _1));
 	
-	BOOST_REQUIRE_EQUAL_COLLECTIONS(pp_tok.begin(), pp_tok.end(), expected, expected + 17);
+	BOOST_REQUIRE_EQUAL_COLLECTIONS(pp_tok.begin(), pp_tok.end(), expected.begin(), expected.end());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

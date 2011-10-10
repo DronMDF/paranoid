@@ -15,7 +15,7 @@ BOOST_AUTO_TEST_CASE(Construction1)
 	istringstream in("line1\nline2\nline3\n");
 	const File file(in);
 	
-	File::const_iterator it = file.begin();
+	auto it = file.begin();
 	BOOST_REQUIRE_EQUAL(it->getNumber(), 1U);
 	BOOST_REQUIRE_EQUAL(it->getText(), "line1");
 	++it;
@@ -36,6 +36,7 @@ BOOST_AUTO_TEST_CASE(Foreach)
 	istringstream in("line1\nline2\nline3\n");
 	const File file(in);
 	unsigned number = 1;
+	// for(const Line &line : file) {	// range-based for появится в gcc-4.6
 	BOOST_FOREACH(const Line &line, file) {
 		BOOST_REQUIRE_EQUAL(line.getNumber(), number);
 		if (number < 4) {
