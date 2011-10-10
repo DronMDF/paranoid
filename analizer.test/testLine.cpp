@@ -1,17 +1,21 @@
 
 
 #include <sstream>
-#include <gtest/gtest.h>
+#include <boost/test/unit_test.hpp>
 
 #include <File.h>
 #include <Line.h>
 
 using namespace std;
 
-TEST(Line, GetFilePointer)
+BOOST_AUTO_TEST_SUITE(suiteLine)
+
+BOOST_AUTO_TEST_CASE(GetFilePointer)
 {
 	istringstream in("");
 	File file(in);
 	Line line(10, "test", &file);
-	ASSERT_EQ(line.getFile(), &file);
+	BOOST_REQUIRE_EQUAL(line.getFile(), &file);
 }
+
+BOOST_AUTO_TEST_SUITE_END()

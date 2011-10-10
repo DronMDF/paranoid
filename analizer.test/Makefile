@@ -3,17 +3,16 @@
 SOURCES=${wildcard *.cpp}
 OBJECTS=${SOURCES:.cpp=.o}
 SUT_OBJECTS=../analizer/analizer.o ../CommandLine.o
-LIBS=-L../ -ltest
-
-IFLAGS = -I../google-test/include -I.. -I../analizer
+IFLAGS = -I.. -I../analizer
+LFLAGS = -lboost_test_exec_monitor-mt
 
 all: runner
 
 check: runner
-	./$< --gtest_shuffle --gtest_random_seed=0 --gtest_print_time=0
+	./$< --random=1
 
 runner: ${OBJECTS} ${SUT_OBJECTS}
-	${CXX} -pthread -o $@ ${OBJECTS} ${SUT_OBJECTS} ${LIBS}
+	${CXX} -pthread -o $@ ${OBJECTS} ${SUT_OBJECTS} ${LFLAGS}
 
 %.o : %.cpp
 	${CXX} -MMD -MF ${<:.cpp=.dep} ${CXXFLAGS} ${IFLAGS} -c -o $@ $<

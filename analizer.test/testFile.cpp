@@ -2,44 +2,49 @@
 #include <sstream>
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
-#include <gtest/gtest.h>
+#include <boost/test/unit_test.hpp>
 #include <File.h>
 
 using namespace std;
 using namespace boost;
 
-TEST(File, Construction1)
+BOOST_AUTO_TEST_SUITE(suiteFile)
+
+BOOST_AUTO_TEST_CASE(Construction1)
 {
 	istringstream in("line1\nline2\nline3\n");
 	const File file(in);
+	
 	File::const_iterator it = file.begin();
-	ASSERT_EQ(it->getNumber(), 1U);
-	ASSERT_EQ(it->getText(), "line1");
+	BOOST_REQUIRE_EQUAL(it->getNumber(), 1U);
+	BOOST_REQUIRE_EQUAL(it->getText(), "line1");
 	++it;
-	ASSERT_EQ(it->getNumber(), 2U);
-	ASSERT_EQ(it->getText(), "line2");
+	BOOST_REQUIRE_EQUAL(it->getNumber(), 2U);
+	BOOST_REQUIRE_EQUAL(it->getText(), "line2");
 	++it;
-	ASSERT_EQ(it->getNumber(), 3U);
-	ASSERT_EQ(it->getText(), "line3");
+	BOOST_REQUIRE_EQUAL(it->getNumber(), 3U);
+	BOOST_REQUIRE_EQUAL(it->getText(), "line3");
 	++it;
-	ASSERT_EQ(it->getNumber(), 4U);
-	ASSERT_TRUE(it->getText().empty());
+	BOOST_REQUIRE_EQUAL(it->getNumber(), 4U);
+	BOOST_REQUIRE(it->getText().empty());
 	++it;
-	ASSERT_EQ(it, file.end());
+	BOOST_REQUIRE(it == file.end());
 }
 
-TEST(File, Foreach)
+BOOST_AUTO_TEST_CASE(Foreach)
 {
 	istringstream in("line1\nline2\nline3\n");
 	const File file(in);
 	unsigned number = 1;
 	BOOST_FOREACH(const Line &line, file) {
-		ASSERT_EQ(line.getNumber(), number);
+		BOOST_REQUIRE_EQUAL(line.getNumber(), number);
 		if (number < 4) {
-			ASSERT_EQ(line.getText(), "line" + lexical_cast<string>(number));
+			BOOST_REQUIRE_EQUAL(line.getText(), "line" + lexical_cast<string>(number));
 		} else {
-			ASSERT_TRUE(line.getText().empty());
+			BOOST_REQUIRE(line.getText().empty());
 		}
 		number++;
 	}
 }
+
+BOOST_AUTO_TEST_SUITE_END()
