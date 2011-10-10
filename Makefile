@@ -2,8 +2,9 @@
 SOURCES=${wildcard *.cpp}
 OBJECTS=${SOURCES:.cpp=.o}
 
-CXX=clang++
-CXXFLAGS=-Wall -Wextra -ggdb3 -O0
+#CXX=clang++
+CXX=g++
+CXXFLAGS=-std=c++0x -Wall -Wextra -ggdb3 -O0
 
 paranoid: ${OBJECTS} analizer/analizer.o
 	${CXX} -o $@  ${OBJECTS} analizer/analizer.o
