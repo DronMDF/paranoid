@@ -18,7 +18,7 @@ analizer/analizer.o :
 
 
 .PHONY: check
-check: #paranoid
+check: analizer/analizer.o #paranoid
 	make -C analizer.test CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" check
 	#functional.test/runner.py $(realpath paranoid)
 
