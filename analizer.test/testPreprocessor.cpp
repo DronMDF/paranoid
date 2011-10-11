@@ -1,8 +1,5 @@
 
 #include <sstream>
-#include <boost/bind.hpp>
-#include <boost/foreach.hpp>
-#include <boost/range/algorithm/equal.hpp>
 #include <boost/range/algorithm/transform.hpp>
 #include <boost/test/unit_test.hpp>
 #include <File.h>

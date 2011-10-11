@@ -1,6 +1,5 @@
 
 #include <boost/test/unit_test.hpp>
-#include <boost/range/algorithm/equal.hpp>
 #include <CommandLine.h>
 #include "Assertions.h"
 
