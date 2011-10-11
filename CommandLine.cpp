@@ -1,7 +1,7 @@
 
 #include <list>
+#include <string>
 #include <vector>
-#include <boost/bind.hpp>
 #include <boost/range/algorithm/find_if.hpp>
 
 using namespace std;
@@ -12,9 +12,9 @@ vector<const char *> Chaining(int argc, const char **argv)
 	list<const char *> args(argv, argv + argc);
 	args.pop_front();
 	
-	list<const char *>::iterator chain = find_if(args, bind(strcmp, _1, "-chain") == 0);
+	auto chain = find_if(args, [](const char *a){ return string(a) == "-chain"; });
 	if (chain != args.end()) {
-		list<const char *>::iterator cexec = args.erase(chain);
+		auto cexec = args.erase(chain);
 		if (cexec != args.end()) {
 			args.push_front(*cexec);
 			args.erase(cexec);
