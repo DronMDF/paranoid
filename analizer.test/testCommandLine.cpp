@@ -31,4 +31,12 @@ BOOST_AUTO_TEST_CASE(testGetSourceFileWithOpts)
 	BOOST_REQUIRE_EQUAL(getSourceFile(args), args.back());
 }
 
+BOOST_AUTO_TEST_CASE(testGetSourceFileWithFailOpts)
+{
+	vector<const char *> args = { "gcc", "-E", "-xc", "-" };
+	BOOST_REQUIRE(getSourceFile(args).empty());
+}
+
+
+
 BOOST_AUTO_TEST_SUITE_END()

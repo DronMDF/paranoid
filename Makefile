@@ -7,7 +7,7 @@ CXX=g++
 CXXFLAGS=-std=c++0x -Wall -Wextra -ggdb3 -O0
 
 paranoid: ${OBJECTS} analizer/analizer.o
-	${CXX} -o $@  ${OBJECTS} analizer/analizer.o
+	${CXX} -o $@  ${OBJECTS} analizer/analizer.o -lboost_filesystem-mt
 
 .PHONY: analizer/analizer.o
 analizer/analizer.o : 

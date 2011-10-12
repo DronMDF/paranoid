@@ -30,8 +30,12 @@ vector<const char *> Chaining(int argc, const char **argv)
 
 string getSourceFile(const vector<const char *> &args)
 {
-	vector<string> wop = {"-MF", "-o"};
+	vector<string> wop = {"-MF", "-o", "-isystem"};
 	for (unsigned i = 1; i < args.size(); ++i) {
+		if (args[i] == 0) {
+			break;
+		}
+
 		if (args[i][0] == '-') {
 			if (find(wop, string(args[i])) != wop.end()) {
 				++i;
