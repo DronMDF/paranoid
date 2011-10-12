@@ -17,4 +17,18 @@ BOOST_AUTO_TEST_CASE(testChaining)
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(argres, argexpected);
 }
 
+BOOST_AUTO_TEST_CASE(testGetSourceFile)
+{
+	vector<const char *> args = {"test", "file.cpp"};
+	BOOST_REQUIRE_EQUAL(getSourceFile(args), "file.cpp");
+}
+
+BOOST_AUTO_TEST_CASE(testGetSourceFileWithOpts)
+{
+	vector<const char *> args = { "g++", "-MMD", "-MF", "../CommandLine.dep",
+		"-std=c++0x", "-Wall", "-Wextra", "-ggdb3", "-O0", "-I..", 
+		"-I../analizer", "-c", "-o", "../CommandLine.o", "../CommandLine.cpp"};
+	BOOST_REQUIRE_EQUAL(getSourceFile(args), args.back());
+}
+
 BOOST_AUTO_TEST_SUITE_END()

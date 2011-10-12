@@ -2,6 +2,7 @@
 #include <list>
 #include <string>
 #include <vector>
+#include <boost/range/algorithm/find.hpp>
 #include <boost/range/algorithm/find_if.hpp>
 
 using namespace std;
@@ -25,4 +26,20 @@ vector<const char *> Chaining(int argc, const char **argv)
 
 	args.push_back(0);
 	return vector<const char *>(args.begin(), args.end());
+}
+
+string getSourceFile(const vector<const char *> &args)
+{
+	vector<string> wop = {"-MF", "-o"};
+	for (unsigned i = 1; i < args.size(); ++i) {
+		if (args[i][0] == '-') {
+			if (find(wop, string(args[i])) != wop.end()) {
+				++i;
+			}
+			continue;
+		}
+		
+		return args[i];
+	}
+	return string();
 }
