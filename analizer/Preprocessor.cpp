@@ -16,7 +16,13 @@ Preprocessor::Preprocessor(const File &file)
 	: tokens()
 {
 	BOOST_FOREACH(const Line &line, file) {
-		const string text = line.getText();
+		string text = line.getText();
+		
+		// Вырезаем однострочный комментарий
+		const size_t comment = text.find("//");
+		if (comment != string::npos) {
+			text.erase(comment);
+		}
 		
 		if (!text.empty() && !tokens.empty() && tokens.back().getText() != " ") {
 			tokens.push_back(Token());

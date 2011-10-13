@@ -1,10 +1,13 @@
 
 #include <unistd.h>
+#include <fstream>
 #include <string>
 #include <vector>
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 #include "CommandLine.h"
+#include "analizer/File.h"
+#include "analizer/Preprocessor.h"
 
 using namespace std;
 using namespace boost::filesystem;
@@ -28,6 +31,10 @@ void checkSource(const vector<const char *> &args)
 			// Временно, пока не отладим аргументы командной строки
 			exit(-1);
 		}
+		
+		ifstream in(source);
+		const File file(in);
+		const Preprocessor pp(file);
 	}
 }
 

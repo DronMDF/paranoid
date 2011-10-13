@@ -26,4 +26,17 @@ BOOST_AUTO_TEST_CASE(Tokenizer)
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(pp_tok, expected);
 }
 
+BOOST_AUTO_TEST_CASE(testOneLineComment)
+{
+	istringstream in("int main(); // comment\n");
+	const File file(in);
+	const Preprocessor pp(file);
+	
+	list<string> pp_tok;
+	transform(pp, back_inserter(pp_tok), [](const Token &t){ return t.getText(); });
+	
+	list<const char *> expected = { "int", " ", "main();" };
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(pp_tok, expected);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
