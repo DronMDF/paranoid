@@ -35,7 +35,8 @@ BOOST_AUTO_TEST_CASE(testOneLineComment)
 	list<string> pp_tok;
 	transform(pp, back_inserter(pp_tok), [](const Token &t){ return t.getText(); });
 	
-	list<const char *> expected = { "int", " ", "main();" };
+	// TODO: Эта функция переработана в соответствии с новой концепцией
+	list<const char *> expected = { "int", " ", "main", "(", ")", ";", " " };
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(pp_tok, expected);
 }
 
