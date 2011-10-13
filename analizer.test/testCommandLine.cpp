@@ -13,7 +13,7 @@ BOOST_AUTO_TEST_CASE(testChaining)
 	vector<const char *> argsrc = {"test", "-chain", "valid"};
 	auto argres = Chaining(argsrc.size(), &argsrc[0]);
 	
-	list<const char *> argexpected = {"valid", 0};
+	list<const char *> argexpected = {"valid"};
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(argres, argexpected);
 }
 
@@ -36,7 +36,5 @@ BOOST_AUTO_TEST_CASE(testGetSourceFileWithFailOpts)
 	vector<const char *> args = { "gcc", "-E", "-xc", "-" };
 	BOOST_REQUIRE(getSourceFile(args).empty());
 }
-
-
 
 BOOST_AUTO_TEST_SUITE_END()

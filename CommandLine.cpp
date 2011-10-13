@@ -24,7 +24,6 @@ vector<const char *> Chaining(int argc, const char **argv)
 		args.push_front("gcc");
 	}
 
-	args.push_back(0);
 	return vector<const char *>(args.begin(), args.end());
 }
 
@@ -32,10 +31,6 @@ string getSourceFile(const vector<const char *> &args)
 {
 	vector<string> wop = {"-MF", "-o", "-isystem"};
 	for (unsigned i = 1; i < args.size(); ++i) {
-		if (args[i] == 0) {
-			break;
-		}
-
 		if (args[i][0] == '-') {
 			if (find(wop, string(args[i])) != wop.end()) {
 				++i;

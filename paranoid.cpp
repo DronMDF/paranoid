@@ -34,8 +34,9 @@ void checkSource(const vector<const char *> &args)
 int main(int argc, const char **argv)
 {
 	vector<const char *> args = Chaining(argc, argv);
-	
+
 	checkSource(args);
 	
+	args.push_back(0);
 	return execvp(args[0], const_cast<char **>(&args[0]));
 }
