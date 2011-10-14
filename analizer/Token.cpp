@@ -1,17 +1,19 @@
 
+#include <boost/assert.hpp>
 #include "Token.h"
 #include "Line.h"
 
 using namespace std;
 
 Token::Token()
-	: line(0), offset(0), lenght(0)
+	: line(0), offset(0), length(0)
 {
 }
 
-Token::Token(const Line *line, unsigned offset, unsigned len)
-	: line(line), offset(offset), lenght(len)
+Token::Token(const Line *line, unsigned offset, unsigned length)
+	: line(line), offset(offset), length(length)
 {
+	BOOST_ASSERT(offset + length <= line->getText().size());
 }
 
 string Token::getText() const
@@ -20,5 +22,5 @@ string Token::getText() const
 		return " ";
 	}
 	
-	return string(line->getText(), offset, lenght);
+	return string(line->getText(), offset, length);
 }
