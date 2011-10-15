@@ -62,4 +62,13 @@ BOOST_FIXTURE_TEST_CASE(testComentInQuote, fixtureLowLevelParser)
 	CUSTOM_REQUIRE_EQUAL_TOKENS(tokens, expected);
 }
 
+BOOST_FIXTURE_TEST_CASE(testParenthesisOnelineComent, fixtureLowLevelParser)
+{
+	Line line(0, "1234/*56*/7890", 0);
+	parser.parse(&line);
+	
+	list<string> expected = { "1234", "7890" };
+	CUSTOM_REQUIRE_EQUAL_TOKENS(tokens, expected);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
