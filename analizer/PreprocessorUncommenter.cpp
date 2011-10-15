@@ -1,43 +1,35 @@
 
 #include <string>
+#include <boost/regex.hpp>
 #include "Line.h"
 #include "PreprocessorUncommenter.h"
 
 using namespace std;
+using namespace boost;
 
 PreprocessorUncommenter::PreprocessorUncommenter(const PreprocessorUncommenter::low_parser_call &parser)
 	: ll_parser(parser)
 {
 }
 
-unsigned PreprocessorUncommenter::getQuoteLenght(const string &quote) const
+void PreprocessorUncommenter::parse(const Line *line) const
 {
-	unsigned qpos = quote.find('"');
-	unsigned qchar = quote.find("\\\"");
-	while (qchar + 1 == qpos) {
-		qpos = quote.find('"', qpos + 1);
-		qchar = quote.find("\\\"", qpos + 1);
-	}
-	return qpos + 1;
+	scanComments(line, 0);
 }
 
-void PreprocessorUncommenter::parse(const Line *line)
+void PreprocessorUncommenter::scanComments(const Line *line, unsigned offset) const
 {
-	const string text = line->getText();
-	unsigned start = 0;
-	for (unsigned i = 0; i < text.size(); ) {
-		if (text[i] == '"') {
-			i += getQuoteLenght(string(text, i));
-			continue;
+	const string text = string(line->getText(), offset);
+	const regex re("[^\\\\](\".*[^\\\\]\"|//)");
+	smatch what;
+	if (regex_search(text, what, re)) {
+		if (what.str(1) == "//") {
+			ll_parser(line, 0, offset + what.position(1));
+		} else {
+			scanComments(line, offset + what.position(1) + what.length(1));
 		}
-		
-		if (string(text, i, 2) == "//") {
-			ll_parser(line, start, i - start);
-			return;
-		}
-		
-		i++;
+		return;
 	}
 	
-	ll_parser(line, start, text.size() - start);
+	ll_parser(line, 0, line->getText().size());
 }

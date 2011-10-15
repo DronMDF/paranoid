@@ -4,7 +4,7 @@ SOURCES=${wildcard *.cpp}
 OBJECTS=${SOURCES:.cpp=.o}
 SUT_OBJECTS=../analizer/analizer.o ../CommandLine.o
 IFLAGS = -I.. -I../analizer
-LFLAGS = -lboost_test_exec_monitor-mt
+LFLAGS = -lboost_test_exec_monitor-mt -lboost_regex-mt
 
 all: runner
 
