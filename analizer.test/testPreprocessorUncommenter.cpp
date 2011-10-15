@@ -21,47 +21,45 @@ void CUSTOM_REQUIRE_EQUAL_TOKENS(const list<Token> &tokens, const list<string> &
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(values, expected);
 }
 
-struct testLL {
+struct fixtureLowLevelParser {
+	PreprocessorUncommenter parser;
 	list<Token> tokens;
+	
+	fixtureLowLevelParser() 
+		: parser(bind(&fixtureLowLevelParser::parse, this, _1, _2, _3))
+	{
+	}
+	
 	void parse(const Line *line, unsigned offset, unsigned size) {
 		tokens.push_back(Token(line, offset, size));
 	}
 };
 
-BOOST_AUTO_TEST_CASE(testNoComment)
+BOOST_FIXTURE_TEST_CASE(testNoComment, fixtureLowLevelParser)
 {
-	testLL ll;
-	PreprocessorUncommenter pu(bind(&testLL::parse, &ll, _1, _2, _3));
-	
 	Line line(0, "1234567890", 0);
-	pu.parse(&line);
+	parser.parse(&line);
 	
 	list<string> expected = { "1234567890" };
-	CUSTOM_REQUIRE_EQUAL_TOKENS(ll.tokens, expected);
+	CUSTOM_REQUIRE_EQUAL_TOKENS(tokens, expected);
 }
 
-BOOST_AUTO_TEST_CASE(testSimpleComment)
+BOOST_FIXTURE_TEST_CASE(testSimpleComment, fixtureLowLevelParser)
 {
-	testLL ll;
-	PreprocessorUncommenter pu(bind(&testLL::parse, &ll, _1, _2, _3));
-	
 	Line line(0, "12345//67890", 0);
-	pu.parse(&line);
+	parser.parse(&line);
 	
 	list<string> expected = { "12345" };
-	CUSTOM_REQUIRE_EQUAL_TOKENS(ll.tokens, expected);
+	CUSTOM_REQUIRE_EQUAL_TOKENS(tokens, expected);
 }
 
-BOOST_AUTO_TEST_CASE(testComentInQuote)
+BOOST_FIXTURE_TEST_CASE(testComentInQuote, fixtureLowLevelParser)
 {
-	testLL ll;
-	PreprocessorUncommenter pu(bind(&testLL::parse, &ll, _1, _2, _3));
-	
 	Line line(0, "1234\"5//6\"7890", 0);
-	pu.parse(&line);
+	parser.parse(&line);
 	
 	list<string> expected = { "1234\"5//6\"7890" };
-	CUSTOM_REQUIRE_EQUAL_TOKENS(ll.tokens, expected);
+	CUSTOM_REQUIRE_EQUAL_TOKENS(tokens, expected);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
