@@ -10,15 +10,34 @@ PreprocessorUncommenter::PreprocessorUncommenter(const PreprocessorUncommenter::
 {
 }
 
+unsigned PreprocessorUncommenter::getQuoteLenght(const string &quote) const
+{
+	unsigned qpos = quote.find('"');
+	unsigned qchar = quote.find("\\\"");
+	while (qchar + 1 == qpos) {
+		qpos = quote.find('"', qpos + 1);
+		qchar = quote.find("\\\"", qpos + 1);
+	}
+	return qpos + 1;
+}
+
 void PreprocessorUncommenter::parse(const Line *line)
 {
 	const string text = line->getText();
-	const size_t comst = text.find("//");
-	if (comst != string::npos) {
-		if (comst > 0) {
-			ll_parser(line, 0, comst);
+	unsigned start = 0;
+	for (unsigned i = 0; i < text.size(); ) {
+		if (text[i] == '"') {
+			i += getQuoteLenght(string(text, i));
+			continue;
 		}
-	} else {
-		ll_parser(line, 0, text.size());
+		
+		if (string(text, i, 2) == "//") {
+			ll_parser(line, start, i - start);
+			return;
+		}
+		
+		i++;
 	}
+	
+	ll_parser(line, start, text.size() - start);
 }

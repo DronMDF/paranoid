@@ -13,5 +13,7 @@ public:
 	void parse(const Line *line);
 	
 private:
+	unsigned getQuoteLenght(const std::string &quote) const;
+
 	low_parser_call ll_parser;
 };
