@@ -24,7 +24,7 @@ void PreprocessorUncommenter::parse(const Line *line) const
 void PreprocessorUncommenter::scanComments(const Line *line, unsigned offset) const
 {
 	const string text = string(line->getText(), offset);
-	const regex re("[^\\\\](\".*[^\\\\]\"|//|/\\*.*\\*/)");
+	const regex re("[^\\\\](\".*[^\\\\]\"|//|/\\*.*?\\*/)");
 	smatch what;
 	if (regex_search(text, what, re)) {
 		if (what.str(1) == "//") {
