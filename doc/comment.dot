@@ -1,0 +1,16 @@
+digraph build {
+	code -> string [label="\""]
+	code -> code [label="\\\""]
+	code -> code [label="\\/"]
+	code -> token [label="//"]
+	code -> token [label="/*"]
+	code -> token [label="eol"]
+
+	token -> cpp_comment [label="//"]
+	token -> c_comment [label="/*"]
+
+	string -> string [label="\\\""]
+	string -> code [label="\""]
+
+	c_comment -> code [label="*/"]
+}
