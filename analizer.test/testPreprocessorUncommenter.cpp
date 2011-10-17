@@ -31,7 +31,7 @@ struct fixtureLowLevelParser {
 	}
 	
 	void parse(const Line *line, unsigned offset, unsigned size) {
-		tokens.push_back(Token(line, offset, size));
+		tokens.push_back(Token(line->getPointer(), offset, size));
 	}
 };
 
