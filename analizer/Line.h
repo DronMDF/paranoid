@@ -5,6 +5,10 @@
 
 class File;
 
+// TODO: Line - Это будет интерфейс. 
+//	Основная реализация FileLine
+//	Дополнительно будут врапперы.
+
 class Line {
 public:
 	Line(const Line &line);
