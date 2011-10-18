@@ -23,7 +23,8 @@ string LineUncommented::getText() const
 {
 	string text = line->getText();
 	BOOST_FOREACH(const auto &hole, holes) {
-		text.erase(hole.first, hole.second - hole.first);
+		const size_type length = hole.second - hole.first;
+		text.replace(hole.first, length, length, ' ');
 	}
 	return text;
 }
