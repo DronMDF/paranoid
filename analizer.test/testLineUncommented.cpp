@@ -16,5 +16,13 @@ BOOST_AUTO_TEST_CASE(testNoModify)
 	BOOST_REQUIRE_EQUAL(uncomm.getPointer(), &line);
 }
 
+BOOST_AUTO_TEST_CASE(testOneHole)
+{
+	FileLine line(0, "0123456789", 0);
+	LineUncommented uncomm(&line);
+	uncomm.hole(3, 7);
+	BOOST_REQUIRE_EQUAL(uncomm.getText(), "012     89");
+	BOOST_REQUIRE_EQUAL(uncomm.getPointer(), &line);
+}
 
 BOOST_AUTO_TEST_SUITE_END()
