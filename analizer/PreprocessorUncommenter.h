@@ -16,7 +16,7 @@
 // Сейчас я что-то наворотил
 
 class Line;
-class LineWrapper;
+class LineUncommented;
 
 class PreprocessorUncommenter {
 public:
@@ -26,14 +26,14 @@ public:
 	void parse(const Line *line);
 	
 private:
-	typedef std::map<std::string, boost::function<void(LineWrapper *, unsigned)>> action_type;
+	typedef std::map<std::string, boost::function<void(LineUncommented *, unsigned)>> action_type;
 	
-	void selectFirst(LineWrapper *line, unsigned offset, const action_type &actions);
+	void selectFirst(LineUncommented *line, unsigned offset, const action_type &actions);
 	
-	void scanText(LineWrapper *line, unsigned offset);
-	void scanString(LineWrapper *line, unsigned offset);
-	void scanCppComment(LineWrapper *line, unsigned offset);
-	void scanCComment(LineWrapper *line, unsigned offset);
+	void scanText(LineUncommented *line, unsigned offset);
+	void scanString(LineUncommented *line, unsigned offset);
+	void scanCppComment(LineUncommented *line, unsigned offset);
+	void scanCComment(LineUncommented *line, unsigned offset);
 	
 	low_parser_call ll_parser;
 };
