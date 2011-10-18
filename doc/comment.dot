@@ -1,16 +1,29 @@
 digraph build {
+	code -> c1 [label="/"]
+	// code -> c2 [label="\\"]
 	code -> string [label="\""]
-	code -> code [label="\\\""]
-	code -> code [label="\\/"]
-	code -> token [label="//"]
-	code -> token [label="/*"]
-	code -> token [label="eol"]
+	code -> code [label="any"]
 
-	token -> cpp_comment [label="//"]
-	token -> c_comment [label="/*"]
+	c1 -> c_comment [label="*"]
+	c1 -> cpp_comment [label="/"]
+	c1 -> code [label="any"]
 
-	string -> string [label="\\\""]
+	//c2 -> code [label="\""]
+	//c2 -> code [label="/"]
+	//c2 -> code [label="any"]
+
+	string -> c3 [label="\\"]
 	string -> code [label="\""]
+	string -> string [label="any"]
+	
+	c3 -> string [label="\""]
+	c3 -> string [label="any"]
 
-	c_comment -> code [label="*/"]
+	cpp_comment -> cpp_comment [label="any"]
+
+	c_comment -> c4 [label="*"]
+	c_comment -> c_comment [label="any"]
+	c4 -> c4 [label="*"]
+	c4 -> code [label="/"]
+	c4 -> c_comment [label="any"]
 }

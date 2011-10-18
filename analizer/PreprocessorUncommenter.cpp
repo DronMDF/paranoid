@@ -24,44 +24,42 @@ void PreprocessorUncommenter::parse(const Line *line)
 	ll_parser(&wline, 0, line->getText().size());
 }
 
-void PreprocessorUncommenter::selectFirst(LineUncommented *line, unsigned offset, 
-					  const action_type &actions)
-{
-	BOOST_ASSERT(!actions.empty());
-	auto nearest = min_element(actions, 
-		[&line, &offset](const action_type::value_type &a, 
-				 const action_type::value_type &b) -> bool 
-		{
-			const auto ap = line->getText().find(a.first, offset);
-			const auto bp = line->getText().find(b.first, offset);
-			return ap < bp; 
-		});
-	
-	const auto pos = line->getText().find(nearest->first, offset);
-	if (pos != string::npos) {
-		nearest->second(line, offset + pos + nearest->first.size());
-	}
-}
-
 void PreprocessorUncommenter::scanText(LineUncommented *line, unsigned offset)
 {
-	action_type actions = {
-		{"\\\"", bind(&PreprocessorUncommenter::scanText, this, _1, _2) },
-		{"\\/", bind(&PreprocessorUncommenter::scanText, this, _1, _2) },
-		{"\"", bind(&PreprocessorUncommenter::scanString, this, _1, _2) },
-		{"//", bind(&PreprocessorUncommenter::scanCppComment, this, _1, _2) },
-		{"/*", bind(&PreprocessorUncommenter::scanCComment, this, _1, _2) }
-	};
-	selectFirst(line, offset, actions);
+	const auto pos = line->getText().find_first_of("/\"", offset);
+	if (pos != string::npos) {
+		if (line->getText()[pos] == '"') {
+			scanString(line, pos + 1);
+		} else {
+			scanComment(line, pos + 1);
+		}
+	}
 }
 
 void PreprocessorUncommenter::scanString(LineUncommented *line, unsigned offset)
 {
-	action_type actions = {
-		{"\\\"", bind(&PreprocessorUncommenter::scanString, this, _1, _2) },
-		{"\"", bind(&PreprocessorUncommenter::scanText, this, _1, _2) },
-	};
-	selectFirst(line, offset, actions);
+	const auto pos = line->getText().find_first_of("\\\"", offset);
+	if (pos == string::npos) {
+		throw logic_error("незакрытая строка");
+	}
+	
+	if (line->getText()[pos] == '\\') {
+		scanString(line, offset + 2);
+	} else {
+		scanText(line, pos + 1);
+	}
+}
+
+void PreprocessorUncommenter::scanComment(LineUncommented *line, unsigned offset)
+{
+	const auto pos = line->getText().find_first_of("/*", offset);
+	if (pos == string::npos) {
+		scanText(line, pos + 1);
+	} else if (line->getText()[pos] == '/') {
+		scanCppComment(line, pos + 1);
+	} else {
+		scanCComment(line, pos + 1);
+	}
 }
 
 void PreprocessorUncommenter::scanCppComment(LineUncommented *line, unsigned offset)
@@ -71,11 +69,11 @@ void PreprocessorUncommenter::scanCppComment(LineUncommented *line, unsigned off
 
 void PreprocessorUncommenter::scanCComment(LineUncommented *line, unsigned offset)
 {
-	auto end_pos = line->getText().find("*/", offset);
-	if (end_pos == string::npos) {
+	auto pos = line->getText().find("*/", offset);
+	if (pos == string::npos) {
 		line->hide(offset - 2, string::npos);
 	} else {
-		line->hide(offset - 2, end_pos + 2);
-		scanText(line, end_pos + 2);
+		line->hide(offset - 2, pos + 2);
+		scanText(line, pos + 2);
 	}
 }

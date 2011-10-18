@@ -32,6 +32,7 @@ private:
 	
 	void scanText(LineUncommented *line, unsigned offset);
 	void scanString(LineUncommented *line, unsigned offset);
+	void scanComment(LineUncommented *line, unsigned offset);
 	void scanCppComment(LineUncommented *line, unsigned offset);
 	void scanCComment(LineUncommented *line, unsigned offset);
 	
