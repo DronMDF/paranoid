@@ -41,4 +41,4 @@ clean:
 	rm -rf .dep
 	rm -f paranoid
 
--include ${addprefix $(OBJDIR)/, ${SOURCES:.cpp=.dep}}
+-include ${addprefix ${DEPDIR}/, ${SOURCES:.cpp=.dep}}

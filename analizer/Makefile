@@ -19,4 +19,4 @@ ${DEPDIR}:
 ${OBJDIR}:
 	mkdir -p ${OBJDIR}
 
--include ${addprefix $(OBJDIR)/, ${SOURCES:.cpp=.dep}}
+-include ${addprefix ${DEPDIR}/, ${SOURCES:.cpp=.dep}}
