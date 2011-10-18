@@ -1,7 +1,9 @@
- 
+
+OBJDIR=../.obj/analizer.test
+DEPDIR=../.dep/analizer.test
 
 SOURCES=${wildcard *.cpp}
-OBJECTS=${SOURCES:.cpp=.o}
+OBJECTS=${addprefix ${OBJDIR}/, ${SOURCES:.cpp=.o}}
 SUT_OBJECTS=../analizer/analizer.o ../CommandLine.o
 IFLAGS = -I.. -I../analizer
 LFLAGS = -lboost_test_exec_monitor-mt -lboost_regex-mt
@@ -14,7 +16,13 @@ check: runner
 runner: ${OBJECTS} ${SUT_OBJECTS}
 	${CXX} -pthread -o $@ ${OBJECTS} ${SUT_OBJECTS} ${LFLAGS}
 
-%.o : %.cpp
-	${CXX} -MMD -MF ${<:.cpp=.dep} ${CXXFLAGS} ${IFLAGS} -c -o $@ $<
+${OBJDIR}/%.o : %.cpp | ${DEPDIR} ${OBJDIR}
+	${CXX} -MMD -MF ${DEPDIR}/${<:.cpp=.dep} ${CXXFLAGS} ${IFLAGS} -c -o $@ $<
 
--include ${SOURCES:.cpp=.dep}
+${DEPDIR}:
+	mkdir -p ${DEPDIR}
+
+${OBJDIR}:
+	mkdir -p ${OBJDIR}
+
+-include ${addprefix $(OBJDIR)/, ${SOURCES:.cpp=.dep}}
