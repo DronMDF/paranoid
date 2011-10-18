@@ -2,8 +2,10 @@
 #include <sstream>
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/range/algorithm/transform.hpp>
 #include <boost/test/unit_test.hpp>
 #include <File.h>
+#include "Assertions.h"
 
 using namespace std;
 using namespace boost;
@@ -15,20 +17,11 @@ BOOST_AUTO_TEST_CASE(Construction1)
 	istringstream in("line1\nline2\nline3\n");
 	const File file(in);
 	
-	auto it = file.begin();
-	BOOST_REQUIRE_EQUAL(it->getNumber(), 1U);
-	BOOST_REQUIRE_EQUAL(it->getText(), "line1");
-	++it;
-	BOOST_REQUIRE_EQUAL(it->getNumber(), 2U);
-	BOOST_REQUIRE_EQUAL(it->getText(), "line2");
-	++it;
-	BOOST_REQUIRE_EQUAL(it->getNumber(), 3U);
-	BOOST_REQUIRE_EQUAL(it->getText(), "line3");
-	++it;
-	BOOST_REQUIRE_EQUAL(it->getNumber(), 4U);
-	BOOST_REQUIRE(it->getText().empty());
-	++it;
-	BOOST_REQUIRE(it == file.end());
+	list<string> lines;
+	transform(file, back_inserter(lines), [](const Line &l){ return l.getText(); });
+
+	list<string> expected = { "line1", "line2", "line3", "" };
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(lines, expected);
 }
 
 BOOST_AUTO_TEST_CASE(Foreach)
@@ -38,7 +31,6 @@ BOOST_AUTO_TEST_CASE(Foreach)
 	unsigned number = 1;
 	// for(const Line &line : file) {	// range-based for появится в gcc-4.6
 	BOOST_FOREACH(const Line &line, file) {
-		BOOST_REQUIRE_EQUAL(line.getNumber(), number);
 		if (number < 4) {
 			BOOST_REQUIRE_EQUAL(line.getText(), "line" + lexical_cast<string>(number));
 		} else {

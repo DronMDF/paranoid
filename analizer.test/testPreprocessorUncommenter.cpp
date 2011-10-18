@@ -4,7 +4,7 @@
 #include <boost/bind.hpp>
 #include <boost/range/algorithm/transform.hpp>
 #include <boost/test/unit_test.hpp>
-#include <Line.h>
+#include <FileLine.h>
 #include <PreprocessorUncommenter.h>
 #include <Token.h>
 #include "Assertions.h"
@@ -37,7 +37,7 @@ struct fixtureLowLevelParser {
 
 BOOST_FIXTURE_TEST_CASE(testNoComment, fixtureLowLevelParser)
 {
-	Line line(0, "1234567890", 0);
+	FileLine line(0, "1234567890", 0);
 	parser.parse(&line);
 	
 	list<string> expected = { "1234567890" };
@@ -46,7 +46,7 @@ BOOST_FIXTURE_TEST_CASE(testNoComment, fixtureLowLevelParser)
 
 BOOST_FIXTURE_TEST_CASE(testSimpleComment, fixtureLowLevelParser)
 {
-	Line line(0, "12345//67890", 0);
+	FileLine line(0, "12345//67890", 0);
 	parser.parse(&line);
 	
 	list<string> expected = { "12345" };
@@ -55,7 +55,7 @@ BOOST_FIXTURE_TEST_CASE(testSimpleComment, fixtureLowLevelParser)
 
 BOOST_FIXTURE_TEST_CASE(testComentInQuote, fixtureLowLevelParser)
 {
-	Line line(0, "1234\"5//6\"7890", 0);
+	FileLine line(0, "1234\"5//6\"7890", 0);
 	parser.parse(&line);
 	
 	list<string> expected = { "1234\"5//6\"7890" };
@@ -64,7 +64,7 @@ BOOST_FIXTURE_TEST_CASE(testComentInQuote, fixtureLowLevelParser)
 
 BOOST_FIXTURE_TEST_CASE(testParenthesisOnelineComent, fixtureLowLevelParser)
 {
-	Line line(0, "1234/*56*/7890", 0);
+	FileLine line(0, "1234/*56*/7890", 0);
 	parser.parse(&line);
 	
 	list<string> expected = { "1234", "7890" };
@@ -73,7 +73,7 @@ BOOST_FIXTURE_TEST_CASE(testParenthesisOnelineComent, fixtureLowLevelParser)
 
 BOOST_FIXTURE_TEST_CASE(testParenthesisOnelineComentTwice, fixtureLowLevelParser)
 {
-	Line line(0, "1234/*56*/78/*9*/0", 0);
+	FileLine line(0, "1234/*56*/78/*9*/0", 0);
 	parser.parse(&line);
 	
 	list<string> expected = { "1234", "78", "0" };

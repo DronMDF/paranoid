@@ -21,10 +21,7 @@ public:
 	virtual const Line *getPointer() const {
 		return line;
 	}
-	virtual unsigned getNumber() const {
-		return line->getNumber();
-	}
-	
+
 	void hide(unsigned spos, unsigned epos);
 	virtual string getText() const;
 	
