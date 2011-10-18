@@ -4,9 +4,9 @@ DEPDIR=../.dep/analizer.test
 
 SOURCES=${wildcard *.cpp}
 OBJECTS=${addprefix ${OBJDIR}/, ${SOURCES:.cpp=.o}}
-SUT_OBJECTS=../analizer/analizer.o ../CommandLine.o
+SUT_OBJECTS=../paranoid.o ../analizer/analizer.o
 IFLAGS = -I.. -I../analizer
-LFLAGS = -lboost_test_exec_monitor-mt -lboost_regex-mt
+LFLAGS = -lboost_test_exec_monitor-mt -lboost_regex-mt -lboost_filesystem-mt
 
 all: runner
 

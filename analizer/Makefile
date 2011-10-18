@@ -1,6 +1,6 @@
 
-OBJDIR=.obj/analizer
-DEPDIR=.dep/analizer
+OBJDIR=../.obj/analizer
+DEPDIR=../.dep/analizer
 
 SOURCES=${wildcard *.cpp}
 OBJECTS=${addprefix ${OBJDIR}/, ${SOURCES:.cpp=.o}}
