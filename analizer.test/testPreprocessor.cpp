@@ -61,7 +61,8 @@ BOOST_FIXTURE_TEST_CASE(testAddTokenMultipleSpaces, TestPreprocessor)
 // 	transform(pp, back_inserter(pp_tok), [](const Token &t){ return t.getText(); });
 // 	
 // 	// TODO: Эта функция переработана в соответствии с новой концепцией
-// 	list<const char *> expected = { "int", " ", "main", "(", ")", ";", " " };
+// 	//list<const char *> expected = { "int", " ", "main", "(", ")", ";", " " };
+// 	list<const char *> expected = { "int", " ", "main();" };
 // 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(pp_tok, expected);
 // }
 

@@ -7,7 +7,7 @@
 #include <boost/regex.hpp>
 #include "Line.h"
 #include "LineUncommented.h"
-#include "PreprocessorUncommenter.h"
+#include "PPUncommenter.h"
 
 using namespace std;
 using namespace boost;
