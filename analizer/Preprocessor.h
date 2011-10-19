@@ -17,6 +17,11 @@ public:
 	const_iterator begin() const;
 	const_iterator end() const;
 	
+protected:
+	Preprocessor();
+	
+	void addToken(Token token);
+	
 private:
 	std::list<Token> tokens;
 	

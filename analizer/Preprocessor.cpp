@@ -12,6 +12,11 @@
 using namespace std;
 using namespace boost;
 
+Preprocessor::Preprocessor()
+	: tokens()
+{
+}
+
 Preprocessor::Preprocessor(const File &file)
 	: tokens()
 {
@@ -32,6 +37,17 @@ Preprocessor::const_iterator Preprocessor::begin() const
 Preprocessor::const_iterator Preprocessor::end() const
 {
 	return tokens.end();
+}
+
+void Preprocessor::addToken(Token token)
+{
+	if (token.getText() == " ") {
+		if (tokens.empty() || tokens.back().getText() == " ") {
+			return;
+		}
+	}
+	
+	tokens.push_back(token);
 }
 
 void Preprocessor::parseLine(const Line &line)
