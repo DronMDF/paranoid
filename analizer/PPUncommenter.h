@@ -4,26 +4,22 @@
 #include <map>
 #include <string>
 #include <boost/function.hpp>
+#include "PPTokenizer.h"
 
-// TODO: Интерфейс - PPTokenizer
-//	PPTokenizerImpl - Основная реализация, делит чистый си поток на токены
 //	PPProcessor - декоратор для токенайзера - обрабатывает директивы препроцессора
-//	PPUncommenter - вырезает все комментарии.
-
-// Токенайзер с декораторами комбинируется в препроцессоре и прокачивают 
-//	чере себя поток в виде последовательности абстрактных строк (Line)
 
 class Line;
 class LineUncommented;
 
-class PPUncommenter {
+class PPUncommenter : public PPTokenizer {
 public:
-	typedef boost::function<void(const Line *, unsigned, unsigned)> low_parser_call;
-	
-	PPUncommenter(const low_parser_call &parser);
+	PPUncommenter(PPTokenizer *tokenizer);
 	void parse(const Line *line);
 	
 private:
+	PPUncommenter(const PPUncommenter &);
+	PPUncommenter &operator =(const PPUncommenter &);
+	
 	typedef std::map<std::string, boost::function<void(LineUncommented *, unsigned)>> action_type;
 	
 	void selectFirst(LineUncommented *line, unsigned offset, const action_type &actions);
@@ -34,5 +30,5 @@ private:
 	void scanCppComment(LineUncommented *line, unsigned offset);
 	void scanCComment(LineUncommented *line, unsigned offset);
 	
-	low_parser_call ll_parser;
+	PPTokenizer *tokenizer;
 };

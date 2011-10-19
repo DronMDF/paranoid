@@ -12,8 +12,8 @@
 using namespace std;
 using namespace boost;
 
-PPUncommenter::PPUncommenter(const low_parser_call &parser)
-	: ll_parser(parser)
+PPUncommenter::PPUncommenter(PPTokenizer *tokenizer)
+	: tokenizer(tokenizer)
 {
 }
 
@@ -21,7 +21,7 @@ void PPUncommenter::parse(const Line *line)
 {
 	LineUncommented wline(line);
 	scanText(&wline, 0);
-	ll_parser(&wline, 0, line->getText().size());
+	tokenizer->parse(&wline);
 }
 
 void PPUncommenter::scanText(LineUncommented *line, unsigned offset)
