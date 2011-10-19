@@ -12,10 +12,10 @@
 using namespace std;
 using namespace boost;
 
-BOOST_AUTO_TEST_SUITE(suitePreprocessorUncommenter)
+BOOST_AUTO_TEST_SUITE(suitePPUncommenter)
 
 struct fixtureLowLevelParser {
-	PreprocessorUncommenter parser;
+	PPUncommenter parser;
 	list<string> values;
 	
 	fixtureLowLevelParser() 

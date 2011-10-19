@@ -16,11 +16,11 @@
 class Line;
 class LineUncommented;
 
-class PreprocessorUncommenter {
+class PPUncommenter {
 public:
 	typedef boost::function<void(const Line *, unsigned, unsigned)> low_parser_call;
 	
-	PreprocessorUncommenter(const low_parser_call &parser);
+	PPUncommenter(const low_parser_call &parser);
 	void parse(const Line *line);
 	
 private:

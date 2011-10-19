@@ -12,19 +12,19 @@
 using namespace std;
 using namespace boost;
 
-PreprocessorUncommenter::PreprocessorUncommenter(const low_parser_call &parser)
+PPUncommenter::PPUncommenter(const low_parser_call &parser)
 	: ll_parser(parser)
 {
 }
 
-void PreprocessorUncommenter::parse(const Line *line)
+void PPUncommenter::parse(const Line *line)
 {
 	LineUncommented wline(line);
 	scanText(&wline, 0);
 	ll_parser(&wline, 0, line->getText().size());
 }
 
-void PreprocessorUncommenter::scanText(LineUncommented *line, unsigned offset)
+void PPUncommenter::scanText(LineUncommented *line, unsigned offset)
 {
 	const auto pos = line->getText().find_first_of("/\"", offset);
 	if (pos != string::npos) {
@@ -36,7 +36,7 @@ void PreprocessorUncommenter::scanText(LineUncommented *line, unsigned offset)
 	}
 }
 
-void PreprocessorUncommenter::scanString(LineUncommented *line, unsigned offset)
+void PPUncommenter::scanString(LineUncommented *line, unsigned offset)
 {
 	const auto pos = line->getText().find_first_of("\\\"", offset);
 	if (pos == string::npos) {
@@ -50,7 +50,7 @@ void PreprocessorUncommenter::scanString(LineUncommented *line, unsigned offset)
 	}
 }
 
-void PreprocessorUncommenter::scanComment(LineUncommented *line, unsigned offset)
+void PPUncommenter::scanComment(LineUncommented *line, unsigned offset)
 {
 	const auto pos = line->getText().find_first_of("/*", offset);
 	if (pos == string::npos) {
@@ -62,12 +62,12 @@ void PreprocessorUncommenter::scanComment(LineUncommented *line, unsigned offset
 	}
 }
 
-void PreprocessorUncommenter::scanCppComment(LineUncommented *line, unsigned offset)
+void PPUncommenter::scanCppComment(LineUncommented *line, unsigned offset)
 {
 	line->hide(offset - 2, string::npos);
 }
 
-void PreprocessorUncommenter::scanCComment(LineUncommented *line, unsigned offset)
+void PPUncommenter::scanCComment(LineUncommented *line, unsigned offset)
 {
 	auto pos = line->getText().find("*/", offset);
 	if (pos == string::npos) {
