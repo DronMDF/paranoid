@@ -19,7 +19,12 @@ struct fixtureLowLevelParser {
 	list<string> values;
 	
 	fixtureLowLevelParser() 
-		: parser(bind(&fixtureLowLevelParser::parse, this, _1, _2, _3))
+		: parser(bind(&fixtureLowLevelParser::parse, this, _1, _2, _3)),
+		   values()
+	{
+	}
+	
+	virtual ~fixtureLowLevelParser()
 	{
 	}
 	
