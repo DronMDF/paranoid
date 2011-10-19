@@ -5,6 +5,7 @@
 #include <boost/foreach.hpp>
 #include "Preprocessor.h"
 #include "PPSplitter.h"
+#include "PPUncommenter.h"
 #include "File.h"
 #include "Line.h"
 
@@ -20,12 +21,17 @@ Preprocessor::Preprocessor(const File &file)
 	: tokens()
 {
 	PPSplitter splitter(bind(&Preprocessor::addToken, this, _1));
+	PPUncommenter uncommenter(&splitter);
 	
 	BOOST_FOREACH(const Line &line, file) {
-		if (!line.getText().empty()) {
+		if (!tokens.empty() && tokens.back().getText() != " ") {
 			addToken(Token());
 		}
-		splitter.parse(&line);
+		uncommenter.parse(&line);
+	}
+	
+	if (!tokens.empty() && tokens.back().getText() == " ") {
+		tokens.pop_back();
 	}
 }
 

@@ -51,19 +51,19 @@ BOOST_FIXTURE_TEST_CASE(testAddTokenMultipleSpaces, TestPreprocessor)
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(values, expected);
 }
 
-// BOOST_AUTO_TEST_CASE(testOneLineComment)
-// {
-// 	istringstream in("int main(); // comment\n");
-// 	const File file(in);
-// 	const Preprocessor pp(file);
-// 	
-// 	list<string> pp_tok;
-// 	transform(pp, back_inserter(pp_tok), [](const Token &t){ return t.getText(); });
-// 	
-// 	// TODO: Эта функция переработана в соответствии с новой концепцией
-// 	//list<const char *> expected = { "int", " ", "main", "(", ")", ";", " " };
-// 	list<const char *> expected = { "int", " ", "main();" };
-// 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(pp_tok, expected);
-// }
+BOOST_AUTO_TEST_CASE(testOneLineComment)
+{
+	istringstream in("int main(); // comment\n");
+	const File file(in);
+	const Preprocessor pp(file);
+	
+	list<string> pp_tok;
+	transform(pp, back_inserter(pp_tok), [](const Token &t){ return t.getText(); });
+	
+	// TODO: Эта функция переработана в соответствии с новой концепцией
+	//list<const char *> expected = { "int", " ", "main", "(", ")", ";", " " };
+	list<const char *> expected = { "int", " ", "main();" };
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(pp_tok, expected);
+}
 
 BOOST_AUTO_TEST_SUITE_END()
