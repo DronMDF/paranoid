@@ -1,11 +1,10 @@
 
 #include <iostream>
 #include <vector>
-#include <boost/algorithm/string/classification.hpp>
-#include <boost/algorithm/string/constants.hpp>
-#include <boost/algorithm/string/split.hpp>
+#include <boost/bind.hpp>
 #include <boost/foreach.hpp>
 #include "Preprocessor.h"
+#include "PPSplitter.h"
 #include "File.h"
 #include "Line.h"
 
@@ -20,8 +19,13 @@ Preprocessor::Preprocessor()
 Preprocessor::Preprocessor(const File &file)
 	: tokens()
 {
+	PPSplitter splitter(bind(&Preprocessor::addToken, this, _1));
+	
 	BOOST_FOREACH(const Line &line, file) {
-		parseLine(line);
+		if (!line.getText().empty()) {
+			addToken(Token());
+		}
+		splitter.parse(&line);
 	}
 }
 
@@ -48,40 +52,4 @@ void Preprocessor::addToken(Token token)
 	}
 	
 	tokens.push_back(token);
-}
-
-void Preprocessor::parseLine(const Line &line)
-{
-	string text = line.getText();
-	
-	// Вырезаем однострочный комментарий
-	const size_t comment = text.find("//");
-	if (comment != string::npos) {
-		text.erase(comment);
-	}
-	
-	if (!text.empty() && !tokens.empty() && tokens.back().getText() != " ") {
-		tokens.push_back(Token());
-	}
-	
-	for (size_t eword = 0;;) {
-		size_t sword = text.find_first_not_of(" \t", eword);
-		if (sword == string::npos) {
-			break;
-		}
-		
-		if (sword > eword && !tokens.empty() && tokens.back().getText() != " ") {
-			tokens.push_back(Token());
-		}
-		
-		eword = text.find_first_of(" \t", sword);
-		if (eword == string::npos) {
-			if (text.size() > sword) {
-				tokens.push_back(Token(&line, sword, text.size() - sword));
-			}
-			break;
-		}
-			
-		tokens.push_back(Token(&line, sword, eword - sword));
-	}
 }

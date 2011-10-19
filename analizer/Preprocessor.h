@@ -24,6 +24,4 @@ protected:
 	
 private:
 	std::list<Token> tokens;
-	
-	virtual void parseLine(const Line &line);
 };
