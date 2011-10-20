@@ -1,4 +1,5 @@
 
+#include <iostream>
 #include <string>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/bind.hpp>
@@ -54,7 +55,7 @@ void PPUncommenter::scanComment(LineUncommented *line, unsigned offset)
 {
 	const auto pos = line->getText().find_first_of("/*", offset);
 	if (pos == string::npos) {
-		scanText(line, pos + 1);
+		scanText(line, offset);
 	} else if (line->getText()[pos] == '/') {
 		scanCppComment(line, pos + 1);
 	} else {
