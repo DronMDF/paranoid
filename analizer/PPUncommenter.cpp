@@ -1,12 +1,6 @@
 
-#include <iostream>
 #include <string>
-#include <boost/algorithm/string/predicate.hpp>
-#include <boost/bind.hpp>
-#include <boost/foreach.hpp>
-#include <boost/range/algorithm/min_element.hpp>
-#include <boost/regex.hpp>
-#include "Line.h"
+#include <boost/algorithm/string/trim.hpp>
 #include "LineUncommented.h"
 #include "PPUncommenter.h"
 
@@ -14,15 +8,22 @@ using namespace std;
 using namespace boost;
 
 PPUncommenter::PPUncommenter(PPTokenizer *tokenizer)
-	: tokenizer(tokenizer)
+	: tokenizer(tokenizer), in_comment(false)
 {
 }
 
 void PPUncommenter::parse(const Line *line)
 {
 	LineUncommented wline(line);
-	scanText(&wline, 0);
-	tokenizer->parse(&wline);
+	if (in_comment) {
+		scanCComment(&wline, 0);
+	} else {
+		scanText(&wline, 0);
+	}
+	
+	if (!trim_right_copy(wline.getText()).empty()) {
+		tokenizer->parse(&wline);
+	}
 }
 
 void PPUncommenter::scanText(LineUncommented *line, unsigned offset)
@@ -45,7 +46,7 @@ void PPUncommenter::scanString(LineUncommented *line, unsigned offset)
 	}
 	
 	if (line->getText()[pos] == '\\') {
-		scanString(line, offset + 2);
+		scanString(line, pos + 1);
 	} else {
 		scanText(line, pos + 1);
 	}
@@ -70,11 +71,14 @@ void PPUncommenter::scanCppComment(LineUncommented *line, unsigned offset)
 
 void PPUncommenter::scanCComment(LineUncommented *line, unsigned offset)
 {
+	auto sp = (offset >= 2) ? (offset - 2) : 0;
 	auto pos = line->getText().find("*/", offset);
 	if (pos == string::npos) {
-		line->hide(offset - 2, string::npos);
+		in_comment = true;
+		line->hide(sp, string::npos);
 	} else {
-		line->hide(offset - 2, pos + 2);
+		line->hide(sp, pos + 2);
+		in_comment = false;
 		scanText(line, pos + 2);
 	}
 }

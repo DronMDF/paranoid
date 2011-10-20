@@ -31,4 +31,5 @@ private:
 	void scanCComment(LineUncommented *line, unsigned offset);
 	
 	PPTokenizer *tokenizer;
+	bool in_comment;
 };
