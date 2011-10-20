@@ -1,6 +1,7 @@
 
 #include <string>
 #include <boost/algorithm/string/trim.hpp>
+#include <boost/format.hpp>
 #include "LineUncommented.h"
 #include "PPUncommenter.h"
 
@@ -14,6 +15,10 @@ PPUncommenter::PPUncommenter(PPTokenizer *tokenizer)
 
 void PPUncommenter::parse(const Line *line)
 {
+	if (line->getText().empty()) {
+		return;
+	}
+	
 	LineUncommented wline(line);
 	if (in_comment) {
 		scanCComment(&wline, 0);
@@ -42,7 +47,9 @@ void PPUncommenter::scanString(LineUncommented *line, unsigned offset)
 {
 	const auto pos = line->getText().find_first_of("\\\"", offset);
 	if (pos == string::npos) {
-		throw logic_error("незакрытая строка");
+		// TODO: Need to get file name and line number.
+		cout << format("'%1%' [%2%]\n\tOpen string") % line->getText() % offset << endl;
+		throw runtime_error("Open string");
 	}
 	
 	if (line->getText()[pos] == '\\') {

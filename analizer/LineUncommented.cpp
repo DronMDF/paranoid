@@ -1,9 +1,11 @@
 
-#include <boost/assert.hpp>
+#include <stdexcept>
 #include <boost/foreach.hpp>
+#include <boost/format.hpp>
 #include "LineUncommented.h"
 
 using namespace std;
+using namespace boost;
 
 LineUncommented::LineUncommented(const Line *line)
 	: line(line), holes()
@@ -17,7 +19,12 @@ const Line *LineUncommented::getPointer() const
 
 void LineUncommented::hide(size_type spos, size_type epos)
 {
-	BOOST_ASSERT(spos < line->getText().size());
+	if (spos >= line->getText().size()) {
+		// TODO: Need to get file name and line number.
+		cout << format("'%1%' [%2% - %3%]\n\tInvalid comment") 
+			% line->getText() % spos % epos << endl;
+		throw runtime_error("Invalid comment");
+	}
 	holes.push_back(make_pair(spos, epos));
 }
 

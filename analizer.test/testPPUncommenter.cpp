@@ -85,12 +85,33 @@ BOOST_FIXTURE_TEST_CASE(testTwoLineComment, fixtureLowLevelParser)
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(values, expected);
 }
 
+BOOST_FIXTURE_TEST_CASE(testEmptyLineInComment, fixtureLowLevelParser)
+{
+	const FileLine line1(0, "1234/*567890", 0);
+	parser.parse(&line1);
+	const FileLine line2(0, "", 0);
+	parser.parse(&line2);
+	const FileLine line3(0, "1234*/567890", 0);
+	parser.parse(&line3);
+
+	list<string> expected = { "1234        ", "      567890"};
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(values, expected);
+}
+
 BOOST_FIXTURE_TEST_CASE(testSimpleSlash, fixtureLowLevelParser)
 {
 	const FileLine line(0, "1234/567890", 0);
 	parser.parse(&line);
 
 	BOOST_REQUIRE_EQUAL(values.front(), "1234/567890");
+}
+
+BOOST_FIXTURE_TEST_CASE(testWrongString, fixtureLowLevelParser)
+{
+	const string text = "const char *rl = \" \\t\\n\\\"\\\\'`@$><=;|&{(\";";
+	const FileLine line(0, text, 0);
+	parser.parse(&line);
+	BOOST_REQUIRE_EQUAL(values.front(), text);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

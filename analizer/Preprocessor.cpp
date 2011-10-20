@@ -3,6 +3,7 @@
 #include <vector>
 #include <boost/bind.hpp>
 #include <boost/foreach.hpp>
+#include <boost/format.hpp>
 #include "Preprocessor.h"
 #include "PPSplitter.h"
 #include "PPUncommenter.h"
@@ -23,11 +24,17 @@ Preprocessor::Preprocessor(const File &file)
 	PPSplitter splitter(bind(&Preprocessor::addToken, this, _1));
 	PPUncommenter uncommenter(&splitter);
 	
-	BOOST_FOREACH(const Line &line, file) {
+	BOOST_FOREACH(const FileLine &line, file) {
 		if (!tokens.empty() && tokens.back().getText() != " ") {
 			addToken(Token());
 		}
-		uncommenter.parse(&line);
+		
+		try {
+			uncommenter.parse(&line);
+		} catch (const std::exception &e) {
+			cout << format("in file %1%:%2%") % "unknown" % line.getNumber() << endl;
+			throw;
+		}
 	}
 	
 	if (!tokens.empty() && tokens.back().getText() == " ") {
