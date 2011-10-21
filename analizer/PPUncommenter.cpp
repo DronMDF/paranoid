@@ -53,7 +53,7 @@ void PPUncommenter::scanString(LineUncommented *line, unsigned offset)
 	}
 	
 	if (line->getText()[pos] == '\\') {
-		scanString(line, pos + 1);
+		scanString(line, pos + 2);
 	} else {
 		scanText(line, pos + 1);
 	}
