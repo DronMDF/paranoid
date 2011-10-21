@@ -113,4 +113,12 @@ BOOST_FIXTURE_TEST_CASE(testWrongString, fixtureLowLevelParser)
 	BOOST_REQUIRE_EQUAL(values.front(), text);
 }
 
+BOOST_FIXTURE_TEST_CASE(testMonoQuote, fixtureLowLevelParser)
+{
+	const string text = "else if (quote_char == '\"')";
+	const shared_ptr<const Line> line(new FileLine(0, text, 0));
+	parser.parse(line);
+	BOOST_REQUIRE_EQUAL(values.front(), text);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

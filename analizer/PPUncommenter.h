@@ -20,6 +20,7 @@ private:
 	
 	void scanText(const std::shared_ptr<LineUncommented> &line, unsigned offset);
 	void scanString(const std::shared_ptr<LineUncommented> &line, unsigned offset);
+	void scanChar(const std::shared_ptr<LineUncommented> &line, unsigned offset);
 	void scanComment(const std::shared_ptr<LineUncommented> &line, unsigned offset);
 	void scanCppComment(const std::shared_ptr<LineUncommented> &line, unsigned offset);
 	void scanCComment(const std::shared_ptr<LineUncommented> &line, unsigned offset);

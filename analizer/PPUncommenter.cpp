@@ -35,10 +35,12 @@ void PPUncommenter::parse(const std::shared_ptr<const Line> &line)
 
 void PPUncommenter::scanText(const shared_ptr<LineUncommented> &line, unsigned offset)
 {
-	const auto pos = line->getText().find_first_of("/\"", offset);
+	const auto pos = line->getText().find_first_of("/\"'", offset);
 	if (pos != string::npos) {
 		if (line->getText()[pos] == '"') {
 			scanString(line, pos + 1);
+		} else if (line->getText()[pos] == '\'') {
+			scanChar(line, pos + 1);
 		} else {
 			scanComment(line, pos + 1);
 		}
@@ -56,6 +58,22 @@ void PPUncommenter::scanString(const shared_ptr<LineUncommented> &line, unsigned
 	
 	if (line->getText()[pos] == '\\') {
 		scanString(line, pos + 2);
+	} else {
+		scanText(line, pos + 1);
+	}
+}
+
+void PPUncommenter::scanChar(const shared_ptr<LineUncommented> &line, unsigned offset)
+{
+	const auto pos = line->getText().find_first_of("\\'", offset);
+	if (pos == string::npos) {
+		// TODO: Need to get file name and line number.
+		cout << format("'%1%' [%2%]\n\tOpen char") % line->getText() % offset << endl;
+		throw runtime_error("Open string");
+	}
+	
+	if (line->getText()[pos] == '\\') {
+		scanChar(line, pos + 2);
 	} else {
 		scanText(line, pos + 1);
 	}
