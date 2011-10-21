@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include "File.h"
+#include "FileLine.h"
 
 using namespace std;
 
@@ -10,7 +11,9 @@ File::File(istream &in)
 	for (unsigned i = 1; !in.eof(); i++) {
 		string line;
 		getline(in, line);
-		lines.push_back(FileLine(i, line, this));
+		if (!line.empty()) {
+			lines.push_back(shared_ptr<Line>(new FileLine(i, line, this)));
+		}
 	}
 }
 

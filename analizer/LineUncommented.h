@@ -6,7 +6,7 @@ class LineUncommented : public Line {
 public:
 	typedef std::string::size_type size_type;
 	
-	explicit LineUncommented(const Line *line);
+	explicit LineUncommented(const std::shared_ptr<const Line> &line);
 
 	virtual const Line *getPointer() const;
 	virtual std::string getText() const;
@@ -17,6 +17,6 @@ private:
 	LineUncommented(const LineUncommented &);
 	LineUncommented &operator = (const LineUncommented &);
 	
-	const Line *line;
+	const std::shared_ptr<const Line> line;
 	std::list<std::pair<size_type, size_type>> holes;
 };

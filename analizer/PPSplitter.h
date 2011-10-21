@@ -9,7 +9,7 @@ class PPSplitter : public PPTokenizer {
 public:
 	PPSplitter(std::function<void (Token)> add_token);
 	
-	virtual void parse(const Line *line);
+	virtual void parse(const std::shared_ptr<const Line> &line);
 	
 private:
 	std::function<void (Token)> add_token;

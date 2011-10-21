@@ -3,11 +3,12 @@
 #include <boost/range/algorithm/transform.hpp>
 #include <boost/test/unit_test.hpp>
 #include <File.h>
+#include <FileLine.h>
 #include <Preprocessor.h>
 #include "Assertions.h"
 
 using namespace std;
-using namespace boost;
+using boost::transform;
 
 BOOST_AUTO_TEST_SUITE(suitePreprocessor)
 

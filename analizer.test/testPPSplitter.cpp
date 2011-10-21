@@ -29,8 +29,8 @@ struct fixtureTokenStorage {
 
 BOOST_FIXTURE_TEST_CASE(testMonolith, fixtureTokenStorage)
 {
-	FileLine line(0, "solid", 0);
-	splitter.parse(&line);
+	shared_ptr<const Line> line(new FileLine(0, "solid", 0));
+	splitter.parse(line);
 	
 	list<string> expected = { "solid" };
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(values, expected);
@@ -38,8 +38,8 @@ BOOST_FIXTURE_TEST_CASE(testMonolith, fixtureTokenStorage)
 
 BOOST_FIXTURE_TEST_CASE(testTwoWord, fixtureTokenStorage)
 {
-	FileLine line(0, "two word", 0);
-	splitter.parse(&line);
+	shared_ptr<const Line> line(new FileLine(0, "two word", 0));
+	splitter.parse(line);
 	
 	list<string> expected = { "two", " ", "word" };
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(values, expected);

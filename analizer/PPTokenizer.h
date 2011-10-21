@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include <memory>
+
 class Line;
 
 /// Интерфейс обработчика строк. Основное предназначение - разделение строки на 
@@ -8,6 +10,5 @@ class Line;
 class PPTokenizer {
 public:
 	virtual ~PPTokenizer() {}
-	virtual void parse(const Line *line) = 0;
-	
+	virtual void parse(const std::shared_ptr<const Line> &line) = 0;
 };

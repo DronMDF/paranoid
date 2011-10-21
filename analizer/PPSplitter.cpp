@@ -11,7 +11,7 @@ PPSplitter::PPSplitter(std::function<void (Token)> add_token)
 {
 }
 	
-void PPSplitter::parse(const Line *line)
+void PPSplitter::parse(const std::shared_ptr<const Line> &line)
 {
 	string text = line->getText();
 	

@@ -3,11 +3,14 @@
 
 #include <iosfwd>
 #include <list>
-#include "FileLine.h"
+#include <memory>
+
+class Line;
 
 class File {
 public:
-	typedef std::list<FileLine>::const_iterator const_iterator;
+	typedef std::list<std::shared_ptr<const Line>> lines_type;
+	typedef lines_type::const_iterator const_iterator;
 
 	explicit File(std::istream &in);
 
@@ -15,5 +18,5 @@ public:
 	const_iterator end() const;
 	
 private:
-	std::list<FileLine> lines;
+	lines_type lines;
 };

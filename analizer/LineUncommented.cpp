@@ -5,16 +5,16 @@
 #include "LineUncommented.h"
 
 using namespace std;
-using namespace boost;
+using boost::format;
 
-LineUncommented::LineUncommented(const Line *line)
+LineUncommented::LineUncommented(const shared_ptr<const Line> &line)
 	: line(line), holes()
 {
 }
 
 const Line *LineUncommented::getPointer() const 
 {
-	return line;
+	return line.get();
 }
 
 void LineUncommented::hide(size_type spos, size_type epos)

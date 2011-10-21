@@ -10,7 +10,6 @@
 #include "Assertions.h"
 
 using namespace std;
-using namespace boost;
 
 BOOST_AUTO_TEST_SUITE(suitePPUncommenter)
 
@@ -21,65 +20,65 @@ struct fixtureLowLevelParser : public PPTokenizer {
 	fixtureLowLevelParser() : parser(this), values() 
 	{ }
 	
-	void parse(const Line *line) {
+	void parse(const shared_ptr<const Line> &line) {
 		values.push_back(line->getText());
 	}
 };
 
 BOOST_FIXTURE_TEST_CASE(testNoComment, fixtureLowLevelParser)
 {
-	FileLine line(0, "1234567890", 0);
-	parser.parse(&line);
+	const shared_ptr<const Line> line(new FileLine(0, "1234567890", 0));
+	parser.parse(line);
 	
 	BOOST_REQUIRE_EQUAL(values.front(), "1234567890");
 }
 
 BOOST_FIXTURE_TEST_CASE(testSimpleComment, fixtureLowLevelParser)
 {
-	FileLine line(0, "12345//67890", 0);
-	parser.parse(&line);
+	const shared_ptr<const Line> line(new FileLine(0, "12345//67890", 0));
+	parser.parse(line);
 	
 	BOOST_REQUIRE_EQUAL(values.front(), "12345       ");
 }
 
 BOOST_FIXTURE_TEST_CASE(testComentInQuote, fixtureLowLevelParser)
 {
-	FileLine line(0, "1234\"5//6\"7890", 0);
-	parser.parse(&line);
+	const shared_ptr<const Line> line(new FileLine(0, "1234\"5//6\"7890", 0));
+	parser.parse(line);
 	
 	BOOST_REQUIRE_EQUAL(values.front(), "1234\"5//6\"7890");
 }
 
 BOOST_FIXTURE_TEST_CASE(testParenthesisOnelineComent, fixtureLowLevelParser)
 {
-	FileLine line(0, "1234/*56*/7890", 0);
-	parser.parse(&line);
+	const shared_ptr<const Line> line(new FileLine(0, "1234/*56*/7890", 0));
+	parser.parse(line);
 	
 	BOOST_REQUIRE_EQUAL(values.front(), "1234      7890");
 }
 
 BOOST_FIXTURE_TEST_CASE(testParenthesisOnelineComentTwice, fixtureLowLevelParser)
 {
-	FileLine line(0, "1234/*56*/78/*9*/0", 0);
-	parser.parse(&line);
+	const shared_ptr<const Line> line(new FileLine(0, "1234/*56*/78/*9*/0", 0));
+	parser.parse(line);
 	
 	BOOST_REQUIRE_EQUAL(values.front(), "1234      78     0");
 }
 
 BOOST_FIXTURE_TEST_CASE(testOpenComment, fixtureLowLevelParser)
 {
-	FileLine line(0, "1234/*567890", 0);
-	parser.parse(&line);
+	const shared_ptr<const Line> line(new FileLine(0, "1234/*567890", 0));
+	parser.parse(line);
 	
 	BOOST_REQUIRE_EQUAL(values.front(), "1234        ");
 }
 
 BOOST_FIXTURE_TEST_CASE(testTwoLineComment, fixtureLowLevelParser)
 {
-	const FileLine line1(0, "1234/*567890", 0);
-	parser.parse(&line1);
-	const FileLine line2(0, "1234*/567890", 0);
-	parser.parse(&line2);
+	const shared_ptr<const Line> line1(new FileLine(0, "1234/*567890", 0));
+	parser.parse(line1);
+	const shared_ptr<const Line> line2(new FileLine(0, "1234*/567890", 0));
+	parser.parse(line2);
 
 	list<string> expected = { "1234        ", "      567890"};
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(values, expected);
@@ -87,12 +86,12 @@ BOOST_FIXTURE_TEST_CASE(testTwoLineComment, fixtureLowLevelParser)
 
 BOOST_FIXTURE_TEST_CASE(testEmptyLineInComment, fixtureLowLevelParser)
 {
-	const FileLine line1(0, "1234/*567890", 0);
-	parser.parse(&line1);
-	const FileLine line2(0, "", 0);
-	parser.parse(&line2);
-	const FileLine line3(0, "1234*/567890", 0);
-	parser.parse(&line3);
+	const shared_ptr<const Line> line1(new FileLine(0, "1234/*567890", 0));
+	parser.parse(line1);
+	const shared_ptr<const Line> line2(new FileLine(0, "", 0));
+	parser.parse(line2);
+	const shared_ptr<const Line> line3(new FileLine(0, "1234*/567890", 0));
+	parser.parse(line3);
 
 	list<string> expected = { "1234        ", "      567890"};
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(values, expected);
@@ -100,8 +99,8 @@ BOOST_FIXTURE_TEST_CASE(testEmptyLineInComment, fixtureLowLevelParser)
 
 BOOST_FIXTURE_TEST_CASE(testSimpleSlash, fixtureLowLevelParser)
 {
-	const FileLine line(0, "1234/567890", 0);
-	parser.parse(&line);
+	const shared_ptr<const Line> line(new FileLine(0, "1234/567890", 0));
+	parser.parse(line);
 
 	BOOST_REQUIRE_EQUAL(values.front(), "1234/567890");
 }
@@ -109,8 +108,8 @@ BOOST_FIXTURE_TEST_CASE(testSimpleSlash, fixtureLowLevelParser)
 BOOST_FIXTURE_TEST_CASE(testWrongString, fixtureLowLevelParser)
 {
 	const string text = "const char *rl = \" \\t\\n\\\"\\\\'`@$><=;|&{(\";";
-	const FileLine line(0, text, 0);
-	parser.parse(&line);
+	const shared_ptr<const Line> line(new FileLine(0, text, 0));
+	parser.parse(line);
 	BOOST_REQUIRE_EQUAL(values.front(), text);
 }
 
