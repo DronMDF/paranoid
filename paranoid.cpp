@@ -3,35 +3,33 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
+#include <boost/range/algorithm/find.hpp>
 #include "CommandLine.h"
 #include "analizer/File.h"
 #include "analizer/Preprocessor.h"
 
 using namespace std;
-using namespace boost::filesystem;
+using boost::ends_with;
+using boost::filesystem::exists;
+using boost::range::find;
 
 void checkSource(const vector<const char *> &args)
 {
-	if (string(args[0]) == "gcc" || string(args[0]) == "g++") {
-		const string source = getSourceFile(args);
-		if (source.empty()) {
-			// Компилятор прокачивается на стандартный ввод
-			return;
-		}
-		
-		if (!exists(source)) {
-			BOOST_FOREACH(const char *a, args) {
-				cout << "'" << a << "' ";
-			}
-			cout << endl;
-			
-			cout << "error: unknown source " << source << " in command line" << endl;
-			// Временно, пока не отладим аргументы командной строки
-			exit(-1);
-		}
-		
+	list<string> compilators = { "gcc", "g++"};
+	if (find(compilators, string(args[0])) == compilators.end()) {
+		return;
+	}
+	
+	const string source = getSourceFile(args);
+	if (source.empty()) {
+		// Компилятор прокачивается на стандартный ввод
+		return;
+	}
+
+	if (exists(source) && (ends_with(source, ".cpp") || ends_with(source, ".c"))) {
 		ifstream in(source);
 		const File file(in);
 		const Preprocessor pp(file);

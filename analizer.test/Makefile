@@ -16,6 +16,8 @@ check: runner
 runner: ${OBJECTS} ${SUT_OBJECTS}
 	${CXX} -pthread -o $@ ${OBJECTS} ${SUT_OBJECTS} ${LFLAGS}
 
+.PHONY: ${SUT_OBJECTS}
+
 ${OBJDIR}/%.o : %.cpp | ${DEPDIR} ${OBJDIR}
 	${CXX} -MMD -MF ${DEPDIR}/${<:.cpp=.dep} ${CXXFLAGS} ${IFLAGS} -c -o $@ $<
 
