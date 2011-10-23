@@ -1,0 +1,2 @@
+functional.test/test0002.cpp:4 error: Open string
+	return "xxxx;
