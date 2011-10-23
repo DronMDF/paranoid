@@ -18,7 +18,11 @@ for f in sorted(cppfiles):
 	if p.wait() != 0 or output != expected:
 		failure_count = failure_count + 1;
 		print("%s: failed" % f)
+		print("output:")
 		for o in output:
-			print(o)
+			print(o.rstrip())
+		print("expected:")
+		for o in expected:
+			print(o.rstrip())
 
 sys.exit(failure_count)
