@@ -21,7 +21,7 @@ vector<const char *> Chaining(int argc, const char **argv)
 			args.erase(cexec);
 		}
 	} else {
-		args.push_front("gcc");
+		args.push_front(0);
 	}
 
 	return vector<const char *>(args.begin(), args.end());

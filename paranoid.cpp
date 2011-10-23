@@ -18,14 +18,8 @@ using boost::range::find;
 
 void checkSource(const vector<const char *> &args)
 {
-	list<string> compilators = { "gcc", "g++"};
-	if (find(compilators, string(args[0])) == compilators.end()) {
-		return;
-	}
-	
 	const string source = getSourceFile(args);
 	if (source.empty()) {
-		// Компилятор прокачивается на стандартный ввод
 		return;
 	}
 
@@ -41,6 +35,11 @@ int main(int argc, const char **argv)
 	vector<const char *> args = Chaining(argc, argv);
 
 	checkSource(args);
+	
+	if (args[0] == 0) {
+		// No chaining
+		return 0;
+	}
 	
 	args.push_back(0);
 	return execvp(args[0], const_cast<char **>(&args[0]));
