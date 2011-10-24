@@ -24,3 +24,7 @@ string Token::getText() const
 	
 	return string(line->getText(), offset, length);
 }
+
+void Token::determoneLocation(Locator *locator) const
+{
+}
