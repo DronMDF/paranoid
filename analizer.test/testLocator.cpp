@@ -14,4 +14,12 @@ BOOST_AUTO_TEST_CASE(testLocateLine)
 	BOOST_REQUIRE_EQUAL(locator.toString(), "in file <unknown>:10");
 }
 
+BOOST_AUTO_TEST_CASE(testLocateFile)
+{
+	Locator locator;
+	locator.setFileName("test.cpp");
+	BOOST_REQUIRE_EQUAL(locator.toString(), "in file test.cpp");
+}
+
+
 BOOST_AUTO_TEST_SUITE_END()

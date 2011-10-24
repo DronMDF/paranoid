@@ -10,6 +10,7 @@ public:
 	
 	std::string toString() const;
 	
+	void setFileName(const std::string &name);
 	void setLineNumber(unsigned number);
 	
 private:
