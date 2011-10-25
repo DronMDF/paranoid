@@ -28,11 +28,11 @@ void PPSplitter::parse(const std::shared_ptr<const Line> &line)
 		eword = text.find_first_of(" \t", sword);
 		if (eword == string::npos) {
 			if (text.size() > sword) {
-				add_token(Token(line->getPointer(), sword, text.size() - sword));
+				add_token(Token(line, sword, text.size() - sword));
 			}
 			break;
 		}
 			
-		add_token(Token(line->getPointer(), sword, eword - sword));
+		add_token(Token(line, sword, eword - sword));
 	}
 }

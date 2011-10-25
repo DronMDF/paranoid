@@ -40,8 +40,8 @@ BOOST_FIXTURE_TEST_CASE(testAddToken, TestPreprocessor)
 
 BOOST_FIXTURE_TEST_CASE(testAddTokenMultipleSpaces, TestPreprocessor)
 {
-	FileLine line(0, "text", 0);
-	addToken(Token(&line, 0, 4));
+	const shared_ptr<const Line> line(new FileLine(0, "text", 0));
+	addToken(Token(line, 0, 4));
 	addToken(Token());
 	addToken(Token());	// Должен проигнорироваться
 	

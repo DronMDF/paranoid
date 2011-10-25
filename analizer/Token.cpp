@@ -6,11 +6,11 @@
 using namespace std;
 
 Token::Token()
-	: line(0), offset(0), length(0)
+	: line(), offset(0), length(0)
 {
 }
 
-Token::Token(const Line *line, unsigned offset, unsigned length)
+Token::Token(const shared_ptr<const Line> &line, unsigned offset, unsigned length)
 	: line(line), offset(offset), length(length)
 {
 	BOOST_ASSERT(offset + length <= line->getText().size());
@@ -18,7 +18,7 @@ Token::Token(const Line *line, unsigned offset, unsigned length)
 
 string Token::getText() const
 {
-	if (line == 0) {
+	if (!line) {
 		return " ";
 	}
 	
