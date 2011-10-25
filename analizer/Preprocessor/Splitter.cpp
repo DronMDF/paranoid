@@ -1,7 +1,7 @@
 
 #include <string>
-#include "Preprocessor/Line.h"
-#include "PPSplitter.h"
+#include "Line.h"
+#include "Splitter.h"
 #include "Token.h"
 
 using namespace std;

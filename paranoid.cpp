@@ -8,8 +8,8 @@
 #include <boost/foreach.hpp>
 #include <boost/range/algorithm/find.hpp>
 #include "CommandLine.h"
-#include "analizer/File.h"
-#include "analizer/Preprocessor.h"
+#include "analizer/Preprocessor/File.h"
+#include "analizer/Preprocessor/Preprocessor.h"
 
 using namespace std;
 using boost::ends_with;

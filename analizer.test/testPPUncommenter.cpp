@@ -5,7 +5,7 @@
 #include <boost/range/algorithm/transform.hpp>
 #include <boost/test/unit_test.hpp>
 #include <FileLine.h>
-#include <PPUncommenter.h>
+#include <Uncommenter.h>
 #include <Token.h>
 #include "Assertions.h"
 

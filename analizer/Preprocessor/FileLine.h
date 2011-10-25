@@ -2,7 +2,7 @@
 #pragma once
 
 #include <string>
-#include "Preprocessor/Line.h"
+#include "Line.h"
 
 class File;
 

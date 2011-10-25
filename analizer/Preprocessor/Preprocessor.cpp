@@ -6,10 +6,10 @@
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
 #include "Preprocessor.h"
-#include "PPSplitter.h"
-#include "PPUncommenter.h"
+#include "Splitter.h"
+#include "Uncommenter.h"
 #include "File.h"
-#include "Preprocessor/Line.h"
+#include "Line.h"
 
 using namespace std;
 using namespace boost;

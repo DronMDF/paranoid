@@ -1,6 +1,6 @@
 
 #include <list>
-#include "Preprocessor/Line.h"
+#include "Line.h"
 
 class LineUncommented : public Line {
 public:

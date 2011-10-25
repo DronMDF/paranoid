@@ -2,7 +2,7 @@
 #include <boost/bind.hpp>
 #include <boost/test/unit_test.hpp>
 #include <FileLine.h>
-#include <PPSplitter.h>
+#include <Splitter.h>
 #include <Token.h>
 #include "Assertions.h"
 

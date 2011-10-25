@@ -4,7 +4,7 @@
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/format.hpp>
 #include "LineUncommented.h"
-#include "PPUncommenter.h"
+#include "Uncommenter.h"
 
 using namespace std;
 using boost::format;

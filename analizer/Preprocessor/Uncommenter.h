@@ -4,7 +4,7 @@
 #include <map>
 #include <string>
 #include <boost/function.hpp>
-#include "PPTokenizer.h"
+#include "Tokenizer.h"
 
 class Line;
 class LineUncommented;
