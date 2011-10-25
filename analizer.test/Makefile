@@ -21,6 +21,9 @@ runner: ${OBJECTS} ${SUT_OBJECTS}
 ${OBJDIR}/%.o : %.cpp | ${DEPDIR} ${OBJDIR}
 	${CXX} -MMD -MF ${DEPDIR}/${<:.cpp=.dep} ${CXXFLAGS} ${IFLAGS} -c -o $@ $<
 
+%.h:	# Special target for handle moved include, cause redepends
+	grep -l $@ ${DEPDIR}/* | xargs rm
+
 ${DEPDIR}:
 	mkdir -p ${DEPDIR}
 

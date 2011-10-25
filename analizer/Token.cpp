@@ -1,7 +1,7 @@
 
 #include <boost/assert.hpp>
 #include "Token.h"
-#include "Line.h"
+#include "Preprocessor/Line.h"
 
 using namespace std;
 

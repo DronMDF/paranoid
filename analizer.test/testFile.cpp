@@ -5,7 +5,7 @@
 #include <boost/range/algorithm/transform.hpp>
 #include <boost/test/unit_test.hpp>
 #include <File.h>
-#include <Line.h>
+#include <Preprocessor/Line.h>
 #include "Assertions.h"
 
 using namespace std;

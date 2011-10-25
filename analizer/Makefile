@@ -13,6 +13,9 @@ analizer.o: ${OBJECTS}
 ${OBJDIR}/%.o : %.cpp | ${DEPDIR} ${OBJDIR}
 	${CXX} -MMD -MF ${DEPDIR}/${<:.cpp=.dep} ${CXXFLAGS} -c -o $@ $<
 
+%.h:	# Special target for handle moved include
+	grep -l $@ ${DEPDIR}/* | xargs rm
+
 ${DEPDIR}:
 	mkdir -p ${DEPDIR}
 

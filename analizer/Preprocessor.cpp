@@ -9,7 +9,7 @@
 #include "PPSplitter.h"
 #include "PPUncommenter.h"
 #include "File.h"
-#include "Line.h"
+#include "Preprocessor/Line.h"
 
 using namespace std;
 using namespace boost;
