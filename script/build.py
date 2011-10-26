@@ -48,15 +48,19 @@ def buildBundle(bundle, sources):
 	ld(bundle, map(lambda o: o[1], objects))
 	
 def buildTarget(target, bundles):
+	assert(isinstance(bundles, list))
 	for bundle, sources in bundles:
 		buildBundle(bundle, sources)
 	if os.path.isfile(target):
 		target_time = os.stat(target).st_mtime
-		if True not in map(lambda b: os.stat(b[0]).st_mtime > bundle_time, bundles):
+		if True not in map(lambda b: os.stat(b[0]).st_mtime > target_time, bundles):
 			return 
-	ld(bundle, map(lambda o: o[1], objects))
+	ld(target, map(lambda b: b[0], bundles))
 
+bundles = []
 for root, dirs, files in os.walk(SRCDIR):
 	cpps = list(filter(lambda f: f.endswith(".cpp"), files))
 	if cpps:
-		buildBundle(root + "/bundle.o", map(lambda f: root + '/' + f, cpps))
+		bundles.append((root + "/bundle.o", list(map(lambda f: root + '/' + f, cpps))))
+
+buildTarget(TARGET, bundles)
