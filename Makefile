@@ -9,7 +9,6 @@ OBJECTS=${addprefix ${OBJDIR}/, ${SOURCES:.cpp=.o}}
 CXX=g++
 CXXFLAGS=-std=c++0x -Wall -Wextra -Weffc++ -ggdb3 -O0
 
-# .obj/paranoid.o - это наш main
 paranoid: .obj/paranoid.o paranoid.o analizer/analizer.o
 	${CXX} -o $@ .obj/paranoid.o paranoid.o analizer/analizer.o -lboost_filesystem-mt
 
@@ -40,5 +39,8 @@ clean:
 	rm -rf .obj
 	rm -rf .dep
 	rm -f paranoid
+
+build_check:
+	CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" ./script/build.py paranoid.o paranoid.cpp
 
 -include ${addprefix ${DEPDIR}/, ${SOURCES:.cpp=.dep}}
