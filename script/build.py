@@ -68,4 +68,7 @@ for root, dirs, files in os.walk(SRCDIR):
 	if cpps:
 		bundles.append((root + "/bundle.o", list(map(lambda f: root + '/' + f, cpps))))
 
-buildTarget(TARGET, bundles)
+try: 
+	buildTarget(TARGET, bundles)
+except subprocess.CalledProcessError:
+	sys.exit(1)

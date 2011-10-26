@@ -1,6 +1,6 @@
 syntax: glob
 paranoid
-runner
+test
 *.o
 *.a
 *.dep
