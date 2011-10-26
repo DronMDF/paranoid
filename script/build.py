@@ -66,7 +66,7 @@ bundles = []
 for root, dirs, files in os.walk(SRCDIR):
 	cpps = list(filter(lambda f: f.endswith(".cpp"), files))
 	if cpps:
-		bundles.append((root + "/bundle.o", list(map(lambda f: root + '/' + f, cpps))))
+		bundles.append((objName(root + "/bundle.cpp"), list(map(lambda f: root + '/' + f, cpps))))
 
 try: 
 	buildTarget(TARGET, bundles)
