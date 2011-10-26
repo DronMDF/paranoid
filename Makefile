@@ -41,6 +41,6 @@ clean:
 	rm -f paranoid
 
 build_check:
-	CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" ./script/build.py paranoid.o paranoid.cpp
+	CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" ./script/build.py analizer.o analizer
 
 -include ${addprefix ${DEPDIR}/, ${SOURCES:.cpp=.dep}}
