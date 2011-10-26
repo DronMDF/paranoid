@@ -12,12 +12,12 @@ check: test paranoid
 	./test --random=1
 	functional.test/runner.py $(realpath paranoid)
 
-paranoid: .obj/paranoid.o .obj/CommandLine.o .obj/analizer.o
-	${CXX} -o $@ .obj/paranoid.o .obj/CommandLine.o .obj/analizer.o \
+paranoid: .obj/paranoid.o .obj/analizer.o
+	${CXX} -o $@ .obj/paranoid.o .obj/analizer.o \
 		-lboost_filesystem-mt
 
-test: .obj/CommandLine.o .obj/analizer.o .obj/test.o
-	${CXX} -o $@ .obj/test.o .obj/CommandLine.o .obj/analizer.o \
+test: .obj/test.o .obj/analizer.o
+	${CXX} -o $@ .obj/test.o .obj/analizer.o \
 		-lboost_test_exec_monitor-mt -lboost_filesystem-mt -lboost_regex-mt 
 
 .PHONY: .obj/analizer.o
@@ -30,9 +30,6 @@ test: .obj/CommandLine.o .obj/analizer.o .obj/test.o
 
 # This is not auto dependences builds
 .obj/paranoid.o : paranoid.cpp ${OBJDIR}
-	${CXX} ${CXXFLAGS} -c -o $@ $<
-
-.obj/CommandLine.o : CommandLine.cpp ${OBJDIR}
 	${CXX} ${CXXFLAGS} -c -o $@ $<
 
 ${OBJDIR}:
