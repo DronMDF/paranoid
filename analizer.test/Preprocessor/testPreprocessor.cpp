@@ -5,7 +5,7 @@
 #include <File.h>
 #include <FileLine.h>
 #include <Preprocessor.h>
-#include "Assertions.h"
+#include "../Assertions.h"
 
 using namespace std;
 using boost::transform;

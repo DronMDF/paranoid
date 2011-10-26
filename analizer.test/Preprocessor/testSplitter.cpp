@@ -4,7 +4,7 @@
 #include <FileLine.h>
 #include <Splitter.h>
 #include <Token.h>
-#include "Assertions.h"
+#include "../Assertions.h"
 
 using namespace std;
 

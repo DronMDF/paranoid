@@ -6,7 +6,7 @@
 #include <boost/test/unit_test.hpp>
 #include <File.h>
 #include <Line.h>
-#include "Assertions.h"
+#include "../Assertions.h"
 
 using namespace std;
 using boost::lexical_cast;

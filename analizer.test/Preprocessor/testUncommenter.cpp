@@ -7,7 +7,7 @@
 #include <FileLine.h>
 #include <Uncommenter.h>
 #include <Token.h>
-#include "Assertions.h"
+#include "../Assertions.h"
 
 using namespace std;
 

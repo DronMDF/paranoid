@@ -31,7 +31,7 @@ def compile(object, source):
 def ld(bundle, objects):
 	objlist = list(objects)
 	print ("Linking %s -> %s" % ("%u objects" % len(objlist), bundle))
-	cmd = ' '.join([ os.getenv('LD', 'ld'), os.getenv('LDFLAGS', ''), "-Ur -o", bundle] + objlist)
+	cmd = ' '.join([ os.getenv('LD', 'ld'), os.getenv('LDFLAGS', ''), "-r -o", bundle] + objlist)
 	subprocess.check_call(cmd.split(), stdout = sys.stdout, stderr = sys.stderr)
 
 def buildObject(object, source):
