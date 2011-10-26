@@ -1,13 +1,13 @@
 
-OBJDIR=.obj
+export OBJDIR=.obj
 DEPDIR=.dep
 
 SOURCES=${wildcard *.cpp}
 OBJECTS=${addprefix ${OBJDIR}/, ${SOURCES:.cpp=.o}}
 
 #CXX=clang++
-CXX=g++
-CXXFLAGS=-std=c++0x -Wall -Wextra -Weffc++ -ggdb3 -O0
+export CXX=g++
+export CXXFLAGS=-std=c++0x -Wall -Wextra -Weffc++ -ggdb3 -O0
 
 paranoid: .obj/paranoid.o paranoid.o analizer/analizer.o
 	${CXX} -o $@ .obj/paranoid.o paranoid.o analizer/analizer.o -lboost_filesystem-mt
@@ -40,7 +40,7 @@ clean:
 	rm -rf .dep
 	rm -f paranoid
 
-build_check:
-	CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" ./script/build.py analizer.o analizer
+build_check: ${OBJDIR}
+	./script/build.py analizer.o analizer
 
 -include ${addprefix ${DEPDIR}/, ${SOURCES:.cpp=.dep}}

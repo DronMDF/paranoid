@@ -12,6 +12,11 @@ SRCDIR = sys.argv[2]
 # LD - linker
 # LDFLAGS - linker flags
 
+def objName(source):
+	if 'OBJDIR' not in os.environ:
+		return source.replace('.cpp', '.o')
+	return os.getenv('OBJDIR') + '/' + source.replace('.cpp', '.o').replace('/', '_')
+
 def depends(source, target):
 	# Dependencies are defined on the fly. If it is slow, we can cache depends.
 	cmd = ' '.join([ os.getenv('CXX', 'g++'), os.getenv('CXXFLAGS', ''), "-E -MM -MT", target, source ])
@@ -38,7 +43,7 @@ def buildObject(object, source):
 	compile(object, source)
 
 def buildBundle(bundle, sources):
-	objects = list(map(lambda f: (f, f.replace('.cpp', '.o')), sources))
+	objects = list(map(lambda f: (f, objName(f)), sources))
 	for src, obj in objects:
 		buildObject(obj, src)
 	if os.path.isfile(bundle):
