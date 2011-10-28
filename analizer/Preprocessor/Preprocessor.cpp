@@ -33,7 +33,7 @@ Preprocessor::Preprocessor(const File &file)
 		try {
 			uncommenter.parse(line);
 		} catch (const std::exception &e) {
-			cout << format("in file %1%:%2%") % "unknown" % "unknown" << endl;
+			cout << e.what() << endl;
 			throw;
 		}
 	}

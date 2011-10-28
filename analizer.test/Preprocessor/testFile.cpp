@@ -43,4 +43,11 @@ BOOST_AUTO_TEST_CASE(Foreach)
 	}
 }
 
+BOOST_AUTO_TEST_CASE(testGetLocation)
+{
+	istringstream in; 
+	const File file(in);
+	BOOST_REQUIRE_EQUAL(file.getLocation(), "<unknown>");
+}
+
 BOOST_AUTO_TEST_SUITE_END()

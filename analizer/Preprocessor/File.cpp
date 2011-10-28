@@ -17,6 +17,11 @@ File::File(istream &in)
 	}
 }
 
+string File::getLocation() const
+{
+	return "<unknown>";
+}
+
 File::const_iterator File::begin() const
 {
 	return lines.begin();

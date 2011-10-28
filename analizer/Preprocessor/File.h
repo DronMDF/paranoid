@@ -14,6 +14,8 @@ public:
 
 	explicit File(std::istream &in);
 
+	std::string getLocation() const;
+	
 	const_iterator begin() const;
 	const_iterator end() const;
 	
