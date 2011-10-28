@@ -10,6 +10,7 @@ public:
 
 	virtual const Line *getPointer() const;
 	virtual std::string getText() const;
+	virtual std::string getLocation() const;
 
 	void hide(size_type spos, size_type epos);
 	

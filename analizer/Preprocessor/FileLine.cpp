@@ -1,7 +1,9 @@
 
+#include <boost/lexical_cast.hpp>
 #include "FileLine.h"
 
 using namespace std;
+using boost::lexical_cast;
 
 FileLine::FileLine()
 	: number(0), text(), file(0)
@@ -30,6 +32,11 @@ unsigned FileLine::getNumber() const
 string FileLine::getText() const
 {
 	return text;
+}
+
+string FileLine::getLocation() const
+{
+	return /*file->getLocation() + */"<unknown>:" + lexical_cast<string>(number);
 }
 
 const File *FileLine::getFile() const

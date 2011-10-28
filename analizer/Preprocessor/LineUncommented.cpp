@@ -37,3 +37,9 @@ string LineUncommented::getText() const
 	}
 	return text;
 }
+
+string LineUncommented::getLocation() const
+{
+	return string();
+}
+

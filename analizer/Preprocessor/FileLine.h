@@ -14,6 +14,8 @@ public:
 	
 	virtual unsigned getNumber() const;
 	virtual std::string getText() const;
+	virtual std::string getLocation() const;
+
 	const File *getFile() const;
 	
 	virtual const Line *getPointer() const;

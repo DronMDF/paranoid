@@ -27,7 +27,7 @@ string Token::getText() const
 
 string Token::getLocation() const
 {
-	return string();
+	return line->getLocation();
 }
 
 string Token::getTextInString() const
