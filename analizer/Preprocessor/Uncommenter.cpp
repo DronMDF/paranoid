@@ -5,6 +5,8 @@
 #include <boost/format.hpp>
 #include "LineUncommented.h"
 #include "Uncommenter.h"
+#include "Token.h"
+#include "Error.h"
 
 using namespace std;
 using boost::format;
@@ -51,9 +53,7 @@ void PPUncommenter::scanString(const shared_ptr<LineUncommented> &line, unsigned
 {
 	const auto pos = line->getText().find_first_of("\\\"", offset);
 	if (pos == string::npos) {
-		// TODO: Need to get file name and line number.
-		cout << format("'%1%' [%2%]\n\tOpen string") % line->getText() % offset << endl;
-		throw runtime_error("Open string");
+		throw Error(Token(line, offset, string::npos), "Open string");
 	}
 	
 	if (line->getText()[pos] == '\\') {
