@@ -37,8 +37,6 @@ ${OBJDIR}:
 
 clean:
 	find ./ -name "*.o" -exec rm {} \;
-	find ./ -name "*.dep" -type f -exec rm -rf {} \;
 	rm -rf .obj
-	rm -rf .dep
-	rm -f paranoid
+	rm -f paranoid test
 

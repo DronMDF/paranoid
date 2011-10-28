@@ -5,12 +5,11 @@
 using namespace std;
 
 Error::Error(const Token &token, const string &message)
-	: locator()
+	: location(token.getLocation()), message(message), text(token.getTextInString())
 {
-	token.determoneLocation(&locator);
 }
 
 string Error::what() const 
 {
-	return locator.toString();
+	return location + " error: " + message + "\n" + text;
 }

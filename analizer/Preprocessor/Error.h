@@ -8,10 +8,11 @@ class Token;
 
 class Error {
 public:
-	Error(const Token &/*token*/, const std::string &/*message*/);
+	Error(const Token &token, const std::string &message);
 	std::string what() const;
 	
 private:
-	Locator locator;
-
+	std::string location;
+	std::string message;
+	std::string text;
 };

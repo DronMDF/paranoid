@@ -5,7 +5,6 @@
 #include <memory>
 
 class Line;
-class Locator;
 
 class Token {
 public:
@@ -13,8 +12,9 @@ public:
 	Token(const std::shared_ptr<const Line> &line, unsigned offset, unsigned length);
 	
 	std::string getText() const;
-	
-	void determoneLocation(Locator *locator) const;
+	std::string getLocation() const;
+	// TODO: need pass style formatter
+	std::string getTextInString() const;
 	
 private:
 	const std::shared_ptr<const Line> line;

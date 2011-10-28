@@ -8,16 +8,23 @@ using namespace std;
 
 BOOST_AUTO_TEST_SUITE(suiteToken)
 
-BOOST_AUTO_TEST_CASE(GetTextFromLine)
+BOOST_AUTO_TEST_CASE(testGetTextFromLine)
 {
 	const shared_ptr<const Line> line(new FileLine(10, "aaaxxxxxaaa", 0));
 	const Token token(line, 3, 5);
 	BOOST_REQUIRE_EQUAL(token.getText(), "xxxxx");
 }
 
-BOOST_AUTO_TEST_CASE(GetEmptyText)
+BOOST_AUTO_TEST_CASE(testGetTextInString)
 {
-	// Специальный случай Токена - пробельный токен
+	const shared_ptr<const Line> line(new FileLine(10, "aaaxxxxxaaa", 0));
+	const Token token(line, 3, 5);
+	BOOST_REQUIRE_EQUAL(token.getTextInString(), "aaaxxxxxaaa");
+}
+
+BOOST_AUTO_TEST_CASE(testGetEmptyText)
+{
+	// Special case - space token
 	const Token token;
 	BOOST_REQUIRE_EQUAL(token.getText(), " ");
 }
