@@ -5,11 +5,16 @@
 using namespace std;
 
 Error::Error(const Token &token, const string &message)
-	: location(token.getLocation()), message(message), text(token.getTextInString())
+	: location(token.getLocation()), message(message), text(token.getTextInString()), whatstr()
+{
+	whatstr = location + " error: " + message + "\n" + text;
+}
+
+Error::~Error() throw()
 {
 }
 
-string Error::what() const 
+const char *Error::what() const throw()
 {
-	return location + " error: " + message + "\n" + text;
+	return whatstr.c_str();
 }

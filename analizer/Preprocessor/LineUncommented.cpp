@@ -40,6 +40,5 @@ string LineUncommented::getText() const
 
 string LineUncommented::getLocation() const
 {
-	return string();
+	return line->getLocation();
 }
-
