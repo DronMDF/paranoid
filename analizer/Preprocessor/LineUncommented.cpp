@@ -12,11 +12,6 @@ LineUncommented::LineUncommented(const shared_ptr<const Line> &line)
 {
 }
 
-const Line *LineUncommented::getPointer() const 
-{
-	return line.get();
-}
-
 void LineUncommented::hide(size_type spos, size_type epos)
 {
 	if (spos >= line->getText().size()) {

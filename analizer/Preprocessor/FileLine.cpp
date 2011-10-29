@@ -25,11 +25,6 @@ FileLine::~FileLine()
 {
 }
 
-unsigned FileLine::getNumber() const
-{
-	return number;
-}
-
 string FileLine::getText() const
 {
 	return text;
@@ -38,14 +33,4 @@ string FileLine::getText() const
 string FileLine::getLocation() const
 {
 	return file->getLocation() + ":" + lexical_cast<string>(number);
-}
-
-const File *FileLine::getFile() const
-{
-	return file;
-}
-
-const Line *FileLine::getPointer() const
-{
-	return this;
 }

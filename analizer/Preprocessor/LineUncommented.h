@@ -8,7 +8,6 @@ public:
 	
 	explicit LineUncommented(const std::shared_ptr<const Line> &line);
 
-	virtual const Line *getPointer() const;
 	virtual std::string getText() const;
 	virtual std::string getLocation() const;
 

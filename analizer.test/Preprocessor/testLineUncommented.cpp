@@ -13,7 +13,6 @@ BOOST_AUTO_TEST_CASE(testNoModify)
 	const shared_ptr<const Line> line(new FileLine(0, "test", 0));
 	LineUncommented uncomm(line);
 	BOOST_REQUIRE_EQUAL(uncomm.getText(), line->getText());
-	BOOST_REQUIRE_EQUAL(uncomm.getPointer(), line.get());
 }
 
 BOOST_AUTO_TEST_CASE(testOneHole)

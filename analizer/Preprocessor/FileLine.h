@@ -12,14 +12,9 @@ public:
 	FileLine(unsigned number, const std::string &text, const File *file);
 	virtual ~FileLine();
 	
-	virtual unsigned getNumber() const;
 	virtual std::string getText() const;
 	virtual std::string getLocation() const;
 
-	const File *getFile() const;
-	
-	virtual const Line *getPointer() const;
-	
 protected:
 	FileLine();
 private:
