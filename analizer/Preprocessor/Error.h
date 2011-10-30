@@ -13,8 +13,5 @@ public:
 	const char *what() const throw();
 	
 private:
-	std::string location;
-	std::string message;
-	std::string text;
 	std::string whatstr;
 };

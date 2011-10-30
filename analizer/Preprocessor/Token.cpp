@@ -30,7 +30,10 @@ string Token::getLocation() const
 	return line->getLocation();
 }
 
-string Token::getTextInString() const
+string Token::getTextInString(const string &begin_marker, const string &end_marker) const
 {
-	return line->getText();
+	string text = line->getText();
+	text.insert(offset + length, end_marker);
+	text.insert(offset, begin_marker);
+	return text;
 }

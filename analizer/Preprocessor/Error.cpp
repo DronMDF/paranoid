@@ -5,9 +5,9 @@
 using namespace std;
 
 Error::Error(const Token &token, const string &message)
-	: location(token.getLocation()), message(message), text(token.getTextInString()), whatstr()
+	: whatstr(token.getLocation() + " error: " + message + "\n" + 
+		token.getTextInString("\033[1;31m", "\033[0m"))
 {
-	whatstr = location + " error: " + message + "\n" + text;
 }
 
 Error::~Error() throw()

@@ -13,8 +13,8 @@ public:
 	
 	std::string getText() const;
 	std::string getLocation() const;
-	// TODO: need pass style formatter
-	std::string getTextInString() const;
+	std::string getTextInString(const std::string &begin_marker = std::string(), 
+				    const std::string &end_marker = std::string()) const;
 	
 private:
 	const std::shared_ptr<const Line> line;

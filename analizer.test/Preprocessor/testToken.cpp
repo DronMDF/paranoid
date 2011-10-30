@@ -22,6 +22,13 @@ BOOST_AUTO_TEST_CASE(testGetTextInString)
 	BOOST_REQUIRE_EQUAL(token.getTextInString(), "aaaxxxxxaaa");
 }
 
+BOOST_AUTO_TEST_CASE(testGetTextInStringMarked)
+{
+	const shared_ptr<const Line> line(new FileLine(10, "aaaxxxxxaaa", 0));
+	const Token token(line, 3, 5);
+	BOOST_REQUIRE_EQUAL(token.getTextInString(">", "<"), "aaa>xxxxx<aaa");
+}
+
 BOOST_AUTO_TEST_CASE(testGetEmptyText)
 {
 	// Special case - space token
