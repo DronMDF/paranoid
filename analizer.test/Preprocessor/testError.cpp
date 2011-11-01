@@ -22,4 +22,13 @@ BOOST_AUTO_TEST_CASE(testErrorFromToken)
 		"123" + SSEL + "45678" + ESEL + "9");
 }
 
+BOOST_AUTO_TEST_CASE(testErrorFromLine)
+{
+	istringstream in("123456789");
+	const File file(in);
+	Error error(**(file.begin()), 5, string::npos, "wrong quote");
+	BOOST_REQUIRE_EQUAL(error.what(), "<unknown>:1 error: wrong quote\n"
+		"12345" + SSEL + "6789" + ESEL);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

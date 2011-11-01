@@ -5,10 +5,12 @@
 #include <stdexcept>
 
 class Token;
+class Line;
 
 class Error : public std::exception {
 public:
 	Error(const Token &token, const std::string &message);
+	Error(const Line &line, unsigned begin, unsigned end, const std::string &message);
 	virtual ~Error() throw();
 	const char *what() const throw();
 	
