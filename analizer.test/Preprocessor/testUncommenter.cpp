@@ -7,6 +7,7 @@
 #include <FileLine.h>
 #include <Uncommenter.h>
 #include <Token.h>
+#include <Error.h>
 #include "../Assertions.h"
 
 using namespace std;
@@ -119,6 +120,19 @@ BOOST_FIXTURE_TEST_CASE(testMonoQuote, fixtureLowLevelParser)
 	const shared_ptr<const Line> line(new FileLine(0, text, 0));
 	parser.parse(line);
 	BOOST_REQUIRE_EQUAL(values.front(), text);
+}
+
+const string SSEL = "\033[1;31m";
+const string ESEL = "\033[0m";
+
+BOOST_FIXTURE_TEST_CASE(testOpenQuote, fixtureLowLevelParser)
+{
+	const string text = "print \"xxx;";
+	const shared_ptr<const Line> line(new FileLine(0, text, 0));
+	auto pred = [&SSEL, &ESEL](const Error &e) {
+		return e.what() == "<unknown>:0 error: Open quote\nprint " + SSEL + "\"xxx;" + ESEL;
+	};
+	BOOST_REQUIRE_EXCEPTION(parser.parse(line), Error, pred);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

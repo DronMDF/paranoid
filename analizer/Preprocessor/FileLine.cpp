@@ -32,5 +32,6 @@ string FileLine::getText() const
 
 string FileLine::getLocation() const
 {
-	return file->getLocation() + ":" + lexical_cast<string>(number);
+	return (file != 0 ? file->getLocation() : "<unknown>") + 
+		":" + lexical_cast<string>(number);
 }
