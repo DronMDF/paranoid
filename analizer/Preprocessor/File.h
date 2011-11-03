@@ -13,8 +13,11 @@ public:
 	typedef lines_type::const_iterator const_iterator;
 
 	explicit File(std::istream &in);
+	File() : lines() { }
+	
+	virtual ~File() { };
 
-	std::string getLocation() const;
+	virtual std::string getLocation() const;
 	
 	const_iterator begin() const;
 	const_iterator end() const;
