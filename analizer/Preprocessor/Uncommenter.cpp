@@ -53,7 +53,7 @@ void PPUncommenter::scanString(const shared_ptr<LineUncommented> &line, unsigned
 {
 	const auto pos = line->getText().find_first_of("\\\"", offset);
 	if (pos == string::npos) {
-		throw Error(*line, offset, string::npos, "Open string");
+		throw Error(*line, offset - 1, string::npos, "Open quote");
 	}
 	
 	if (line->getText()[pos] == '\\') {
