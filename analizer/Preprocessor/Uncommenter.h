@@ -19,7 +19,8 @@ private:
 	PPUncommenter &operator =(const PPUncommenter &);
 	
 	void scanText(const std::shared_ptr<LineUncommented> &line, unsigned offset);
-	void scanString(const std::shared_ptr<LineUncommented> &line, unsigned offset);
+	void scanString(const std::shared_ptr<LineUncommented> &line, 
+			std::string::size_type begin, unsigned pos);
 	void scanChar(const std::shared_ptr<LineUncommented> &line, unsigned offset);
 	void scanComment(const std::shared_ptr<LineUncommented> &line, unsigned offset);
 	void scanCppComment(const std::shared_ptr<LineUncommented> &line, unsigned offset);

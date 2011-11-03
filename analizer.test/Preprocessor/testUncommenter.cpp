@@ -135,4 +135,14 @@ BOOST_FIXTURE_TEST_CASE(testOpenQuote, fixtureLowLevelParser)
 	BOOST_REQUIRE_EXCEPTION(parser.parse(line), Error, pred);
 }
 
+BOOST_FIXTURE_TEST_CASE(testOpenQuoteWithEscaped, fixtureLowLevelParser)
+{
+	const string text = "print \"xx\\\"x;";
+	const shared_ptr<const Line> line(new FileLine(0, text, 0));
+	auto pred = [&SSEL, &ESEL](const Error &e) {
+		return e.what() == "<unknown>:0 error: Open quote\nprint " + SSEL + "\"xx\\\"x;" + ESEL;
+	};
+	BOOST_REQUIRE_EXCEPTION(parser.parse(line), Error, pred);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

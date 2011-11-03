@@ -40,7 +40,7 @@ void PPUncommenter::scanText(const shared_ptr<LineUncommented> &line, unsigned o
 	const auto pos = line->getText().find_first_of("/\"'", offset);
 	if (pos != string::npos) {
 		if (line->getText()[pos] == '"') {
-			scanString(line, pos + 1);
+			scanString(line, pos, pos + 1);
 		} else if (line->getText()[pos] == '\'') {
 			scanChar(line, pos + 1);
 		} else {
@@ -49,17 +49,18 @@ void PPUncommenter::scanText(const shared_ptr<LineUncommented> &line, unsigned o
 	}
 }
 
-void PPUncommenter::scanString(const shared_ptr<LineUncommented> &line, unsigned offset)
+void PPUncommenter::scanString(const shared_ptr<LineUncommented> &line, 
+			       string::size_type begin, unsigned pos)
 {
-	const auto pos = line->getText().find_first_of("\\\"", offset);
-	if (pos == string::npos) {
-		throw Error(*line, offset - 1, string::npos, "Open quote");
+	const auto next_pos = line->getText().find_first_of("\\\"", pos);
+	if (next_pos == string::npos) {
+		throw Error(*line, begin, string::npos, "Open quote");
 	}
 	
-	if (line->getText()[pos] == '\\') {
-		scanString(line, pos + 2);
+	if (line->getText()[next_pos] == '\\') {
+		scanString(line, begin, next_pos + 2);
 	} else {
-		scanText(line, pos + 1);
+		scanText(line, next_pos + 1);
 	}
 }
 
