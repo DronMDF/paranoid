@@ -12,7 +12,7 @@ Error::Error(const Token &token, const string &message)
 {
 }
 
-Error::Error(const Line &line, unsigned begin, unsigned end, const string &message)
+Error::Error(const Line &line, string::size_type begin, string::size_type end, const string &message)
 	: whatstr(line.getLocation() + " error: " + message + "\n")
 {
 	BOOST_ASSERT(end == string::npos || begin < end);
