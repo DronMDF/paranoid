@@ -5,9 +5,11 @@
 #include <list>
 #include <memory>
 #include "Location.h"
+#include "Token.h"
 
 class Line;
 class Preprocessor;
+class Token;
 
 // One file structure class
 class File : public Location {
@@ -28,6 +30,8 @@ public:
 	// TODO: Need to be replaced by visitor interface
 	const_iterator begin() const;
 	const_iterator end() const;
+	
+	virtual void getTokens(std::function<void (const std::shared_ptr<const Token> &)> add_token) const;
 	
 private:
 	const std::string filename;

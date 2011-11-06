@@ -37,3 +37,10 @@ File::const_iterator File::end() const
 {
 	return lines.end();
 }
+
+void File::getTokens(function<void (const shared_ptr<const Token> &)> add_token) const
+{
+	const shared_ptr<const Line> line(new FileLine(10, "012345", this));
+	const shared_ptr<const Token> token(new Token(line, 0, 6));
+	add_token(token);
+}

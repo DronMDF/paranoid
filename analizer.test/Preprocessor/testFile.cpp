@@ -6,6 +6,8 @@
 #include <boost/test/unit_test.hpp>
 #include <File.h>
 #include <Line.h>
+#include <Preprocessor/FileLine.h>
+#include <Preprocessor/Token.h>
 #include "../Assertions.h"
 
 using namespace std;
@@ -18,6 +20,23 @@ BOOST_AUTO_TEST_CASE(testGetConstructedLocation)
 {
 	const File file(0, "test.cpp");
 	BOOST_REQUIRE_EQUAL(file.getLocation(), "test.cpp");
+}
+
+BOOST_AUTO_TEST_CASE(testTokenize)
+{
+	struct testFile : public File {
+		testFile() : File(0, "none") {}
+		typedef shared_ptr<const Line> line_ptr;
+		virtual void forEachLine(function<void (const line_ptr &)> lineparser) const {
+			line_ptr line(new FileLine(7, "012345", this));
+			lineparser(line);
+		}
+	} file;
+
+	string token;
+	file.getTokens([&token](const shared_ptr<const Token> &t){ token = t->getText(); });
+	
+	BOOST_REQUIRE_EQUAL(token, "012345");
 }
 
 BOOST_AUTO_TEST_CASE(Construction1)
