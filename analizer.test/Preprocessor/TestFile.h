@@ -1,7 +1,7 @@
 
-#include <Preprocessor/File.h>
+#include <Preprocessor/Location.h>
 
-class TestFile : public File {
+class TestFile : public Location {
 private:
 	const std::string location;
 public:
@@ -10,7 +10,7 @@ public:
 	{
 	}
 	
-	std::string getLocation() const
+	virtual std::string getLocation() const
 	{
 		return location;
 	}

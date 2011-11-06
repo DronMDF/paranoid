@@ -16,7 +16,7 @@ FileLine::FileLine(const FileLine &line)
 {
 }
 
-FileLine::FileLine(unsigned number, const string &text, const File *file)
+FileLine::FileLine(unsigned number, const string &text, const Location *file)
 	: number(number), text(text), file(file)
 {
 }

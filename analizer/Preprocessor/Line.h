@@ -2,11 +2,9 @@
 #pragma once
 
 #include <string>
+#include "Location.h"
 
-class Line {
-public:
+struct Line : public Location {
 	virtual ~Line() {};
-	
 	virtual std::string getText() const = 0;
-	virtual std::string getLocation() const = 0;
 };

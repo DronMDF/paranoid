@@ -9,7 +9,7 @@ class File;
 class FileLine : public Line {
 public:
 	FileLine(const FileLine &line);
-	FileLine(unsigned number, const std::string &text, const File *file);
+	FileLine(unsigned number, const std::string &text, const Location *file);
 	virtual ~FileLine();
 	
 	virtual std::string getText() const;
@@ -22,5 +22,5 @@ private:
 	
 	const unsigned number;
 	const std::string text;
-	const File *file;
+	const Location *file;
 };

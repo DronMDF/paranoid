@@ -4,12 +4,13 @@
 #include <iosfwd>
 #include <list>
 #include <memory>
+#include "Location.h"
 
 class Line;
 class Preprocessor;
 
 // One file structure class
-class File {
+class File : public Location {
 public:
 	typedef std::list<std::shared_ptr<const Line>> lines_type;
 	typedef lines_type::const_iterator const_iterator;
