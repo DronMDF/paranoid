@@ -23,6 +23,10 @@ File::File(istream &in)
 	}
 }
 
+void File::tokenize()
+{
+}
+
 string File::getLocation() const
 {
 	return filename;

@@ -22,7 +22,7 @@ public:
 	
 	virtual ~File() { };
 
-	// TODO: Command for tokenizing
+	void tokenize();
 	// TODO: Command for adding include point
 	
 	virtual std::string getLocation() const;

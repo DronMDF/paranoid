@@ -33,6 +33,8 @@ BOOST_AUTO_TEST_CASE(testTokenize)
 		}
 	} file;
 
+	file.tokenize();
+	
 	string token;
 	file.getTokens([&token](const shared_ptr<const Token> &t){ token = t->getText(); });
 	
