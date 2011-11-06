@@ -17,14 +17,12 @@ public:
 
 	File(const Preprocessor *pp, const std::string &filename);
 	explicit File(std::istream &in);
-	File() : lines() { }
 	
 	virtual ~File() { };
 
 	// TODO: Command for tokenizing
 	// TODO: Command for adding include point
 	
-	// TODO: Pull to Location interface
 	virtual std::string getLocation() const;
 	
 	// TODO: Need to be replaced by visitor interface
