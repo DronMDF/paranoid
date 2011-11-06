@@ -6,6 +6,7 @@
 #include <memory>
 
 class Line;
+class Preprocessor;
 
 // One file structure class
 class File {
@@ -13,7 +14,7 @@ public:
 	typedef std::list<std::shared_ptr<const Line>> lines_type;
 	typedef lines_type::const_iterator const_iterator;
 
-	// TODO: get the Preprocessor pointer and filename
+	File(const Preprocessor *pp, const std::string &filename);
 	explicit File(std::istream &in);
 	File() : lines() { }
 	
@@ -30,6 +31,8 @@ public:
 	const_iterator end() const;
 	
 private:
+	const std::string filename;
+	
 	// TODO: Keep the Preprocessor pointer for include callbacks
 	// TODO: Keep the preprocessed token list only by this file (not by included)
 	lines_type lines;

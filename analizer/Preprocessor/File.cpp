@@ -5,8 +5,14 @@
 
 using namespace std;
 
+File::File(const Preprocessor *pp, const string &filename)
+	: filename(filename)
+{
+}
+
+
 File::File(istream &in)
-	: lines()
+	: filename("<unknown>"), lines()
 {
 	for (unsigned i = 1; !in.eof(); i++) {
 		string line;
@@ -19,7 +25,7 @@ File::File(istream &in)
 
 string File::getLocation() const
 {
-	return "<unknown>";
+	return filename;
 }
 
 File::const_iterator File::begin() const

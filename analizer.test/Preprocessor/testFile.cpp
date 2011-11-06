@@ -14,6 +14,12 @@ using boost::transform;
 
 BOOST_AUTO_TEST_SUITE(suiteFile)
 
+BOOST_AUTO_TEST_CASE(testGetConstructedLocation)
+{
+	const File file(0, "test.cpp");
+	BOOST_REQUIRE_EQUAL(file.getLocation(), "test.cpp");
+}
+
 BOOST_AUTO_TEST_CASE(Construction1)
 {
 	istringstream in("line1\nline2\nline3\n");
