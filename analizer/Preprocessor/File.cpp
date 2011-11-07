@@ -26,6 +26,10 @@ File::File(istream &in)
 	}
 }
 
+File::~File()
+{
+}
+
 void File::tokenize()
 {
 	PPSplitter splitter([&](Token token) -> void { 
