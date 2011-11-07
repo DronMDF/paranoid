@@ -61,41 +61,40 @@ BOOST_AUTO_TEST_CASE(testTokenize2)
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
 }
 
-
-BOOST_AUTO_TEST_CASE(Construction1)
-{
-	istringstream in("line1\nline2\nline3\n");
-	const File file(in);
-	
-	list<string> lines;
-	transform(file, back_inserter(lines), 
-		  [](const shared_ptr<const Line> &l){ return l->getText(); });
-
-	list<string> expected = { "line1", "line2", "line3" };
-	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(lines, expected);
-}
-
-BOOST_AUTO_TEST_CASE(Foreach)
-{
-	istringstream in("line1\nline2\nline3\n");
-	const File file(in);
-	unsigned number = 1;
-	// for(const Line &line : file) {	// range-based for появится в gcc-4.6
-	BOOST_FOREACH(const auto &line, file) {
-		if (number < 4) {
-			BOOST_REQUIRE_EQUAL(line->getText(), "line" + lexical_cast<string>(number));
-		} else {
-			BOOST_REQUIRE(line->getText().empty());
-		}
-		number++;
-	}
-}
-
-BOOST_AUTO_TEST_CASE(testGetLocation)
-{
-	istringstream in; 
-	const File file(in);
-	BOOST_REQUIRE_EQUAL(file.getLocation(), "<unknown>");
-}
+// BOOST_AUTO_TEST_CASE(Construction1)
+// {
+// 	istringstream in("line1\nline2\nline3\n");
+// 	const File file(in);
+// 	
+// 	list<string> lines;
+// 	transform(file, back_inserter(lines), 
+// 		  [](const shared_ptr<const Line> &l){ return l->getText(); });
+// 
+// 	list<string> expected = { "line1", "line2", "line3" };
+// 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(lines, expected);
+// }
+// 
+// BOOST_AUTO_TEST_CASE(Foreach)
+// {
+// 	istringstream in("line1\nline2\nline3\n");
+// 	const File file(in);
+// 	unsigned number = 1;
+// 	// for(const Line &line : file) {	// range-based for появится в gcc-4.6
+// 	BOOST_FOREACH(const auto &line, file) {
+// 		if (number < 4) {
+// 			BOOST_REQUIRE_EQUAL(line->getText(), "line" + lexical_cast<string>(number));
+// 		} else {
+// 			BOOST_REQUIRE(line->getText().empty());
+// 		}
+// 		number++;
+// 	}
+// }
+//
+// BOOST_AUTO_TEST_CASE(testGetLocation)
+// {
+// 	istringstream in; 
+// 	const File file(in);
+// 	BOOST_REQUIRE_EQUAL(file.getLocation(), "<unknown>");
+// }
 
 BOOST_AUTO_TEST_SUITE_END()

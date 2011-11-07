@@ -4,6 +4,7 @@
 #include "File.h"
 #include "FileLine.h"
 #include "Splitter.h"
+#include "Token.h"
 #include "Uncommenter.h"
 
 using namespace std;
@@ -11,19 +12,6 @@ using namespace std;
 File::File(const Preprocessor *pp, const string &filename)
 	: filename(filename), tokens()
 {
-}
-
-
-File::File(istream &in)
-	: filename("<unknown>"), tokens(), lines()
-{
-	for (unsigned i = 1; !in.eof(); i++) {
-		string line;
-		getline(in, line);
-		if (!line.empty()) {
-			lines.push_back(shared_ptr<Line>(new FileLine(i, line, this)));
-		}
-	}
 }
 
 File::~File()
@@ -45,16 +33,6 @@ void File::tokenize()
 string File::getLocation() const
 {
 	return filename;
-}
-
-File::const_iterator File::begin() const
-{
-	return lines.begin();
-}
-
-File::const_iterator File::end() const
-{
-	return lines.end();
 }
 
 void File::getTokens(function<void (const shared_ptr<const Token> &)> add_token) const

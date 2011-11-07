@@ -24,9 +24,8 @@ void checkSource(const vector<const char *> &args)
 	}
 
 	if (exists(source) && (ends_with(source, ".cpp") || ends_with(source, ".c"))) {
-		ifstream in(source);
-		const File file(in);
-		const Preprocessor pp(file);
+		const Preprocessor pp(source);
+		// TODO: tokenize sources
 	}
 }
 

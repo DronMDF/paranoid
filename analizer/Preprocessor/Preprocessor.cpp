@@ -20,56 +20,6 @@ Preprocessor::Preprocessor(const string &filename)
 	files.insert(make_pair(filename, shared_ptr<File>(new File(this, filename))));
 }
 
-Preprocessor::Preprocessor()
-	: tokens()
-{
-}
-
-Preprocessor::Preprocessor(const File &file)
-	: tokens()
-{
-	PPSplitter splitter(bind(&Preprocessor::addToken, this, _1));
-	PPUncommenter uncommenter(&splitter);
-	
-	BOOST_FOREACH(const auto &line, file) {
-		if (!tokens.empty() && tokens.back().getText() != " ") {
-			addToken(Token());
-		}
-		
-		try {
-			uncommenter.parse(line);
-		} catch (const std::exception &e) {
-			cout << e.what() << endl;
-			throw;
-		}
-	}
-	
-	if (!tokens.empty() && tokens.back().getText() == " ") {
-		tokens.pop_back();
-	}
-}
-
 Preprocessor::~Preprocessor()
 {
-}
-
-Preprocessor::const_iterator Preprocessor::begin() const
-{
-	return tokens.begin();
-}
-
-Preprocessor::const_iterator Preprocessor::end() const
-{
-	return tokens.end();
-}
-
-void Preprocessor::addToken(Token token)
-{
-	if (token.getText() == " ") {
-		if (tokens.empty() || tokens.back().getText() == " ") {
-			return;
-		}
-	}
-	
-	tokens.push_back(token);
 }
