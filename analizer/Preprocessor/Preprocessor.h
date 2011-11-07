@@ -2,7 +2,6 @@
 #pragma once
 
 #include <list>
-#include <map>
 #include <memory>
 #include <string>
 #include "Token.h"
@@ -18,5 +17,5 @@ public:
 	virtual ~Preprocessor();
 
 protected:
-	std::map<std::string, std::shared_ptr<File>> files;
+	std::list<std::pair<std::string, std::shared_ptr<File>>> files;
 };

@@ -16,7 +16,9 @@ BOOST_AUTO_TEST_CASE(testConstruct)
 {
 	struct testPreprocessor : public Preprocessor {
 		testPreprocessor() : Preprocessor("test.cpp") {}
-		virtual ~testPreprocessor() { BOOST_REQUIRE_EQUAL(files["test.cpp"]->getLocation(), "test.cpp"); }
+		virtual ~testPreprocessor() { 
+			BOOST_REQUIRE_EQUAL(files.front().second->getLocation(), "test.cpp");
+		}
 	} pp;
 }
 
