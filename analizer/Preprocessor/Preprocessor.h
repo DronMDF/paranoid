@@ -2,6 +2,9 @@
 #pragma once
 
 #include <list>
+#include <map>
+#include <memory>
+#include <string>
 #include "Token.h"
 
 class File;
@@ -12,7 +15,8 @@ class Preprocessor {
 public:
 	typedef std::list<Token>::const_iterator const_iterator __attribute__((deprecated));
 
-	// TODO: construct with include/sysinclude paths and one source file name
+	// TODO: construct with include/sysinclude paths
+	explicit Preprocessor(const std::string &filename);
 	explicit Preprocessor(const File &file) __attribute__((deprecated));
 	virtual ~Preprocessor();
 
@@ -23,6 +27,8 @@ protected:
 	Preprocessor() __attribute__((deprecated));
 	
 	void addToken(Token token) __attribute__((deprecated));
+	
+	std::map<std::string, std::shared_ptr<File>> files;
 	
 private:
 	// TODO: Keep map of files by full name
