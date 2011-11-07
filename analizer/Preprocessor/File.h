@@ -35,6 +35,9 @@ public:
 	
 private:
 	const std::string filename;
+	std::list<std::shared_ptr<const Token>> tokens;
+	
+	virtual void forEachLine(std::function<void (const std::shared_ptr<const Line> &)> lineparser) const;
 	
 	// TODO: Keep the Preprocessor pointer for include callbacks
 	// TODO: Keep the preprocessed token list only by this file (not by included)

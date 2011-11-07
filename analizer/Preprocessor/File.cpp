@@ -1,18 +1,21 @@
 
 #include <iostream>
+#include <boost/foreach.hpp>
 #include "File.h"
 #include "FileLine.h"
+#include "Splitter.h"
+#include "Uncommenter.h"
 
 using namespace std;
 
 File::File(const Preprocessor *pp, const string &filename)
-	: filename(filename)
+	: filename(filename), tokens()
 {
 }
 
 
 File::File(istream &in)
-	: filename("<unknown>"), lines()
+	: filename("<unknown>"), tokens(), lines()
 {
 	for (unsigned i = 1; !in.eof(); i++) {
 		string line;
@@ -25,6 +28,14 @@ File::File(istream &in)
 
 void File::tokenize()
 {
+	PPSplitter splitter([&](Token token) -> void { 
+		shared_ptr<const Token> t(new Token(token));
+		tokens.push_back(t); 
+	});
+	PPUncommenter uncommenter(&splitter);
+	forEachLine([&uncommenter](const shared_ptr<const Line> &line) -> void { 
+		uncommenter.parse(line); 
+	});
 }
 
 string File::getLocation() const
@@ -44,7 +55,12 @@ File::const_iterator File::end() const
 
 void File::getTokens(function<void (const shared_ptr<const Token> &)> add_token) const
 {
-	const shared_ptr<const Line> line(new FileLine(10, "012345", this));
-	const shared_ptr<const Token> token(new Token(line, 0, 6));
-	add_token(token);
+	BOOST_FOREACH(const auto &token, tokens) {
+		add_token(token);
+	}
+}
+
+void File::forEachLine(function<void (const shared_ptr<const Line> &)> lineparser) const
+{
+	BOOST_ASSERT(false);
 }

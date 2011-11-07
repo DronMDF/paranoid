@@ -41,6 +41,27 @@ BOOST_AUTO_TEST_CASE(testTokenize)
 	BOOST_REQUIRE_EQUAL(token, "012345");
 }
 
+BOOST_AUTO_TEST_CASE(testTokenize2)
+{
+	struct testFile : public File {
+		testFile() : File(0, "none") {}
+		typedef shared_ptr<const Line> line_ptr;
+		virtual void forEachLine(function<void (const line_ptr &)> lineparser) const {
+			line_ptr line(new FileLine(1, "aaa bbb", this));
+			lineparser(line);
+		}
+	} file;
+
+	file.tokenize();
+	
+	list<string> tokens;
+	file.getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
+	
+	list<string> expected = { "aaa", " ", "bbb" };
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
+}
+
+
 BOOST_AUTO_TEST_CASE(Construction1)
 {
 	istringstream in("line1\nline2\nline3\n");
