@@ -23,3 +23,7 @@ Preprocessor::Preprocessor(const string &filename)
 Preprocessor::~Preprocessor()
 {
 }
+
+void Preprocessor::getTokens(function<void (const shared_ptr<const Token> &)> add_token) const
+{
+}

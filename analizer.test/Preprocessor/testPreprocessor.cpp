@@ -22,6 +22,21 @@ BOOST_AUTO_TEST_CASE(testConstruct)
 	} pp;
 }
 
+BOOST_AUTO_TEST_CASE(testTokenize)
+{
+	Preprocessor pp("test.cpp");
+	// TODO: replace inner File to stub.
+	
+	// TODO: pp.tokenize();	<- this is command
+	
+	list<string> tokens;
+	pp.getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
+	
+	list<string> expected = { "int", " ", "main(int", " ", "argc,", " ", 
+		"char", " ", "**argv)", " ", "{", " ", "return", " ", "0;", " ", "}" };
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
+}
+
 // BOOST_AUTO_TEST_CASE(testTokenizer)
 // {
 // 	istringstream in("int main(int argc, char **argv)\n{\n\treturn 0;\n}\n");
