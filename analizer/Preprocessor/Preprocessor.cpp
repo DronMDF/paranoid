@@ -24,6 +24,10 @@ Preprocessor::~Preprocessor()
 {
 }
 
+void Preprocessor::tokenize()
+{
+}
+
 void Preprocessor::getTokens(function<void (const shared_ptr<const Token> &)> add_token) const
 {
 }

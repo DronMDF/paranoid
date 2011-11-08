@@ -16,6 +16,7 @@ public:
 	explicit Preprocessor(const std::string &filename);
 	virtual ~Preprocessor();
 
+	void tokenize();
 	void getTokens(std::function<void (const std::shared_ptr<const Token> &)> add_token) const;
 	
 protected:

@@ -1,7 +1,7 @@
 
-#include <sstream>
 #include <boost/range/algorithm/transform.hpp>
 #include <boost/test/unit_test.hpp>
+#include <boost/foreach.hpp>
 #include <File.h>
 #include <FileLine.h>
 #include <Preprocessor.h>
@@ -16,18 +16,35 @@ BOOST_AUTO_TEST_CASE(testConstruct)
 {
 	struct testPreprocessor : public Preprocessor {
 		testPreprocessor() : Preprocessor("test.cpp") {}
-		virtual ~testPreprocessor() { 
-			BOOST_REQUIRE_EQUAL(files.front().second->getLocation(), "test.cpp");
-		}
+		using Preprocessor::files;
 	} pp;
+
+	BOOST_REQUIRE_EQUAL(pp.files.front().second->getLocation(), "test.cpp");
 }
 
 BOOST_AUTO_TEST_CASE(testTokenize)
 {
-	Preprocessor pp("test.cpp");
-	// TODO: replace inner File to stub.
+	struct testPreprocessor : public Preprocessor {
+		testPreprocessor() : Preprocessor("test.cpp") {}
+		using Preprocessor::files;
+	} pp;
 	
-	// TODO: pp.tokenize();	<- this is command
+	pp.files.clear();
+	
+	struct testFile : public File {
+		testFile() : File(0, "test.cpp") {}
+		typedef shared_ptr<const Line> line_ptr;
+		virtual void forEachLine(function<void (const line_ptr &)> lineparser) const {
+			list<string> source = { "int main(int argc, char **argv) {", "return 0;", "}" };
+			BOOST_FOREACH(const auto &source_line, source) {
+				line_ptr line(new FileLine(1, source_line, this));
+				lineparser(line);
+			}
+		}
+	};
+	pp.files.push_back(make_pair("test.cpp", shared_ptr<File>(new testFile())));
+	
+	pp.tokenize();
 	
 	list<string> tokens;
 	pp.getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
