@@ -1,6 +1,6 @@
 
 #include <functional>
-#include "Tokenizer.h"
+#include <memory>
 
 class Line;
 class Token;
