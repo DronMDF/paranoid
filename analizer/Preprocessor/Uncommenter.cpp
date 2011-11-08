@@ -12,13 +12,6 @@ using namespace std;
 using boost::format;
 using boost::trim_right_copy;
 
-Uncommenter::Uncommenter(PPTokenizer *tokenizer)
-	: parser([tokenizer](const std::shared_ptr<const Line> &line){ 
-		tokenizer->parse(line); 
-	}), in_comment(false)
-{
-}
-
 Uncommenter::Uncommenter(function<void (const shared_ptr<const Line> &)> parser)
 	: parser(parser), in_comment(false)
 {

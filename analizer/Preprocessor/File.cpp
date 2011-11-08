@@ -24,7 +24,9 @@ void File::tokenize()
 		shared_ptr<const Token> t(new Token(token));
 		tokens.push_back(t); 
 	});
-	Uncommenter uncommenter(&splitter);
+	Uncommenter uncommenter([&splitter](const shared_ptr<const Line> &line) {
+		splitter.parse(line);
+	});
 	forEachLine([&uncommenter](const shared_ptr<const Line> &line) -> void { 
 		uncommenter.parse(line); 
 	});
