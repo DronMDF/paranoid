@@ -14,16 +14,17 @@ using namespace std;
 
 BOOST_AUTO_TEST_SUITE(suitePPUncommenter)
 
-struct fixtureLowLevelParser : public PPTokenizer {
+struct fixtureLowLevelParser {
 	PPUncommenter parser;
 	list<string> values;
 	
-	fixtureLowLevelParser() : parser(this), values() 
+	fixtureLowLevelParser() 
+		: parser([&](const shared_ptr<const Line> &line){ 
+			values.push_back(line->getText());
+		}), values() 
 	{ }
-	
-	void parse(const shared_ptr<const Line> &line) {
-		values.push_back(line->getText());
-	}
+
+	virtual ~fixtureLowLevelParser() {};
 };
 
 BOOST_FIXTURE_TEST_CASE(testNoComment, fixtureLowLevelParser)

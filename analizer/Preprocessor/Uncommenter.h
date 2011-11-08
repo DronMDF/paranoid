@@ -11,13 +11,14 @@ class LineUncommented;
 
 class PPUncommenter : public PPTokenizer {
 public:
-	PPUncommenter(PPTokenizer *tokenizer);
+	PPUncommenter(const PPUncommenter &) = delete;
+	PPUncommenter &operator =(const PPUncommenter &) = delete;
+	
+	explicit PPUncommenter(PPTokenizer *tokenizer);
+	explicit PPUncommenter(std::function<void (const std::shared_ptr<const Line> &)> parser);
 	void parse(const std::shared_ptr<const Line> &line);
 	
 private:
-	PPUncommenter(const PPUncommenter &);
-	PPUncommenter &operator =(const PPUncommenter &);
-	
 	void scanText(const std::shared_ptr<LineUncommented> &line, unsigned offset);
 	void scanString(const std::shared_ptr<LineUncommented> &line, 
 			std::string::size_type begin, unsigned pos);
@@ -26,6 +27,6 @@ private:
 	void scanCppComment(const std::shared_ptr<LineUncommented> &line, unsigned offset);
 	void scanCComment(const std::shared_ptr<LineUncommented> &line, unsigned offset);
 	
-	PPTokenizer *tokenizer;
+	std::function<void (const std::shared_ptr<const Line> &)> parser;
 	bool in_comment;
 };
