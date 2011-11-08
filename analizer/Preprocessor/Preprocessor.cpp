@@ -26,8 +26,17 @@ Preprocessor::~Preprocessor()
 
 void Preprocessor::tokenize()
 {
+	auto fit = files.begin();
+	while (fit != files.end()) {
+		// TODO: pass this to File here.
+		fit->second->tokenize();
+		++fit;
+	}
 }
 
 void Preprocessor::getTokens(function<void (const shared_ptr<const Token> &)> add_token) const
 {
+	BOOST_FOREACH(const auto &file, files) {
+		file.second->getTokens(add_token);
+	}
 }

@@ -35,9 +35,10 @@ BOOST_AUTO_TEST_CASE(testTokenize)
 		testFile() : File(0, "test.cpp") {}
 		typedef shared_ptr<const Line> line_ptr;
 		virtual void forEachLine(function<void (const line_ptr &)> lineparser) const {
-			list<string> source = { "int main(int argc, char **argv) {", "return 0;", "}" };
+			list<string> source = { "int main(int argc, char **argv) {", " return 0;", " }" };
+			int lineno = 1;
 			BOOST_FOREACH(const auto &source_line, source) {
-				line_ptr line(new FileLine(1, source_line, this));
+				line_ptr line(new FileLine(lineno++, source_line, this));
 				lineparser(line);
 			}
 		}
