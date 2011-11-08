@@ -9,13 +9,13 @@
 class Line;
 class LineUncommented;
 
-class PPUncommenter : public PPTokenizer {
+class Uncommenter : public PPTokenizer {
 public:
-	PPUncommenter(const PPUncommenter &) = delete;
-	PPUncommenter &operator =(const PPUncommenter &) = delete;
+	Uncommenter(const Uncommenter &) = delete;
+	Uncommenter &operator =(const Uncommenter &) = delete;
 	
-	explicit PPUncommenter(PPTokenizer *tokenizer);
-	explicit PPUncommenter(std::function<void (const std::shared_ptr<const Line> &)> parser);
+	explicit Uncommenter(PPTokenizer *tokenizer);
+	explicit Uncommenter(std::function<void (const std::shared_ptr<const Line> &)> parser);
 	void parse(const std::shared_ptr<const Line> &line);
 	
 private:
