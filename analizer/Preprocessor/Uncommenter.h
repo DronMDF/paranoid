@@ -4,12 +4,11 @@
 #include <map>
 #include <string>
 #include <boost/function.hpp>
-#include "Tokenizer.h"
 
 class Line;
 class LineUncommented;
 
-class Uncommenter : public PPTokenizer {
+class Uncommenter {
 public:
 	Uncommenter(const Uncommenter &) = delete;
 	Uncommenter &operator =(const Uncommenter &) = delete;
