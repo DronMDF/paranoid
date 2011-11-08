@@ -1,5 +1,5 @@
 
-#include <iostream>
+#include <fstream>
 #include <boost/foreach.hpp>
 #include "File.h"
 #include "FileLine.h"
@@ -44,5 +44,12 @@ void File::getTokens(function<void (const shared_ptr<const Token> &)> add_token)
 
 void File::forEachLine(function<void (const shared_ptr<const Line> &)> lineparser) const
 {
-	BOOST_ASSERT(false);
+	ifstream file(filename);
+	for (unsigned i = 1; !file.eof(); i++) {
+		string line;
+		getline(file, line);
+		if (!line.empty()) {
+			lineparser(shared_ptr<Line>(new FileLine(i, line, this)));
+		}
+	}
 }

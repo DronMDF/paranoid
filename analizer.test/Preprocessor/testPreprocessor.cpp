@@ -29,8 +29,7 @@ BOOST_AUTO_TEST_CASE(testTokenize)
 		using Preprocessor::files;
 	} pp;
 	
-	pp.files.clear();
-	
+	// Replace the file in pp
 	struct testFile : public File {
 		testFile() : File(0, "test.cpp") {}
 		typedef shared_ptr<const Line> line_ptr;
@@ -43,8 +42,10 @@ BOOST_AUTO_TEST_CASE(testTokenize)
 			}
 		}
 	};
+	pp.files.clear();
 	pp.files.push_back(make_pair("test.cpp", shared_ptr<File>(new testFile())));
 	
+	// Parse
 	pp.tokenize();
 	
 	list<string> tokens;
