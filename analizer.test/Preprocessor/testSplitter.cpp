@@ -8,10 +8,10 @@
 
 using namespace std;
 
-BOOST_AUTO_TEST_SUITE(suitePPSplitter)
+BOOST_AUTO_TEST_SUITE(suiteSplitter)
 
 struct fixtureTokenStorage {
-	PPSplitter splitter;
+	Splitter splitter;
 	list<string> values;
 	
 	fixtureTokenStorage() 

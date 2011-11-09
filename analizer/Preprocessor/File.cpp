@@ -20,7 +20,7 @@ File::~File()
 
 void File::tokenize()
 {
-	PPSplitter splitter([&](Token token) -> void { 
+	Splitter splitter([&](Token token) -> void { 
 		shared_ptr<const Token> t(new Token(token));
 		tokens.push_back(t); 
 	});

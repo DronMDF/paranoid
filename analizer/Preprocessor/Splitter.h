@@ -5,9 +5,9 @@
 class Line;
 class Token;
 
-class PPSplitter {
+class Splitter {
 public:
-	PPSplitter(std::function<void (Token)> add_token);
+	Splitter(std::function<void (Token)> add_token);
 	
 	void parse(const std::shared_ptr<const Line> &line);
 	
