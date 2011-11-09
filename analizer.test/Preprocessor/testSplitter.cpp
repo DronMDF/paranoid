@@ -15,17 +15,14 @@ struct fixtureTokenStorage {
 	list<string> values;
 	
 	fixtureTokenStorage() 
-		: splitter(bind(&fixtureTokenStorage::add_token, this, _1)),
+		: splitter([&](const std::shared_ptr<const Token> &t) { values.push_back(t->getText()); }),
 		  values()
 	{}
 	
-	virtual ~fixtureTokenStorage()
-	{}
-	
-	void add_token(Token token) {
-		values.push_back(token.getText());
-	}
+	virtual ~fixtureTokenStorage();
 };
+
+fixtureTokenStorage::~fixtureTokenStorage() = default;
 
 BOOST_FIXTURE_TEST_CASE(testMonolith, fixtureTokenStorage)
 {

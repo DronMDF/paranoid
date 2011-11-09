@@ -6,7 +6,7 @@
 
 using namespace std;
 
-Splitter::Splitter(std::function<void (Token)> add_token)
+Splitter::Splitter(std::function<void (const std::shared_ptr<const Token> &)> add_token)
 	: add_token(add_token)
 {
 }
@@ -22,17 +22,17 @@ void Splitter::parse(const std::shared_ptr<const Line> &line)
 		}
 		
 		if (sword > eword) {
-			add_token(Token());
+			add_token(shared_ptr<const Token>(new Token()));
 		}
 		
 		eword = text.find_first_of(" \t", sword);
 		if (eword == string::npos) {
 			if (text.size() > sword) {
-				add_token(Token(line, sword, text.size() - sword));
+				add_token(shared_ptr<const Token>(new Token(line, sword, text.size() - sword)));
 			}
 			break;
 		}
 			
-		add_token(Token(line, sword, eword - sword));
+		add_token(shared_ptr<const Token>(new Token(line, sword, eword - sword)));
 	}
 }

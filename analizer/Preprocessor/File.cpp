@@ -20,14 +20,13 @@ File::~File()
 
 void File::tokenize()
 {
-	Splitter splitter([&](Token token) -> void { 
-		shared_ptr<const Token> t(new Token(token));
+	Splitter splitter([&](const shared_ptr<const Token> &t) { 
 		tokens.push_back(t); 
 	});
 	Uncommenter uncommenter([&splitter](const shared_ptr<const Line> &line) {
 		splitter.parse(line);
 	});
-	forEachLine([&uncommenter](const shared_ptr<const Line> &line) -> void { 
+	forEachLine([&uncommenter](const shared_ptr<const Line> &line) { 
 		uncommenter.parse(line); 
 	});
 }
