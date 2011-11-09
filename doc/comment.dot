@@ -1,7 +1,10 @@
-digraph build {
+// dot -Tpng -o comment.png comment.dot
+
+digraph comment {
 	code -> c1 [label="/"]
 	// code -> c2 [label="\\"]
 	code -> string [label="\""]
+	code -> char [label="\'"]
 	code -> code [label="any"]
 
 	c1 -> c_comment [label="*"]
@@ -15,9 +18,12 @@ digraph build {
 	string -> c3 [label="\\"]
 	string -> code [label="\""]
 	string -> string [label="any"]
-	
-	c3 -> string [label="\""]
 	c3 -> string [label="any"]
+
+	char -> c5 [label="\\"]
+	char -> code [label="\'"]
+	char -> char [label="any"]
+	c5 -> char [label="any"]
 
 	cpp_comment -> cpp_comment [label="any"]
 
