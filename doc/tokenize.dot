@@ -1,0 +1,41 @@
+// dot -Tpng -o tokenize.png tokenize.dot
+
+// source code split by next tokens:
+// 1. string (quoted in ")
+// 2. char (quoted in ')
+// 3. number (digit, continuous)
+// 4. symbol (fill the list of symbol)
+// 5. spaces (space, tabs, linefeed, etc...)
+// 6. word (all non previous tokens, continuous)
+// 7. newline (special token)
+
+digraph tokenize {
+	"init passthrought" -> string [label="\""]
+	"init passthrought" -> char [label="\'"]
+	"init passthrought" -> number [label="digits"]
+	"init passthrought" -> space [label="spaces"]
+	"init passthrought" -> symbol [label="symbols"]
+	"init passthrought" -> word [label="any"]
+	
+	string -> strescape [label="\\"]
+	string -> "init passthrought" [label="\""]
+	string -> string [label="any"]
+	strescape -> string [label="any"]
+
+	char -> charescape [label="\\"]
+	char -> "init passthrought" [label="\'"]
+	char -> char [label="any"]
+	charescape -> char [label="any"]
+	
+	number -> number [label="digits"]
+	number -> "init passthrought" [label="any"]
+	
+	space -> space [label="spaces"]
+	space -> "init passthrought" [label="any"]
+
+	// Symbol only by one
+	symbol -> "init passthrought" [label="any"]
+	
+	word -> word [label="not not words"]
+	word -> "init passthrought" [label="any"]
+}
