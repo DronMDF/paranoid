@@ -6,10 +6,12 @@
 
 class Line;
 
+// TODO: This class should be abstract
 class Token {
 public:
 	Token();
 	Token(const std::shared_ptr<const Line> &line, unsigned offset, unsigned length);
+	virtual ~Token();
 	
 	std::string getText() const;
 	std::string getLocation() const;

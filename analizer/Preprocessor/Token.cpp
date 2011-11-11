@@ -16,6 +16,8 @@ Token::Token(const shared_ptr<const Line> &line, unsigned offset, unsigned lengt
 	BOOST_ASSERT(offset + length <= line->getText().size());
 }
 
+Token::~Token() = default;
+
 string Token::getText() const
 {
 	if (!line) {
