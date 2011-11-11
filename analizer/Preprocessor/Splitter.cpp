@@ -4,6 +4,7 @@
 #include "Splitter.h"
 #include "Token.h"
 #include "TokenWord.h"
+#include "TokenSpace.h"
 
 using namespace std;
 
@@ -23,7 +24,7 @@ void Splitter::parse(const std::shared_ptr<const Line> &line)
 		}
 		
 		if (sword > eword) {
-			add_token(shared_ptr<const Token>(new Token()));
+			add_token(shared_ptr<const Token>(new TokenSpace));
 		}
 		
 		eword = text.find_first_of(" \t", sword);
