@@ -3,6 +3,7 @@
 #include "Line.h"
 #include "Splitter.h"
 #include "Token.h"
+#include "TokenWord.h"
 
 using namespace std;
 
@@ -28,11 +29,11 @@ void Splitter::parse(const std::shared_ptr<const Line> &line)
 		eword = text.find_first_of(" \t", sword);
 		if (eword == string::npos) {
 			if (text.size() > sword) {
-				add_token(shared_ptr<const Token>(new Token(line, sword, text.size() - sword)));
+				add_token(shared_ptr<const Token>(new TokenWord(line, sword, text.size())));
 			}
 			break;
 		}
 			
-		add_token(shared_ptr<const Token>(new Token(line, sword, eword - sword)));
+		add_token(shared_ptr<const Token>(new TokenWord(line, sword, eword)));
 	}
 }
