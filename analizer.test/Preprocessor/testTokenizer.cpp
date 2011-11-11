@@ -36,4 +36,12 @@ BOOST_FIXTURE_TEST_CASE(testWord, fixtureTokenizer)
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
 }
 
+BOOST_FIXTURE_TEST_CASE(testTwoWord, fixtureTokenizer)
+{
+	shared_ptr<const Line> line(new FileLine(1, "test two", &file));
+	tokenizer.parse(line);
+	list<string> expected = { "test", " ", "two", "\n" };
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
