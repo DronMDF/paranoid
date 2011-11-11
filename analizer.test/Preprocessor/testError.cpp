@@ -3,7 +3,7 @@
 #include <boost/test/unit_test.hpp>
 #include <File.h>
 #include <Preprocessor/FileLine.h>
-#include <Token.h>
+#include <Preprocessor/TokenWord.h>
 #include <Error.h>
 
 using namespace std;
@@ -17,7 +17,7 @@ BOOST_AUTO_TEST_CASE(testErrorFromToken)
 {
 	const File file(0, "test.cpp");
 	const shared_ptr<Line> line(new FileLine(1, "123456789", &file));
-	const Token token(line, 3, 5);
+	const TokenWord token(line, 3, 8);
 	Error error(token, "numbers error");
 	BOOST_REQUIRE_EQUAL(error.what(), "test.cpp:1 error: numbers error\n"
 		"123" + SSEL + "45678" + ESEL + "9");

@@ -1,9 +1,31 @@
 
+#include <boost/assert.hpp>
 #include "TokenWord.h"
+#include "Line.h"
 
 using namespace std;
 
-TokenWord::TokenWord(const shared_ptr<const Line> &line, unsigned begin, unsigned end)
-	: Token(line, begin, end - begin)
+TokenWord::TokenWord(const shared_ptr<const Line> &line, std::string::size_type begin, std::string::size_type end)
+	: line(line), begin(begin), end(end)
 {
+	BOOST_ASSERT(line);
+	BOOST_ASSERT(end <= line->getText().size());
+}
+
+string TokenWord::getText() const
+{
+	return string(line->getText(), begin, end - begin);
+}
+
+string TokenWord::getLocation() const
+{
+	return line->getLocation();
+}
+
+string TokenWord::getTextInString(const string &begin_marker, const string &end_marker) const
+{
+	string text = line->getText();
+	text.insert(end, end_marker);
+	text.insert(begin, begin_marker);
+	return text;
 }

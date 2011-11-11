@@ -13,7 +13,8 @@ string TokenSpace::getLocation() const
 	return string();
 }
 
-string TokenSpace::getTextInString(const string &begin_marker, const string &end_marker) const
+string TokenSpace::getTextInString(const string &begin_marker __attribute__((unused)), 
+				   const string &end_marker __attribute__((unused))) const
 {
 	return string();
 }
