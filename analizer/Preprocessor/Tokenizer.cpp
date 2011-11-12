@@ -1,4 +1,5 @@
 
+#include <boost/algorithm/string/classification.hpp>
 #include "Line.h"
 #include "Tokenizer.h"
 #include "TokenNewline.h"
@@ -6,6 +7,7 @@
 #include "TokenSpace.h"
 
 using namespace std;
+using boost::algorithm::is_any_of;
 
 Tokenizer::Tokenizer(add_token_t add_token)
 	: add_token(add_token)
@@ -22,7 +24,7 @@ void Tokenizer::parseRecurse(const shared_ptr<const Line> &line,
 			     string::size_type begin, string::size_type current) const
 {
 	if (current < line->getText().size()) {
-		if (line->getText()[current] == ' ' || line->getText()[current] == '\t') {
+		if (is_any_of(" \t")(line->getText()[current])) {
 			parseSpace(line, begin, current + 1);
 		} else {
 			parseWord(line, begin, current + 1);
@@ -34,7 +36,7 @@ void Tokenizer::parseSpace(const shared_ptr<const Line> &line,
 			   string::size_type begin, string::size_type current) const
 {
 	if (current < line->getText().size()) {
-		if (line->getText()[current] == ' ' || line->getText()[current] == '\t') {
+		if (is_any_of(" \t")(line->getText()[current])) {
 			parseSpace(line, begin, current + 1);
 			return;
 		}
@@ -48,9 +50,7 @@ void Tokenizer::parseSpace(const shared_ptr<const Line> &line,
 void Tokenizer::parseWord(const shared_ptr<const Line> &line, 
 			  string::size_type begin, string::size_type current) const
 {
-	if (current < line->getText().size() && line->getText()[current] != ' ' && 
-		line->getText()[current] != '\t') 
-	{
+	if (current < line->getText().size() && !is_any_of(" \t")(line->getText()[current])) {
 		parseWord(line, begin, current + 1);
 		return;
 	}
