@@ -12,30 +12,41 @@
 digraph tokenize {
 	"init passthrought" -> string [label="\""]
 	"init passthrought" -> char [label="\'"]
-	"init passthrought" -> number [label="digits"]
-	"init passthrought" -> space [label="spaces"]
+	"init passthrought" -> "number detect" [label="0"]
+	"init passthrought" -> "number digital" [label="1..9"]
+	"init passthrought" -> space [label="_"]
+	"init passthrought" -> space [label="\\t"]
 	"init passthrought" -> symbol [label="symbols"]
 	"init passthrought" -> word [label="any"]
 	
-	string -> strescape [label="\\"]
+	string -> "string escape" [label="\\"]
 	string -> "init passthrought" [label="\""]
 	string -> string [label="any"]
-	strescape -> string [label="any"]
+	"string escape" -> string [label="any"]
 
-	char -> charescape [label="\\"]
+	char -> "char escape" [label="\\"]
 	char -> "init passthrought" [label="\'"]
 	char -> char [label="any"]
-	charescape -> char [label="any"]
+	"char escape" -> char [label="any"]
 	
-	number -> number [label="digits"]
-	number -> "init passthrought" [label="any"]
+	// float and suffixes i can detect over postprocess
+	"number detect" -> "number hex" [label="x"]
+	"number detect" -> "number octal" [label="0..7"]
+	"number hex" -> "number hex" [label="0..9a..fA..F"]
+	"number hex" -> "init passthrought" [label="any"]
+	"number octal" -> "number octal" [label="0..7"]
+	"number octal" -> "init passthrought" [label="any"]
+
+	"number digital" -> "number digital" [label="0..9"]
+	"number digital" -> "init passthrought" [label="any"]
 	
-	space -> space [label="spaces"]
+	space -> space [label="_"]
+	space -> space [label="\\t"]
 	space -> "init passthrought" [label="any"]
 
 	// Symbol only by one
 	symbol -> "init passthrought" [label="any"]
 	
-	word -> word [label="not not words"]
-	word -> "init passthrought" [label="any"]
+	word -> "init passthrought" [label="space | symbols"]
+	word -> word [label="any"]
 }
