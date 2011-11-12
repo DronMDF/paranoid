@@ -24,7 +24,7 @@ void Splitter::parse(const std::shared_ptr<const Line> &line)
 		}
 		
 		if (sword > eword) {
-			add_token(shared_ptr<const Token>(new TokenSpace));
+			add_token(shared_ptr<const Token>(new TokenSpace(line, sword, eword)));
 		}
 		
 		eword = text.find_first_of(" \t", sword);

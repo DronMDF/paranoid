@@ -40,7 +40,7 @@ void Tokenizer::parseSpace(const shared_ptr<const Line> &line,
 		}
 	}
 		
-	add_token(shared_ptr<Token>(new TokenSpace()));
+	add_token(shared_ptr<Token>(new TokenSpace(line, begin, current)));
 	parseRecurse(line, current, current);
 	return;
 }
