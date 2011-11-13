@@ -26,6 +26,8 @@ void Tokenizer::parseRecurse(const shared_ptr<const Line> &line,
 	if (current < line->getText().size()) {
 		if (is_any_of(" \t")(line->getText()[current])) {
 			parseSpace(line, begin, current + 1);
+		} else if (line->getText()[current] == '"') {
+			parseString(line, begin, current + 1);
 		} else {
 			parseWord(line, begin, current + 1);
 		}
@@ -53,6 +55,26 @@ void Tokenizer::parseWord(const shared_ptr<const Line> &line,
 	if (current < line->getText().size() && !is_any_of(" \t")(line->getText()[current])) {
 		parseWord(line, begin, current + 1);
 		return;
+	}
+		
+	add_token(shared_ptr<Token>(new TokenWord(line, begin, current)));
+	parseRecurse(line, current, current);
+	return;
+}
+
+void Tokenizer::parseString(const shared_ptr<const Line> &line, 
+			  string::size_type begin, string::size_type current) const
+{
+	if (current < line->getText().size()) {
+		if (line->getText()[current] == '\\') {
+			parseString(line, begin, current + 2);
+			return;
+		}
+		
+		if (line->getText()[current] != '"') {
+			parseString(line, begin, current + 2);
+			return;
+		}
 	}
 		
 	add_token(shared_ptr<Token>(new TokenWord(line, begin, current)));

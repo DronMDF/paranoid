@@ -21,7 +21,9 @@ private:
 	void parseSpace(const std::shared_ptr<const Line> &line, 
 			  std::string::size_type begin, std::string::size_type current) const;
 	void parseWord(const std::shared_ptr<const Line> &line, 
-			  std::string::size_type begin, std::string::size_type current) const;  
+			  std::string::size_type begin, std::string::size_type current) const; 
+	void parseString(const std::shared_ptr<const Line> &line, 
+			  std::string::size_type begin, std::string::size_type current) const;
 
 	add_token_t add_token;
 };

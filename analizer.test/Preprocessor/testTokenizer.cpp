@@ -44,4 +44,12 @@ BOOST_FIXTURE_TEST_CASE(testTwoWord, fixtureTokenizer)
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
 }
 
+BOOST_FIXTURE_TEST_CASE(testDoubleQuoting, fixtureTokenizer)
+{
+	shared_ptr<const Line> line(new FileLine(1, "test \"quoted string\"", &file));
+	tokenizer.parse(line);
+	list<string> expected = { "test", " ", "\"quoted string\"", "\n" };
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
