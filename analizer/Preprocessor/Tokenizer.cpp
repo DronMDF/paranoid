@@ -54,16 +54,18 @@ Tokenizer::size_type Tokenizer::parseWord(const shared_ptr<const Line> &line, si
 
 Tokenizer::size_type Tokenizer::parseString(const shared_ptr<const Line> &line, size_type begin, size_type current) const
 {
-	current = line->getText().find_first_of("\\\"", current);
-	if (current == string::npos) {
-		// TODO: handle Multiline string
-		throw Error(*line, begin, string::npos, "Open quote");
-	}
-	
-	if (line->getText()[current] == '\\') {
-		// TODO: need implement without recursion
-		parseString(line, begin, current + 2);
-		return line->getText().size();
+	while(true) {
+		current = line->getText().find_first_of("\\\"", current);
+		if (current == string::npos) {
+			// TODO: handle Multiline string
+			throw Error(*line, begin, string::npos, "Open quote");
+		}
+		
+		if (line->getText()[current] == '"') {
+			break;
+		}
+		
+		current += 2;
 	}
 	
 	add_token(shared_ptr<Token>(new TokenWord(line, begin, current + 1)));
@@ -73,17 +75,19 @@ Tokenizer::size_type Tokenizer::parseString(const shared_ptr<const Line> &line, 
 
 Tokenizer::size_type Tokenizer::parseChar(const shared_ptr<const Line> &line, size_type begin, size_type current) const
 {
-	current = line->getText().find_first_of("\\'", current);
-	if (current == string::npos) {
-		throw Error(*line, begin, string::npos, "Open quote");
-	}
+	while(true) {
+		current = line->getText().find_first_of("\\'", current);
+		if (current == string::npos) {
+			throw Error(*line, begin, string::npos, "Open quote");
+		}
 	
-	if (line->getText()[current] == '\\') {
-		// TODO: need implement without recursion
-		parseChar(line, begin, current + 2);
-		return line->getText().size();
+		if (line->getText()[current] == '\'') {
+			break;
+		}
+		
+		current += 2;
 	}
-	
+
 	add_token(shared_ptr<Token>(new TokenWord(line, begin, current + 1)));
 	parseRecurse(line, current + 1, current + 1);
 	return current + 1;
