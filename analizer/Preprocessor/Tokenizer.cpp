@@ -21,8 +21,7 @@ void Tokenizer::parse(const shared_ptr<const Line> &line) const
 	add_token(shared_ptr<Token>(new TokenNewline(line)));
 }
 
-void Tokenizer::parseRecurse(const shared_ptr<const Line> &line, 
-			     string::size_type begin, string::size_type current) const
+void Tokenizer::parseRecurse(const shared_ptr<const Line> &line, size_type begin, size_type current) const
 {
 	if (current < line->getText().size()) {
 		if (is_any_of(" \t")(line->getText()[current])) {
@@ -37,24 +36,21 @@ void Tokenizer::parseRecurse(const shared_ptr<const Line> &line,
 	}
 }
 
-void Tokenizer::parseSpace(const shared_ptr<const Line> &line, 
-			   string::size_type begin, string::size_type current) const
+void Tokenizer::parseSpace(const shared_ptr<const Line> &line, size_type begin, size_type current) const
 {
 	current = line->getText().find_first_not_of(" \t", current);
 	add_token(shared_ptr<Token>(new TokenSpace(line, begin, current)));
 	parseRecurse(line, current, current);
 }
 
-void Tokenizer::parseWord(const shared_ptr<const Line> &line, 
-			  string::size_type begin, string::size_type current) const
+void Tokenizer::parseWord(const shared_ptr<const Line> &line, size_type begin, size_type current) const
 {
 	current = line->getText().find_first_of(" \t", current);
 	add_token(shared_ptr<Token>(new TokenWord(line, begin, current)));
 	parseRecurse(line, current, current);
 }
 
-void Tokenizer::parseString(const shared_ptr<const Line> &line, 
-			  string::size_type begin, string::size_type current) const
+void Tokenizer::parseString(const shared_ptr<const Line> &line, size_type begin, size_type current) const
 {
 	current = line->getText().find_first_of("\\\"", current);
 	if (current == string::npos) {
@@ -71,8 +67,7 @@ void Tokenizer::parseString(const shared_ptr<const Line> &line,
 	parseRecurse(line, current + 1, current + 1);
 }
 
-void Tokenizer::parseChar(const shared_ptr<const Line> &line, 
-			  string::size_type begin, string::size_type current) const
+void Tokenizer::parseChar(const shared_ptr<const Line> &line, size_type begin, size_type current) const
 {
 	current = line->getText().find_first_of("\\'", current);
 	if (current == string::npos) {

@@ -16,16 +16,13 @@ public:
 	void parse(const std::shared_ptr<const Line> &line) const;
 	
 private:
-	void parseRecurse(const std::shared_ptr<const Line> &line, 
-			  std::string::size_type begin, std::string::size_type current) const;
-	void parseSpace(const std::shared_ptr<const Line> &line, 
-			  std::string::size_type begin, std::string::size_type current) const;
-	void parseWord(const std::shared_ptr<const Line> &line, 
-			  std::string::size_type begin, std::string::size_type current) const; 
-	void parseString(const std::shared_ptr<const Line> &line, 
-			  std::string::size_type begin, std::string::size_type current) const;
-	void parseChar(const std::shared_ptr<const Line> &line, 
-			  std::string::size_type begin, std::string::size_type current) const;
+	typedef std::string::size_type size_type;
+	
+	void parseRecurse(const std::shared_ptr<const Line> &line, size_type begin, size_type current) const;
+	void parseSpace(const std::shared_ptr<const Line> &line, size_type begin, size_type current) const;
+	void parseWord(const std::shared_ptr<const Line> &line, size_type begin, size_type current) const; 
+	void parseString(const std::shared_ptr<const Line> &line, size_type begin, size_type current) const;
+	void parseChar(const std::shared_ptr<const Line> &line, size_type begin, size_type current) const;
 
 	add_token_t add_token;
 };
