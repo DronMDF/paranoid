@@ -5,6 +5,7 @@
 #include "TokenNewline.h"
 #include "TokenWord.h"
 #include "TokenSpace.h"
+#include "Error.h"
 
 using namespace std;
 using boost::algorithm::is_any_of;
@@ -29,7 +30,7 @@ void Tokenizer::parseRecurse(const shared_ptr<const Line> &line,
 		} else if (line->getText()[current] == '"') {
 			parseString(line, begin, current + 1);
 		} else if (line->getText()[current] == '\'') {
-			parseString(line, begin, current + 1);
+			parseChar(line, begin, current + 1);
 		} else {
 			parseWord(line, begin, current + 1);
 		}
@@ -48,7 +49,6 @@ void Tokenizer::parseSpace(const shared_ptr<const Line> &line,
 		
 	add_token(shared_ptr<Token>(new TokenSpace(line, begin, current)));
 	parseRecurse(line, current, current);
-	return;
 }
 
 void Tokenizer::parseWord(const shared_ptr<const Line> &line, 
@@ -61,7 +61,6 @@ void Tokenizer::parseWord(const shared_ptr<const Line> &line,
 		
 	add_token(shared_ptr<Token>(new TokenWord(line, begin, current)));
 	parseRecurse(line, current, current);
-	return;
 }
 
 void Tokenizer::parseString(const shared_ptr<const Line> &line, 
@@ -81,25 +80,21 @@ void Tokenizer::parseString(const shared_ptr<const Line> &line,
 		
 	add_token(shared_ptr<Token>(new TokenWord(line, begin, current + 1)));
 	parseRecurse(line, current + 1, current + 1);
-	return;
 }
 
 void Tokenizer::parseChar(const shared_ptr<const Line> &line, 
 			  string::size_type begin, string::size_type current) const
 {
-	if (current < line->getText().size()) {
-		if (line->getText()[current] == '\\') {
-			parseChar(line, begin, current + 2);
-			return;
-		}
-		
-		if (line->getText()[current] != '\'') {
-			parseChar(line, begin, current + 1);
-			return;
-		}
+	current = line->getText().find_first_of("\\\'", current);
+	if (current == string::npos) {
+		throw Error(*line, begin, string::npos, "Open quote");
 	}
-		
+	
+	if (line->getText()[current] == '\\') {
+		parseChar(line, begin, current + 2);
+		return;
+	}
+	
 	add_token(shared_ptr<Token>(new TokenWord(line, begin, current + 1)));
 	parseRecurse(line, current + 1, current + 1);
-	return;
 }
