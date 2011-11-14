@@ -36,21 +36,23 @@ void Tokenizer::parseRecurse(const shared_ptr<const Line> &line, size_type begin
 	}
 }
 
-void Tokenizer::parseSpace(const shared_ptr<const Line> &line, size_type begin, size_type current) const
+Tokenizer::size_type Tokenizer::parseSpace(const shared_ptr<const Line> &line, size_type begin, size_type current) const
 {
 	current = line->getText().find_first_not_of(" \t", current);
 	add_token(shared_ptr<Token>(new TokenSpace(line, begin, current)));
 	parseRecurse(line, current, current);
+	return current;
 }
 
-void Tokenizer::parseWord(const shared_ptr<const Line> &line, size_type begin, size_type current) const
+Tokenizer::size_type Tokenizer::parseWord(const shared_ptr<const Line> &line, size_type begin, size_type current) const
 {
 	current = line->getText().find_first_of(" \t", current);
 	add_token(shared_ptr<Token>(new TokenWord(line, begin, current)));
 	parseRecurse(line, current, current);
+	return current;
 }
 
-void Tokenizer::parseString(const shared_ptr<const Line> &line, size_type begin, size_type current) const
+Tokenizer::size_type Tokenizer::parseString(const shared_ptr<const Line> &line, size_type begin, size_type current) const
 {
 	current = line->getText().find_first_of("\\\"", current);
 	if (current == string::npos) {
@@ -59,15 +61,17 @@ void Tokenizer::parseString(const shared_ptr<const Line> &line, size_type begin,
 	}
 	
 	if (line->getText()[current] == '\\') {
+		// TODO: need implement without recursion
 		parseString(line, begin, current + 2);
-		return;
+		return line->getText().size();
 	}
 	
 	add_token(shared_ptr<Token>(new TokenWord(line, begin, current + 1)));
 	parseRecurse(line, current + 1, current + 1);
+	return current + 1;
 }
 
-void Tokenizer::parseChar(const shared_ptr<const Line> &line, size_type begin, size_type current) const
+Tokenizer::size_type Tokenizer::parseChar(const shared_ptr<const Line> &line, size_type begin, size_type current) const
 {
 	current = line->getText().find_first_of("\\'", current);
 	if (current == string::npos) {
@@ -75,10 +79,12 @@ void Tokenizer::parseChar(const shared_ptr<const Line> &line, size_type begin, s
 	}
 	
 	if (line->getText()[current] == '\\') {
+		// TODO: need implement without recursion
 		parseChar(line, begin, current + 2);
-		return;
+		return line->getText().size();
 	}
 	
 	add_token(shared_ptr<Token>(new TokenWord(line, begin, current + 1)));
 	parseRecurse(line, current + 1, current + 1);
+	return current + 1;
 }
