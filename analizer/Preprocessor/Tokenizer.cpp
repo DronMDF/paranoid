@@ -40,13 +40,7 @@ void Tokenizer::parseRecurse(const shared_ptr<const Line> &line,
 void Tokenizer::parseSpace(const shared_ptr<const Line> &line, 
 			   string::size_type begin, string::size_type current) const
 {
-	if (current < line->getText().size()) {
-		if (is_any_of(" \t")(line->getText()[current])) {
-			parseSpace(line, begin, current + 1);
-			return;
-		}
-	}
-		
+	current = line->getText().find_first_not_of(" \t", current);
 	add_token(shared_ptr<Token>(new TokenSpace(line, begin, current)));
 	parseRecurse(line, current, current);
 }
