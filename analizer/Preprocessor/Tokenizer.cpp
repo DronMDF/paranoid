@@ -76,22 +76,24 @@ Tokenizer::size_type Tokenizer::parseString(const shared_ptr<const Line> &line, 
 	return end;
 }
 
-Tokenizer::size_type Tokenizer::parseChar(const shared_ptr<const Line> &line, size_type begin, size_type current) const
+Tokenizer::size_type Tokenizer::parseChar(const shared_ptr<const Line> &line, size_type begin, size_type current __attribute__((unused))) const
 {
+	size_type end = begin + 1;
 	while(true) {
-		current = line->getText().find_first_of("\\'", current);
-		if (current == string::npos) {
+		end = line->getText().find_first_of("\\'", end);
+		if (end == string::npos) {
 			throw Error(*line, begin, string::npos, "Open quote");
 		}
 	
-		if (line->getText()[current] == '\'') {
+		if (line->getText()[end] == '\'') {
 			break;
 		}
 		
-		current += 2;
+		end += 2;
 	}
 
-	add_token(shared_ptr<Token>(new TokenWord(line, begin, current + 1)));
-	parseRecurse(line, current + 1, current + 1);
-	return current + 1;
+	end += 1;
+	add_token(shared_ptr<Token>(new TokenWord(line, begin, end)));
+	parseRecurse(line, end, end);
+	return end;
 }
