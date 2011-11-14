@@ -36,12 +36,12 @@ void Tokenizer::parseRecurse(const shared_ptr<const Line> &line, size_type begin
 	}
 }
 
-Tokenizer::size_type Tokenizer::parseSpace(const shared_ptr<const Line> &line, size_type begin, size_type current) const
+Tokenizer::size_type Tokenizer::parseSpace(const shared_ptr<const Line> &line, size_type begin, size_type current __attribute__((unused))) const
 {
-	current = line->getText().find_first_not_of(" \t", current);
-	add_token(shared_ptr<Token>(new TokenSpace(line, begin, current)));
-	parseRecurse(line, current, current);
-	return current;
+	const size_type end = line->getText().find_first_not_of(" \t", begin);
+	add_token(shared_ptr<Token>(new TokenSpace(line, begin, end)));
+	parseRecurse(line, end, end);
+	return end;
 }
 
 Tokenizer::size_type Tokenizer::parseWord(const shared_ptr<const Line> &line, size_type begin, size_type current) const
