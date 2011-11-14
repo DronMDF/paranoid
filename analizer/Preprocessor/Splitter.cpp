@@ -17,14 +17,14 @@ void Splitter::parse(const std::shared_ptr<const Line> &line)
 {
 	string text = line->getText();
 	
-	for (size_t eword = 0;;) {
-		size_t sword = text.find_first_not_of(" \t", eword);
+	for (string::size_type eword = 0;;) {
+		string::size_type sword = text.find_first_not_of(" \t", eword);
 		if (sword == string::npos) {
 			break;
 		}
 		
 		if (sword > eword) {
-			add_token(shared_ptr<const Token>(new TokenSpace(line, sword, eword)));
+			add_token(shared_ptr<const Token>(new TokenSpace(line, eword, sword)));
 		}
 		
 		eword = text.find_first_of(" \t", sword);

@@ -1,4 +1,5 @@
 
+#include <iostream>
 #include <boost/assert.hpp>
 #include "TokenWord.h"
 #include "Line.h"
@@ -9,7 +10,11 @@ TokenWord::TokenWord(const shared_ptr<const Line> &line, std::string::size_type 
 	: line(line), begin(begin), end(end)
 {
 	BOOST_ASSERT(line);
-	BOOST_ASSERT(end <= line->getText().size());
+	if (this->end == string::npos) {
+		this->end = line->getText().size();
+	}
+	BOOST_ASSERT(begin < this->end);
+	BOOST_ASSERT(this->end <= line->getText().size());
 }
 
 string TokenWord::getText() const

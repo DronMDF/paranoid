@@ -54,11 +54,7 @@ void Tokenizer::parseSpace(const shared_ptr<const Line> &line,
 void Tokenizer::parseWord(const shared_ptr<const Line> &line, 
 			  string::size_type begin, string::size_type current) const
 {
-	if (current < line->getText().size() && !is_any_of(" \t")(line->getText()[current])) {
-		parseWord(line, begin, current + 1);
-		return;
-	}
-		
+	current = line->getText().find_first_of(" \t", current);
 	add_token(shared_ptr<Token>(new TokenWord(line, begin, current)));
 	parseRecurse(line, current, current);
 }
@@ -66,18 +62,17 @@ void Tokenizer::parseWord(const shared_ptr<const Line> &line,
 void Tokenizer::parseString(const shared_ptr<const Line> &line, 
 			  string::size_type begin, string::size_type current) const
 {
-	if (current < line->getText().size()) {
-		if (line->getText()[current] == '\\') {
-			parseString(line, begin, current + 2);
-			return;
-		}
-		
-		if (line->getText()[current] != '"') {
-			parseString(line, begin, current + 1);
-			return;
-		}
+	current = line->getText().find_first_of("\\\"", current);
+	if (current == string::npos) {
+		// TODO: handle Multiline string
+		throw Error(*line, begin, string::npos, "Open quote");
 	}
-		
+	
+	if (line->getText()[current] == '\\') {
+		parseString(line, begin, current + 2);
+		return;
+	}
+	
 	add_token(shared_ptr<Token>(new TokenWord(line, begin, current + 1)));
 	parseRecurse(line, current + 1, current + 1);
 }
@@ -85,7 +80,7 @@ void Tokenizer::parseString(const shared_ptr<const Line> &line,
 void Tokenizer::parseChar(const shared_ptr<const Line> &line, 
 			  string::size_type begin, string::size_type current) const
 {
-	current = line->getText().find_first_of("\\\'", current);
+	current = line->getText().find_first_of("\\'", current);
 	if (current == string::npos) {
 		throw Error(*line, begin, string::npos, "Open quote");
 	}
