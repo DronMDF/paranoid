@@ -17,12 +17,6 @@ Tokenizer::Tokenizer(add_token_t add_token)
 	
 void Tokenizer::parse(const shared_ptr<const Line> &line) const
 {
-	parseRecurse(line);
-	add_token(shared_ptr<Token>(new TokenNewline(line)));
-}
-
-void Tokenizer::parseRecurse(const shared_ptr<const Line> &line) const
-{
 	for (size_type position = 0; position != string::npos && position < line->getText().size(); ) {
 		if (is_any_of(" \t")(line->getText()[position])) {
 			position = parseSpace(line, position);
@@ -34,6 +28,8 @@ void Tokenizer::parseRecurse(const shared_ptr<const Line> &line) const
 			position = parseWord(line, position);
 		}
 	}
+	
+	add_token(shared_ptr<Token>(new TokenNewline(line)));
 }
 
 Tokenizer::size_type Tokenizer::parseSpace(const shared_ptr<const Line> &line, size_type begin) const
