@@ -21,17 +21,17 @@ void Tokenizer::parse(const shared_ptr<const Line> &line) const
 	add_token(shared_ptr<Token>(new TokenNewline(line)));
 }
 
-void Tokenizer::parseRecurse(const shared_ptr<const Line> &line, size_type begin, size_type current) const
+void Tokenizer::parseRecurse(const shared_ptr<const Line> &line, size_type begin __attribute__((unused)), size_type current __attribute__((unused))) const
 {
-	if (current < line->getText().size()) {
-		if (is_any_of(" \t")(line->getText()[current])) {
-			parseSpace(line, begin, current + 1);
-		} else if (line->getText()[current] == '"') {
-			parseString(line, begin, current + 1);
-		} else if (line->getText()[current] == '\'') {
-			parseChar(line, begin, current + 1);
+	for (size_type position = 0; position != string::npos && position < line->getText().size(); ) {
+		if (is_any_of(" \t")(line->getText()[position])) {
+			position = parseSpace(line, position, 0);
+		} else if (line->getText()[position] == '"') {
+			position = parseString(line, position, 0);
+		} else if (line->getText()[position] == '\'') {
+			position = parseChar(line, position, 0);
 		} else {
-			parseWord(line, begin, current + 1);
+			position = parseWord(line, position, 0);
 		}
 	}
 }
@@ -40,15 +40,15 @@ Tokenizer::size_type Tokenizer::parseSpace(const shared_ptr<const Line> &line, s
 {
 	const size_type end = line->getText().find_first_not_of(" \t", begin);
 	add_token(shared_ptr<Token>(new TokenSpace(line, begin, end)));
-	parseRecurse(line, end, end);
+	//parseRecurse(line, end, end);
 	return end;
 }
 
 Tokenizer::size_type Tokenizer::parseWord(const shared_ptr<const Line> &line, size_type begin, size_type current __attribute__((unused))) const
 {
-	const size_type end = line->getText().find_first_of(" \t", current);
+	const size_type end = line->getText().find_first_of(" \t", begin);
 	add_token(shared_ptr<Token>(new TokenWord(line, begin, end)));
-	parseRecurse(line, end, end);
+	//parseRecurse(line, end, end);
 	return end;
 }
 
@@ -72,7 +72,7 @@ Tokenizer::size_type Tokenizer::parseString(const shared_ptr<const Line> &line, 
 	
 	end += 1;
 	add_token(shared_ptr<Token>(new TokenWord(line, begin, end)));
-	parseRecurse(line, end, end);
+	//parseRecurse(line, end, end);
 	return end;
 }
 
@@ -94,6 +94,6 @@ Tokenizer::size_type Tokenizer::parseChar(const shared_ptr<const Line> &line, si
 
 	end += 1;
 	add_token(shared_ptr<Token>(new TokenWord(line, begin, end)));
-	parseRecurse(line, end, end);
+	//parseRecurse(line, end, end);
 	return end;
 }
