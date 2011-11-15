@@ -18,7 +18,7 @@ Tokenizer::Tokenizer(add_token_t add_token)
 void Tokenizer::parse(const shared_ptr<const Line> &line) const
 {
 	for (size_type position = 0; position != string::npos && position < line->getText().size(); ) {
-		if (is_any_of(" \t")(line->getText()[position])) {
+		if (is_any_of(" \t\v\r\f")(line->getText()[position])) {
 			position = parseSpace(line, position);
 		} else if (is_any_of("{}[]#()<>%:;.?*+-/^&|∼!=,\\")(line->getText()[position])) {
 			add_token(shared_ptr<Token>(new TokenWord(line, position, position + 1)));
@@ -37,14 +37,14 @@ void Tokenizer::parse(const shared_ptr<const Line> &line) const
 
 Tokenizer::size_type Tokenizer::parseSpace(const shared_ptr<const Line> &line, size_type begin) const
 {
-	const size_type end = line->getText().find_first_not_of(" \t", begin);
+	const size_type end = line->getText().find_first_not_of(" \t\v\r\f", begin);
 	add_token(shared_ptr<Token>(new TokenSpace(line, begin, end)));
 	return end;
 }
 
 Tokenizer::size_type Tokenizer::parseWord(const shared_ptr<const Line> &line, size_type begin) const
 {
-	const size_type end = line->getText().find_first_of(" \t{}[]#()<>%:;.?*+-/^&|∼!=,\\\"’", begin);
+	const size_type end = line->getText().find_first_of(" \t\v\r\f{}[]#()<>%:;.?*+-/^&|∼!=,\\\"’", begin);
 	add_token(shared_ptr<Token>(new TokenWord(line, begin, end)));
 	return end;
 }
