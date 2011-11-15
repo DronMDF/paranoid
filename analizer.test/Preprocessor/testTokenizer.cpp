@@ -60,4 +60,12 @@ BOOST_FIXTURE_TEST_CASE(testSingleQuoting, fixtureTokenizer)
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
 }
 
+BOOST_FIXTURE_TEST_CASE(testSpecialSymbols, fixtureTokenizer)
+{
+	shared_ptr<const Line> line(new FileLine(1, "special<symbols>;", &file));
+	tokenizer.parse(line);
+	list<string> expected = { "special", "<", "symbols", ">", ";", "\n" };
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
