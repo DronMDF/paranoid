@@ -54,7 +54,14 @@ Tokenizer::size_type Tokenizer::parseWord(const shared_ptr<const Line> &line, si
 
 Tokenizer::size_type Tokenizer::parseNumber(const std::shared_ptr<const Line> &line, size_type begin) const
 {
-	const size_type end = line->getText().find_first_not_of("0123456789", begin);
+	size_type end = string::npos;
+	if (line->getText()[begin] == '0') {
+		// octal
+		end = line->getText().find_first_not_of("01234567", begin);
+	} else {
+		end = line->getText().find_first_not_of("0123456789", begin);
+	}
+	
 	add_token(shared_ptr<Token>(new TokenWord(line, begin, end)));
 	return end;
 }

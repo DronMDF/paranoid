@@ -68,12 +68,21 @@ BOOST_FIXTURE_TEST_CASE(testSpecialSymbols, fixtureTokenizer)
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
 }
 
-BOOST_FIXTURE_TEST_CASE(testDigits, fixtureTokenizer)
+BOOST_FIXTURE_TEST_CASE(testDecimalNumber, fixtureTokenizer)
 {
 	// Text is not a number, it's another token
 	shared_ptr<const Line> line(new FileLine(1, "222test", &file));
 	tokenizer.parse(line);
 	list<string> expected = { "222", "test", "\n" };
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
+}
+
+BOOST_FIXTURE_TEST_CASE(testOctalNumbers, fixtureTokenizer)
+{
+	// 8 and 9 is not a octal number, it's another token (stupid? may be)
+	shared_ptr<const Line> line(new FileLine(1, "034134198", &file));
+	tokenizer.parse(line);
+	list<string> expected = { "0341341", "98", "\n" };
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
 }
 
