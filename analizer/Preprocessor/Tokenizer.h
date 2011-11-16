@@ -20,6 +20,7 @@ private:
 	
 	size_type parseSpace(const std::shared_ptr<const Line> &line, size_type begin) const;
 	size_type parseWord(const std::shared_ptr<const Line> &line, size_type begin) const; 
+	size_type parseNumber(const std::shared_ptr<const Line> &line, size_type begin) const;
 	size_type parseString(const std::shared_ptr<const Line> &line, size_type begin) const;
 	size_type parseChar(const std::shared_ptr<const Line> &line, size_type begin) const;
 

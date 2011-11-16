@@ -68,4 +68,13 @@ BOOST_FIXTURE_TEST_CASE(testSpecialSymbols, fixtureTokenizer)
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
 }
 
+BOOST_FIXTURE_TEST_CASE(testDigits, fixtureTokenizer)
+{
+	// Text is not a number, it's another token
+	shared_ptr<const Line> line(new FileLine(1, "222test", &file));
+	tokenizer.parse(line);
+	list<string> expected = { "222", "test", "\n" };
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
