@@ -1,5 +1,6 @@
 
 #include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 #include "Line.h"
 #include "Tokenizer.h"
 #include "TokenNewline.h"
@@ -8,6 +9,7 @@
 #include "Error.h"
 
 using namespace std;
+using boost::algorithm::iequals;
 using boost::algorithm::is_any_of;
 using boost::algorithm::is_from_range;
 
@@ -55,11 +57,15 @@ Tokenizer::size_type Tokenizer::parseWord(const shared_ptr<const Line> &line, si
 Tokenizer::size_type Tokenizer::parseNumber(const std::shared_ptr<const Line> &line, size_type begin) const
 {
 	size_type end = string::npos;
-	if (line->getText()[begin] == '0') {
+	if (line->getText()[begin] != '0') {
+		// decimal
+		end = line->getText().find_first_not_of("0123456789", begin);
+	} else if (iequals(string(line->getText(), begin, 2), "0x")) {
+		// hex
+		end = line->getText().find_first_not_of("0123456789abcdefABCDEF", begin + 2);
+	} else {
 		// octal
 		end = line->getText().find_first_not_of("01234567", begin);
-	} else {
-		end = line->getText().find_first_not_of("0123456789", begin);
 	}
 	
 	add_token(shared_ptr<Token>(new TokenWord(line, begin, end)));

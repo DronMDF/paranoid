@@ -86,4 +86,12 @@ BOOST_FIXTURE_TEST_CASE(testOctalNumbers, fixtureTokenizer)
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
 }
 
+BOOST_FIXTURE_TEST_CASE(testHexNumbers, fixtureTokenizer)
+{
+	shared_ptr<const Line> line(new FileLine(1, "0xDEADc0detest", &file));
+	tokenizer.parse(line);
+	list<string> expected = { "0xDEADc0de", "test", "\n" };
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
