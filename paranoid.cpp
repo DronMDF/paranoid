@@ -5,6 +5,7 @@
 #include <vector>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/foreach.hpp>
 #include "CommandLine.h"
 #include "analizer/Preprocessor/File.h"
 #include "analizer/Preprocessor/Preprocessor.h"

@@ -29,7 +29,8 @@ vector<const char *> Chaining(int argc, const char **argv)
 
 string getSourceFile(const vector<const char *> &args)
 {
-	vector<string> wop = {"-MF", "-o", "-isystem"};
+	// TODO: include файлы надо включить в выборку.
+	vector<string> wop = {"-MF", "-o", "-isystem", "-include"};
 	for (unsigned i = 1; i < args.size(); ++i) {
 		if (args[i][0] == '-') {
 			if (find(wop, string(args[i])) != wop.end()) {
