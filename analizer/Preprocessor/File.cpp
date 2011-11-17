@@ -3,9 +3,8 @@
 #include <boost/foreach.hpp>
 #include "File.h"
 #include "FileLine.h"
-#include "Splitter.h"
 #include "Token.h"
-#include "Uncommenter.h"
+#include "Tokenizer.h"
 
 using namespace std;
 
@@ -20,14 +19,11 @@ File::~File()
 
 void File::tokenize()
 {
-	Splitter splitter([&](const shared_ptr<const Token> &t) { 
+	Tokenizer tokenizer([&](const shared_ptr<const Token> &t) { 
 		tokens.push_back(t); 
 	});
-	Uncommenter uncommenter([&splitter](const shared_ptr<const Line> &line) {
-		splitter.parse(line);
-	});
-	forEachLine([&uncommenter](const shared_ptr<const Line> &line) { 
-		uncommenter.parse(line); 
+	forEachLine([&tokenizer](const shared_ptr<const Line> &line) { 
+		tokenizer.parse(line); 
 	});
 }
 

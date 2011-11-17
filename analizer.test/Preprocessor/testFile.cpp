@@ -35,10 +35,11 @@ BOOST_AUTO_TEST_CASE(testTokenize)
 
 	file.tokenize();
 	
-	string token;
-	file.getTokens([&token](const shared_ptr<const Token> &t){ token = t->getText(); });
+	list<string> tokens;
+	file.getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
 	
-	BOOST_REQUIRE_EQUAL(token, "012345");
+	list<string> expected = { "012345", "\n" };
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
 }
 
 BOOST_AUTO_TEST_CASE(testTokenize2)
@@ -57,7 +58,7 @@ BOOST_AUTO_TEST_CASE(testTokenize2)
 	list<string> tokens;
 	file.getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
 	
-	list<string> expected = { "aaa", " ", "bbb" };
+	list<string> expected = { "aaa", " ", "bbb", "\n" };
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
 }
 
