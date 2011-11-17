@@ -6,8 +6,6 @@
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
 #include "Preprocessor.h"
-#include "Splitter.h"
-#include "Uncommenter.h"
 #include "File.h"
 #include "Line.h"
 
