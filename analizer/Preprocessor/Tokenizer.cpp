@@ -97,21 +97,19 @@ Tokenizer::size_type Tokenizer::parseString(const shared_ptr<const Line> &line, 
 
 Tokenizer::size_type Tokenizer::parseChar(const shared_ptr<const Line> &line, size_type begin) const
 {
-	size_type end = begin + 1;
-	while(true) {
-		end = line->getText().find_first_of("\\'", end);
-		if (end == string::npos) {
-			throw Error(*line, begin, string::npos, "Open quote");
-		}
-	
-		if (line->getText()[end] == '\'') {
-			break;
-		}
-		
-		end += 2;
+	// Character literal is not a string. Only one char or escape sequence
+	// TODO: Parse escape sequence
+	if (line->getText()[begin + 1] == '\\' && line->getText()[begin + 3] == '\'') {
+		add_token(shared_ptr<Token>(new TokenWord(line, begin, begin + 4)));
+		return begin + 4;
 	}
-
-	end += 1;
-	add_token(shared_ptr<Token>(new TokenWord(line, begin, end)));
-	return end;
+	
+	if (line->getText()[begin + 2] == '\'') {
+		add_token(shared_ptr<Token>(new TokenWord(line, begin, begin + 3)));
+		return begin + 3;
+	}
+	
+	// Parse single quote as a symbol
+	add_token(shared_ptr<Token>(new TokenWord(line, begin, begin + 1)));
+	return begin + 1;
 }
