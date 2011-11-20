@@ -94,23 +94,22 @@ BOOST_FIXTURE_TEST_CASE(testHexNumbers, fixtureTokenizer)
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
 }
 
-BOOST_FIXTURE_TEST_CASE(testCommentWithSingleQuote, fixtureTokenizer)
+BOOST_FIXTURE_TEST_CASE(testComment, fixtureTokenizer)
 {
 	shared_ptr<const Line> line(new FileLine(1, "/* 'Specific EOI to master */", &file));
 	tokenizer.parse(line);
-	list<string> expected = { "/", "*", " ", "'", "Specific", " ", "EOI", 
-		" ", "to", " ", "master", " ", "*", "/", "\n" };
+	list<string> expected = { " ", "\n" };
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
 }
 
-BOOST_FIXTURE_TEST_CASE(testMultilineDoubleQuoteString, fixtureTokenizer)
-{
-	shared_ptr<const Line> line1(new FileLine(101, "* \" Page with PAT set to", &file));
-	tokenizer.parse(line1);
-	shared_ptr<const Line> line2(new FileLine(102, "*   may consolidate to UC\"", &file));
-	tokenizer.parse(line2);
-	list<string> expected = { "*", " ", "\" Page with PAT set to\n*   may consolidate to UC\"", "\n" };
-	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
-}
+// BOOST_FIXTURE_TEST_CASE(testMultilineDoubleQuoteString, fixtureTokenizer)
+// {
+// 	shared_ptr<const Line> line1(new FileLine(101, "* \" Page with PAT set to", &file));
+// 	tokenizer.parse(line1);
+// 	shared_ptr<const Line> line2(new FileLine(102, "*   may consolidate to UC\"", &file));
+// 	tokenizer.parse(line2);
+// 	list<string> expected = { "*", " ", "\" Page with PAT set to\n*   may consolidate to UC\"", "\n" };
+// 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
+// }
 
 BOOST_AUTO_TEST_SUITE_END()
