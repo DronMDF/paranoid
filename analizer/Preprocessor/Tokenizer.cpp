@@ -15,13 +15,18 @@ using boost::algorithm::is_from_range;
 using boost::algorithm::starts_with;
 
 Tokenizer::Tokenizer(add_token_t add_token)
-	: add_token(add_token)
+	: add_token(add_token), in_ccomment(false)
 {
 }
 
-void Tokenizer::parse(const shared_ptr<const Line> &line) const
+void Tokenizer::parse(const shared_ptr<const Line> &line)
 {
-	for (size_type position = 0; position != string::npos && position < line->getText().size(); ) {
+	size_type position = 0;
+	if (in_ccomment) {
+		position = parseCComment(line, position);
+	}
+	
+	for (; position != string::npos && position < line->getText().size(); ) {
 		if (is_any_of(" \t\v\r\f")(line->getText()[position])) {
 			position = parseSpace(line, position);
 		} else if (starts_with(string(line->getText(), position), "/*")) {
@@ -50,9 +55,15 @@ Tokenizer::size_type Tokenizer::parseSpace(const shared_ptr<const Line> &line, s
 	return end;
 }
 
-Tokenizer::size_type Tokenizer::parseCComment(const shared_ptr<const Line> &line, size_type begin) const
+Tokenizer::size_type Tokenizer::parseCComment(const shared_ptr<const Line> &line, size_type begin)
 {
 	const size_type end = line->getText().find("*/", begin);
+	in_ccomment = (end == string::npos);
+	if (in_ccomment) {
+		add_token(shared_ptr<Token>(new TokenSpace(line, begin, string::npos)));
+		return string::npos;
+	}
+	
 	add_token(shared_ptr<Token>(new TokenSpace(line, begin, end + 2)));
 	return end + 2;
 }

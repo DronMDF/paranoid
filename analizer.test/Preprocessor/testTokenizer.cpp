@@ -102,6 +102,16 @@ BOOST_FIXTURE_TEST_CASE(testComment, fixtureTokenizer)
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
 }
 
+BOOST_FIXTURE_TEST_CASE(testMultilineComment, fixtureTokenizer)
+{
+	shared_ptr<const Line> line1(new FileLine(101, "/* \" Page with PAT set to", &file));
+	tokenizer.parse(line1);
+	shared_ptr<const Line> line2(new FileLine(102, "*   may consolidate to UC\" */", &file));
+	tokenizer.parse(line2);
+	list<string> expected = { " ", "\n", " ", "\n"};
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
+}
+
 // BOOST_FIXTURE_TEST_CASE(testMultilineDoubleQuoteString, fixtureTokenizer)
 // {
 // 	shared_ptr<const Line> line1(new FileLine(101, "* \" Page with PAT set to", &file));
