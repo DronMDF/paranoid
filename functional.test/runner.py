@@ -15,7 +15,7 @@ for f in sorted(cppfiles):
 		stdout = subprocess.PIPE, stderr = open('/dev/null'))
 	output = p.stdout.readlines()
 	expected = open(dir + '/' + f.replace('.cpp', '.out')).readlines()
-	if p.wait() != 0 or output != expected:
+	if output != expected:
 		failure_count = failure_count + 1;
 		print("%s: failed" % f)
 		print("output:")
