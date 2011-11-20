@@ -122,4 +122,7 @@ BOOST_FIXTURE_TEST_CASE(testMultilineComment, fixtureTokenizer)
 // 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
 // }
 
+// 	seq_printf(m, "%d (%s) %c %d %d %d %d %d %u %lu \
+// %lu %lu %lu %lu %lu %lu %lu %lu %d %d %u %u %llu %lu %ld\n",
+
 BOOST_AUTO_TEST_SUITE_END()
