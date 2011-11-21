@@ -1,7 +1,7 @@
 
 #include <boost/test/unit_test.hpp>
+#include <Preprocessor/Line.h>
 #include <Preprocessor/TokenNewline.h>
-#include <Preprocessor/FileLine.h>
 
 using namespace std;
 

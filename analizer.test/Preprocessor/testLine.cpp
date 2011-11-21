@@ -2,8 +2,7 @@
 
 #include <sstream>
 #include <boost/test/unit_test.hpp>
-
-#include <FileLine.h>
+#include <Preprocessor/Line.h>
 #include "TestFile.h"
 
 using namespace std;

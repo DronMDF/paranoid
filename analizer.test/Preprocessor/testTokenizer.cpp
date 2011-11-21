@@ -2,9 +2,9 @@
 #include <list>
 #include <memory>
 #include <boost/test/unit_test.hpp>
-#include <Preprocessor/Tokenizer.h>
+#include <Preprocessor/Line.h>
 #include <Preprocessor/Token.h>
-#include <Preprocessor/FileLine.h>
+#include <Preprocessor/Tokenizer.h>
 #include "TestFile.h"
 #include "../Assertions.h"
 

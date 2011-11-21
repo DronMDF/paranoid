@@ -4,9 +4,8 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/range/algorithm/transform.hpp>
 #include <boost/test/unit_test.hpp>
-#include <File.h>
-#include <Line.h>
-#include <Preprocessor/FileLine.h>
+#include <Preprocessor/File.h>
+#include <Preprocessor/Line.h>
 #include <Preprocessor/Token.h>
 #include "../Assertions.h"
 

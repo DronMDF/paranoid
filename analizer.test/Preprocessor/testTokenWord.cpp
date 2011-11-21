@@ -1,8 +1,8 @@
 
 #include <memory>
 #include <boost/test/unit_test.hpp>
-#include <FileLine.h>
-#include <TokenWord.h>
+#include <Preprocessor/Line.h>
+#include <Preprocessor/TokenWord.h>
 
 using namespace std;
 

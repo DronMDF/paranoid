@@ -2,9 +2,9 @@
 #include <boost/range/algorithm/transform.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/foreach.hpp>
-#include <File.h>
-#include <FileLine.h>
-#include <Preprocessor.h>
+#include <Preprocessor/File.h>
+#include <Preprocessor/Line.h>
+#include <Preprocessor/Preprocessor.h>
 #include "../Assertions.h"
 
 using namespace std;

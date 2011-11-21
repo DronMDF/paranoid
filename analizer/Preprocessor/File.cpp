@@ -2,7 +2,7 @@
 #include <fstream>
 #include <boost/foreach.hpp>
 #include "File.h"
-#include "FileLine.h"
+#include "Line.h"
 #include "Token.h"
 #include "Tokenizer.h"
 

@@ -1,10 +1,10 @@
 
 #include <sstream>
 #include <boost/test/unit_test.hpp>
-#include <File.h>
-#include <Preprocessor/FileLine.h>
+#include <Preprocessor/Error.h>
+#include <Preprocessor/File.h>
+#include <Preprocessor/Line.h>
 #include <Preprocessor/TokenWord.h>
-#include <Error.h>
 
 using namespace std;
 

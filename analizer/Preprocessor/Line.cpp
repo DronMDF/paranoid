@@ -1,6 +1,6 @@
 
 #include <boost/lexical_cast.hpp>
-#include "FileLine.h"
+#include "Line.h"
 #include "File.h"
 
 using namespace std;
