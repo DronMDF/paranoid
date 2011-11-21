@@ -4,27 +4,19 @@
 #include <string>
 #include "Location.h"
 
-struct Line : public Location {
-	virtual ~Line() {};
-	virtual std::string getText() const = 0;
-};
-
-class File;
-
-class FileLine : public Line {
+class Line : public Location {
 public:
-	FileLine(const FileLine &line);
-	FileLine(unsigned number, const std::string &text, const Location *file);
-	virtual ~FileLine();
+	Line() = delete;
+	Line(const Line &line) = delete;
+	Line(unsigned number, const std::string &text, const Location *file);
+	virtual ~Line();
+
+	Line &operator = (const Line &) = delete;
 	
 	virtual std::string getText() const;
 	virtual std::string getLocation() const;
 
-protected:
-	FileLine();
 private:
-	FileLine &operator = (const FileLine &);
-	
 	const unsigned number;
 	const std::string text;
 	const Location *file;

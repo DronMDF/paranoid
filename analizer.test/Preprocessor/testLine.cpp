@@ -12,7 +12,7 @@ BOOST_AUTO_TEST_SUITE(suiteFileLine)
 BOOST_AUTO_TEST_CASE(testGetLocation)
 {
 	TestFile file("test.cpp");
-	FileLine line(10, "test", &file);
+	Line line(10, "test", &file);
 	BOOST_REQUIRE_EQUAL(line.getLocation(), "test.cpp:10");
 }
 

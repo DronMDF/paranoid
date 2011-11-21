@@ -27,7 +27,7 @@ BOOST_AUTO_TEST_CASE(testTokenize)
 		testFile() : File(0, "none") {}
 		typedef shared_ptr<const Line> line_ptr;
 		virtual void forEachLine(function<void (const line_ptr &)> lineparser) const {
-			line_ptr line(new FileLine(7, "012345", this));
+			line_ptr line(new Line(7, "012345", this));
 			lineparser(line);
 		}
 	} file;
@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_CASE(testTokenize2)
 		testFile() : File(0, "none") {}
 		typedef shared_ptr<const Line> line_ptr;
 		virtual void forEachLine(function<void (const line_ptr &)> lineparser) const {
-			line_ptr line(new FileLine(1, "aaa bbb", this));
+			line_ptr line(new Line(1, "aaa bbb", this));
 			lineparser(line);
 		}
 	} file;

@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE(testTokenize)
 			list<string> source = { "int main(int argc, char **argv) {", " return 0;", " }" };
 			int lineno = 1;
 			BOOST_FOREACH(const auto &source_line, source) {
-				line_ptr line(new FileLine(lineno++, source_line, this));
+				line_ptr line(new Line(lineno++, source_line, this));
 				lineparser(line);
 			}
 		}
