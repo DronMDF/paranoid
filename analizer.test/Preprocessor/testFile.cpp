@@ -17,14 +17,14 @@ BOOST_AUTO_TEST_SUITE(suiteFile)
 
 BOOST_AUTO_TEST_CASE(testGetConstructedLocation)
 {
-	const File file(0, "test.cpp");
+	const File file("test.cpp");
 	BOOST_REQUIRE_EQUAL(file.getLocation(), "test.cpp");
 }
 
 BOOST_AUTO_TEST_CASE(testTokenize)
 {
 	struct testFile : public File {
-		testFile() : File(0, "none") {}
+		testFile() : File("none") {}
 		typedef shared_ptr<const Line> line_ptr;
 		virtual void forEachLine(function<void (const line_ptr &)> lineparser) const {
 			line_ptr line(new Line(7, "012345", this));
@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE(testTokenize)
 BOOST_AUTO_TEST_CASE(testTokenize2)
 {
 	struct testFile : public File {
-		testFile() : File(0, "none") {}
+		testFile() : File("none") {}
 		typedef shared_ptr<const Line> line_ptr;
 		virtual void forEachLine(function<void (const line_ptr &)> lineparser) const {
 			line_ptr line(new Line(1, "aaa bbb", this));
@@ -60,41 +60,5 @@ BOOST_AUTO_TEST_CASE(testTokenize2)
 	list<string> expected = { "aaa", " ", "bbb", "\n" };
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
 }
-
-// BOOST_AUTO_TEST_CASE(Construction1)
-// {
-// 	istringstream in("line1\nline2\nline3\n");
-// 	const File file(in);
-// 	
-// 	list<string> lines;
-// 	transform(file, back_inserter(lines), 
-// 		  [](const shared_ptr<const Line> &l){ return l->getText(); });
-// 
-// 	list<string> expected = { "line1", "line2", "line3" };
-// 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(lines, expected);
-// }
-// 
-// BOOST_AUTO_TEST_CASE(Foreach)
-// {
-// 	istringstream in("line1\nline2\nline3\n");
-// 	const File file(in);
-// 	unsigned number = 1;
-// 	// for(const Line &line : file) {	// range-based for появится в gcc-4.6
-// 	BOOST_FOREACH(const auto &line, file) {
-// 		if (number < 4) {
-// 			BOOST_REQUIRE_EQUAL(line->getText(), "line" + lexical_cast<string>(number));
-// 		} else {
-// 			BOOST_REQUIRE(line->getText().empty());
-// 		}
-// 		number++;
-// 	}
-// }
-//
-// BOOST_AUTO_TEST_CASE(testGetLocation)
-// {
-// 	istringstream in; 
-// 	const File file(in);
-// 	BOOST_REQUIRE_EQUAL(file.getLocation(), "<unknown>");
-// }
 
 BOOST_AUTO_TEST_SUITE_END()

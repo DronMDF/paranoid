@@ -15,7 +15,7 @@ const string ESEL = "\033[0m";
 
 BOOST_AUTO_TEST_CASE(testErrorFromToken)
 {
-	const File file(0, "test.cpp");
+	const File file("test.cpp");
 	const shared_ptr<Line> line(new Line(1, "123456789", &file));
 	const TokenWord token(line, 3, 8);
 	Error error(token, "numbers error");
@@ -25,7 +25,7 @@ BOOST_AUTO_TEST_CASE(testErrorFromToken)
 
 BOOST_AUTO_TEST_CASE(testErrorFromLine)
 {
-	const File file(0, "test.cpp");
+	const File file("test.cpp");
 	const Line line(1, "123456789", &file);
 	Error error(line, 5, string::npos, "wrong quote");
 	BOOST_REQUIRE_EQUAL(error.what(), "test.cpp:1 error: wrong quote\n"

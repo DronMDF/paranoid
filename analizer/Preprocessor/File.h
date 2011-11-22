@@ -13,7 +13,7 @@ class Token;
 // One file structure class
 class File : public Location {
 public:
-	File(const Preprocessor *pp, const std::string &filename);
+	File(const std::string &filename);
 	virtual ~File();
 	
 	void tokenize();

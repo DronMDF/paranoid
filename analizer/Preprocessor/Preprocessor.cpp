@@ -15,7 +15,7 @@ Preprocessor::Preprocessor(const string &filename)
 	: files()
 {
 	// First file created, but not parse. Later.
-	files.push_back(make_pair(filename, shared_ptr<File>(new File(this, filename))));
+	files.push_back(make_pair(filename, shared_ptr<File>(new File(filename))));
 }
 
 Preprocessor::~Preprocessor()

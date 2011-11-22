@@ -8,7 +8,7 @@
 
 using namespace std;
 
-File::File(const Preprocessor *pp, const string &filename)
+File::File(const string &filename)
 	: filename(filename), tokens()
 {
 }
