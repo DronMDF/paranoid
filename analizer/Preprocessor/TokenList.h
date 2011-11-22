@@ -12,4 +12,6 @@ public:
 	virtual std::string getLocation() const;
 	virtual std::string getTextInString(const std::string &begin_marker = std::string(), 
 				    const std::string &end_marker = std::string()) const;
+private:
+	const std::list<std::shared_ptr<const Token>> tokens;
 };

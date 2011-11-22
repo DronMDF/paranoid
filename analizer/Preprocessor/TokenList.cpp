@@ -1,15 +1,21 @@
 
+#include <boost/foreach.hpp>
 #include "TokenList.h"
 
 using namespace std;
 
 TokenList::TokenList(const list<shared_ptr<const Token>> &tokens)
+	: tokens(tokens)
 {
 }
 
 string TokenList::getText() const
 {
-	return string();
+	string text;
+	BOOST_FOREACH(const auto token, tokens) {
+		text += token->getText();
+	}
+	return text;
 }
 
 string TokenList::getLocation() const
