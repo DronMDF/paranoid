@@ -114,13 +114,13 @@ BOOST_FIXTURE_TEST_CASE(testMultilineComment, fixtureTokenizer)
 
 BOOST_FIXTURE_TEST_CASE(testMultilineDoubleQuoteString, fixtureTokenizer)
 {
-// 	shared_ptr<const Line> line1(new Line(101, "seq_printf(m, \"%d (%s) %c \\", &file));
-// 	tokenizer.parse(line1);
-// 	shared_ptr<const Line> line2(new Line(102, "%llu %lu %ld\\n\",", &file));
-// 	tokenizer.parse(line2);
-// 	list<string> expected = { "seq_printf", "(", "m", ",", " ", 
-// 		"\"%d (%s) %c \\\n%llu %lu %ld\\n\"", ",", "\n" };
-// 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
+	shared_ptr<const Line> line1(new Line(101, "seq_printf(m, \"%d (%s) %c \\", &file));
+	tokenizer.parse(line1);
+	shared_ptr<const Line> line2(new Line(102, "%llu %lu %ld\\n\",", &file));
+	tokenizer.parse(line2);
+	list<string> expected = { "seq_printf", "(", "m", ",", " ", 
+		"\"%d (%s) %c \\\n%llu %lu %ld\\n\"", ",", "\n" };
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -12,8 +12,8 @@ failure_count = 0;
 
 for f in sorted(cppfiles):
 	p = subprocess.Popen([sys.argv[1], dir + '/' + f], 
-		stdout = subprocess.PIPE, stderr = open('/dev/null'))
-	output = p.stdout.readlines()
+		stdout = open('/dev/null'), stderr = subprocess.PIPE)
+	output = p.stderr.readlines()
 	expected = open(dir + '/' + f.replace('.cpp', '.out')).readlines()
 	if output != expected:
 		failure_count = failure_count + 1;

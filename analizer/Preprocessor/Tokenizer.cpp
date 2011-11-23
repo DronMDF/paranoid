@@ -1,12 +1,13 @@
 
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/predicate.hpp>
+#include "Error.h"
 #include "Line.h"
 #include "Tokenizer.h"
+#include "TokenList.h"
 #include "TokenNewline.h"
-#include "TokenWord.h"
 #include "TokenSpace.h"
-#include "Error.h"
+#include "TokenWord.h"
 
 using namespace std;
 using boost::algorithm::iequals;
@@ -15,14 +16,26 @@ using boost::algorithm::is_from_range;
 using boost::algorithm::starts_with;
 
 Tokenizer::Tokenizer(add_token_t add_token)
-	: add_token(add_token), in_ccomment(false)
+	: add_token(add_token), in_ccomment(false), string_tokens()
 {
 }
 
-void Tokenizer::parse(const shared_ptr<const Line> &line)
+Tokenizer::~Tokenizer()
 {
+	if (!string_tokens.empty()) {
+		Error error(*(string_tokens.front()), "Open quote");
+		cerr << error.what() << endl;
+	}
+}
+
+void Tokenizer::parse(const shared_ptr<const Line> &line)
+{	
 	size_type position = 0;
-	if (in_ccomment) {
+	if (!string_tokens.empty()) {
+		position = parseString(line, position);
+	}
+	
+	if (position != string::npos && in_ccomment) {
 		position = parseCComment(line, position);
 	}
 	
@@ -45,7 +58,11 @@ void Tokenizer::parse(const shared_ptr<const Line> &line)
 		}
 	}
 	
-	add_token(shared_ptr<Token>(new TokenNewline(line)));
+	if (string_tokens.empty()) {
+		add_token(shared_ptr<Token>(new TokenNewline(line)));
+	} else {
+		string_tokens.push_back(shared_ptr<Token>(new TokenNewline(line)));
+	}
 }
 
 Tokenizer::size_type Tokenizer::parseSpace(const shared_ptr<const Line> &line, size_type begin) const
@@ -93,15 +110,18 @@ Tokenizer::size_type Tokenizer::parseNumber(const std::shared_ptr<const Line> &l
 	return end;
 }
 
-Tokenizer::size_type Tokenizer::parseString(const shared_ptr<const Line> &line, size_type begin) const
+Tokenizer::size_type Tokenizer::parseString(const shared_ptr<const Line> &line, size_type begin)
 {
-	size_type end = begin + 1;
+	size_type end = begin;
+	if (string_tokens.empty()) {
+		end++;	// skip the lead double quote char
+	}
 	
 	while(true) {
 		end = line->getText().find_first_of("\\\"", end);
 		if (end == string::npos) {
-			// TODO: handle Multiline string
-			throw Error(*line, begin, string::npos, "Open quote");
+			string_tokens.push_back(shared_ptr<Token>(new TokenWord(line, begin, end)));
+			return end;
 		}
 		
 		if (line->getText()[end] == '"') {
@@ -112,7 +132,16 @@ Tokenizer::size_type Tokenizer::parseString(const shared_ptr<const Line> &line, 
 	}
 	
 	end += 1;
-	add_token(shared_ptr<Token>(new TokenWord(line, begin, end)));
+	shared_ptr<Token> token(new TokenWord(line, begin, end));
+	
+	if (string_tokens.empty()) {
+		add_token(token);
+	} else {
+		string_tokens.push_back(token);
+		add_token(shared_ptr<Token>(new TokenList(string_tokens)));
+		string_tokens.clear();
+	}
+	
 	return end;
 }
 

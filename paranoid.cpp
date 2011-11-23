@@ -34,7 +34,7 @@ int main(int argc, const char **argv)
 	try {
 		checkSource(args);
 	} catch (const exception &e) {
-		cout << e.what() << endl;
+		cerr << e.what() << endl;
 		return -1;	// Let it fail
 	}
 	
