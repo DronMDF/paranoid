@@ -57,4 +57,16 @@ BOOST_AUTO_TEST_CASE(testTokenize2)
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
 }
 
+BOOST_AUTO_TEST_CASE(testEscapedNewline)
+{
+	TestFile file({"#define a \\", "(foo)"});
+	file.tokenize();
+	
+	list<string> tokens;
+	file.getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
+	
+	list<string> expected = { "#", "define", " ", "a", " ", "(", "foo", ")", "\n" };
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

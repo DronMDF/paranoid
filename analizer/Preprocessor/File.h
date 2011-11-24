@@ -28,4 +28,5 @@ private:
 	std::list<std::shared_ptr<const Token>> tokens;
 	
 	virtual void forEachLine(std::function<void (const std::shared_ptr<const Line> &)> lineparser) const;
+	void dropEscapedNewline();
 };
