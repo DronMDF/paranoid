@@ -15,6 +15,18 @@ using boost::transform;
 
 BOOST_AUTO_TEST_SUITE(suiteFile)
 
+struct TestFile : public File {
+	const list<string> lines;
+	TestFile(const list<string> &lines) : File("testFile.cpp"), lines(lines) {}
+	void forEachLine(function<void (const shared_ptr<const Line> &)> lineparser) const {
+		unsigned n = 0;
+		BOOST_FOREACH(const auto &l, lines) {
+			shared_ptr<const Line> line(new Line(++n, l, this));
+			lineparser(line);
+		}
+	}
+};
+
 BOOST_AUTO_TEST_CASE(testGetConstructedLocation)
 {
 	const File file("test.cpp");
@@ -23,15 +35,7 @@ BOOST_AUTO_TEST_CASE(testGetConstructedLocation)
 
 BOOST_AUTO_TEST_CASE(testTokenize)
 {
-	struct testFile : public File {
-		testFile() : File("none") {}
-		typedef shared_ptr<const Line> line_ptr;
-		virtual void forEachLine(function<void (const line_ptr &)> lineparser) const {
-			line_ptr line(new Line(7, "012345", this));
-			lineparser(line);
-		}
-	} file;
-
+	TestFile file({"012345"});
 	file.tokenize();
 	
 	list<string> tokens;
@@ -43,15 +47,7 @@ BOOST_AUTO_TEST_CASE(testTokenize)
 
 BOOST_AUTO_TEST_CASE(testTokenize2)
 {
-	struct testFile : public File {
-		testFile() : File("none") {}
-		typedef shared_ptr<const Line> line_ptr;
-		virtual void forEachLine(function<void (const line_ptr &)> lineparser) const {
-			line_ptr line(new Line(1, "aaa bbb", this));
-			lineparser(line);
-		}
-	} file;
-
+	TestFile file({"aaa bbb"});
 	file.tokenize();
 	
 	list<string> tokens;
