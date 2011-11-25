@@ -27,6 +27,10 @@ struct TestFile : public File {
 	}
 };
 
+shared_ptr<File> include(const File *, const string &, bool) {
+	return shared_ptr<File>();
+}
+
 BOOST_AUTO_TEST_CASE(testGetConstructedLocation)
 {
 	const File file("test.cpp");
@@ -36,7 +40,7 @@ BOOST_AUTO_TEST_CASE(testGetConstructedLocation)
 BOOST_AUTO_TEST_CASE(testTokenize)
 {
 	TestFile file({"012345"});
-	file.tokenize();
+	file.tokenize(include);
 	
 	list<string> tokens;
 	file.getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
@@ -48,7 +52,7 @@ BOOST_AUTO_TEST_CASE(testTokenize)
 BOOST_AUTO_TEST_CASE(testTokenize2)
 {
 	TestFile file({"aaa bbb"});
-	file.tokenize();
+	file.tokenize(include);
 	
 	list<string> tokens;
 	file.getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
@@ -60,12 +64,38 @@ BOOST_AUTO_TEST_CASE(testTokenize2)
 BOOST_AUTO_TEST_CASE(testEscapedNewline)
 {
 	TestFile file({"#define a \\", "(foo)"});
-	file.tokenize();
+	file.tokenize(include);
 	
 	list<string> tokens;
 	file.getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
 	
 	list<string> expected = { "#", "define", " ", "a", " ", "(", "foo", ")", "\n" };
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
+}
+
+BOOST_AUTO_TEST_CASE(testInclude)
+{
+	TestFile file({"#include <test.h>"});
+
+	const File *tf = 0;
+	string filename;
+	bool system = false;
+	
+	file.tokenize([&](const File *f, const string &n, bool s) /*-> shared_ptr<const File>*/ {
+		tf = f;
+		filename = n;
+		system = s;
+		return shared_ptr<File>();
+	});
+
+	BOOST_REQUIRE_EQUAL(tf, &file);
+	BOOST_REQUIRE_EQUAL(filename, "test.h");
+	BOOST_REQUIRE(system);
+	
+	list<string> tokens;
+	file.getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
+	
+	list<string> expected = { "#include <test.h>", "\n" };
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
 }
 

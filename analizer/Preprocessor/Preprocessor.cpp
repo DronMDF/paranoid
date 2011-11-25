@@ -26,8 +26,7 @@ void Preprocessor::tokenize()
 {
 	auto fit = files.begin();
 	while (fit != files.end()) {
-		// TODO: pass this to File here.
-		fit->second->tokenize();
+		fit->second->tokenize([](const File *, const string &, bool){ return shared_ptr<File>(); });
 		++fit;
 	}
 }
