@@ -6,6 +6,7 @@ class File;
 
 class TokenInclude : public TokenList {
 public:
-	TokenInclude(const std::list<std::shared_ptr<const Token>> &tokens, const std::shared_ptr<const File> &file);
+	explicit TokenInclude(const std::list<std::shared_ptr<const Token>> &tokens);
 
+	void include(const std::shared_ptr<const File> &file);
 };
