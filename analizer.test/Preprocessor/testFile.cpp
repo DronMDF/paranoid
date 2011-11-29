@@ -73,7 +73,7 @@ BOOST_AUTO_TEST_CASE(testEscapedNewline)
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
 }
 
-BOOST_AUTO_TEST_CASE(testInclude)
+BOOST_AUTO_TEST_CASE(testIncludeSystem)
 {
 	TestFile file({"#include <test.h>"});
 
@@ -96,6 +96,32 @@ BOOST_AUTO_TEST_CASE(testInclude)
 	file.getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
 	
 	list<string> expected = { "#include <test.h>", "\n" };
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
+}
+
+BOOST_AUTO_TEST_CASE(testIncludeLocal)
+{
+	TestFile file({"#include \"test.h\""});
+
+	const File *tf = 0;
+	string filename;
+	bool system = false;
+	
+	file.tokenize([&](const File *f, const string &n, bool s) {
+		tf = f;
+		filename = n;
+		system = s;
+		return shared_ptr<File>();
+	});
+
+	BOOST_REQUIRE_EQUAL(tf, &file);
+	BOOST_REQUIRE_EQUAL(filename, "test.h");
+	BOOST_REQUIRE(!system);
+	
+	list<string> tokens;
+	file.getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
+	
+	list<string> expected = { "#include \"test.h\"", "\n" };
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
 }
 
