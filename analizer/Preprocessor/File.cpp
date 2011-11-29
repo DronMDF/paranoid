@@ -15,7 +15,7 @@ using boost::find_if;
 using boost::is_any_of;
 
 File::File(const string &filename)
-	: filename(filename), tokens()
+	: filename(filename), tokens(), included_from()
 {
 }
 
@@ -25,7 +25,12 @@ File::~File()
 
 string File::getLocation() const
 {
-	return filename;
+	// TODO: How to show multiple points of inclusion?
+	string location;
+	if (!included_from.empty()) {
+		location += included_from.front()->getLocation() + '\n';
+	}
+	return location + filename;
 }
 
 void File::getTokens(function<void (const shared_ptr<const Token> &)> add_token) const
@@ -46,6 +51,11 @@ void File::tokenize(function<shared_ptr<const File> (const File *, const string 
 	
 	dropEscapedNewline();
 	tokenizeIncludes(include);
+}
+
+void File::includedFrom(const shared_ptr<const Token> &token)
+{
+	included_from.push_back(token);
 }
 
 void File::dropEscapedNewline()

@@ -22,9 +22,12 @@ public:
 	virtual std::string getLocation() const;
 	virtual void getTokens(std::function<void (const std::shared_ptr<const Token> &)> add_token) const;
 	
+	void includedFrom(const std::shared_ptr<const Token> &token);
+	
 private:
 	const std::string filename;
 	std::list<std::shared_ptr<const Token>> tokens;
+	std::list<std::shared_ptr<const Token>> included_from;
 	
 	virtual void forEachLine(std::function<void (const std::shared_ptr<const Line> &)> lineparser) const;
 	void dropEscapedNewline();

@@ -99,4 +99,17 @@ BOOST_AUTO_TEST_CASE(testInclude)
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
 }
 
+BOOST_AUTO_TEST_CASE(testIncludeFrom)
+{
+	struct TestToken : public Token {
+		string getText() const { return string(); }
+		string getLocation() const { return "Parent.cpp:5"; }
+		string getTextInString(const string &, const string &) const { return string(); }
+	};
+	
+	TestFile file({});
+	file.includedFrom(shared_ptr<Token>(new TestToken()));
+	BOOST_REQUIRE_EQUAL(file.getLocation(), "Parent.cpp:5\ntestFile.cpp");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
