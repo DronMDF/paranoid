@@ -100,10 +100,25 @@ void File::tokenizeIncludes(function<shared_ptr<const File> (const File *, const
 		}
 		
 		if ((*end)->getText() != "<") {
+			if ((*end)->getText()[0] != '"' || (*end)->getText().size() < 2) {
+				begin = find_if(end, tokens.end(), is_sharp);
+				continue;
+			}
+
+			// local include
+			auto filename = string((*end)->getText(), 1, (*end)->getText().size() - 2);
+			include(this, filename, false);
+			
+			++end;
+			auto itoken = shared_ptr<Token>(new TokenList(list<shared_ptr<const Token>>(begin, end)));
+			tokens.erase(begin, end);
+			tokens.insert(end, itoken);
+			
 			begin = find_if(end, tokens.end(), is_sharp);
 			continue;
 		}
-
+		
+		// System include
 		++end;
 		auto end2 = find_if(end, tokens.end(), is_rb);
 		if ((*end2)->getText() == "\n") {
