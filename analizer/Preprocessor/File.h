@@ -13,11 +13,12 @@ class Token;
 // One file structure class
 class File : public Location {
 public:
+	typedef std::function<std::shared_ptr<const File>(const File *, const std::string &, bool)> include_function;
+	
 	File(const std::string &filename);
 	virtual ~File();
 	
-	void tokenize(std::function<std::shared_ptr<const File> (const File *, const std::string &, bool)> include);
-	// TODO: Command for adding include point
+	void tokenize(include_function include);
 	
 	virtual std::string getLocation() const;
 	virtual void getTokens(std::function<void (const std::shared_ptr<const Token> &)> add_token) const;
@@ -26,10 +27,15 @@ public:
 	
 private:
 	const std::string filename;
-	std::list<std::shared_ptr<const Token>> tokens;
-	std::list<std::shared_ptr<const Token>> included_from;
+	typedef std::list<std::shared_ptr<const Token>> tokens_list;
+	typedef tokens_list::iterator tokens_iterator;
+	
+	tokens_list tokens;
+	tokens_list included_from;
 	
 	virtual void forEachLine(std::function<void (const std::shared_ptr<const Line> &)> lineparser) const;
 	void dropEscapedNewline();
-	void tokenizeIncludes(std::function<std::shared_ptr<const File> (const File *, const std::string &, bool)> include);
+	void tokenizeIncludes(include_function include);
+	
+	void replaceTokens(tokens_iterator begin, tokens_iterator end, const std::shared_ptr<Token> &token);
 };

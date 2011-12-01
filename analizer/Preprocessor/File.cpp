@@ -111,8 +111,7 @@ void File::tokenizeIncludes(function<shared_ptr<const File> (const File *, const
 			
 			++end;
 			auto itoken = shared_ptr<Token>(new TokenList(list<shared_ptr<const Token>>(begin, end)));
-			tokens.erase(begin, end);
-			tokens.insert(end, itoken);
+			replaceTokens(begin, end, itoken);
 			
 			begin = find_if(end, tokens.end(), is_sharp);
 			continue;
@@ -127,17 +126,21 @@ void File::tokenizeIncludes(function<shared_ptr<const File> (const File *, const
 		}
 		
 		auto fntoken = shared_ptr<Token>(new TokenList(list<shared_ptr<const Token>>(end, end2)));
-		tokens.erase(end, end2);
-		tokens.insert(end2, fntoken);
+		replaceTokens(end, end2, fntoken);
 		include(this, fntoken->getText(), true);
 		
 		++end2;
 		auto itoken = shared_ptr<Token>(new TokenList(list<shared_ptr<const Token>>(begin, end2)));
-		tokens.erase(begin, end2);
-		tokens.insert(end2, itoken);
+		replaceTokens(begin, end2, itoken);
 		
 		begin = find_if(end2, tokens.end(), is_sharp);
 	}
+}
+
+void File::replaceTokens(tokens_iterator begin, tokens_iterator end, const shared_ptr<Token> &token)
+{
+	tokens.erase(begin, end);
+	tokens.insert(end, token);
 }
 
 void File::forEachLine(function<void (const shared_ptr<const Line> &)> lineparser) const
