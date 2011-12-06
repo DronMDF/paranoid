@@ -9,11 +9,11 @@
 class Line;
 class Preprocessor;
 class Token;
+class TokenInclude;
 
-// One file structure class
 class File : public Location {
 public:
-	typedef std::function<std::shared_ptr<const File>(const File *, const std::string &, bool)> include_function;
+	typedef std::function<void (const std::shared_ptr<TokenInclude> &, const std::string &, bool)> include_function;
 	
 	File(const std::string &filename);
 	virtual ~File();

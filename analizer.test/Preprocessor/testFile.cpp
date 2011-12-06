@@ -7,6 +7,7 @@
 #include <Preprocessor/File.h>
 #include <Preprocessor/Line.h>
 #include <Preprocessor/Token.h>
+#include <Preprocessor/TokenInclude.h>
 #include "../Assertions.h"
 
 using namespace std;
@@ -27,8 +28,8 @@ struct TestFile : public File {
 	}
 };
 
-shared_ptr<File> include(const File *, const string &, bool) {
-	return shared_ptr<File>();
+void include(const shared_ptr<TokenInclude> &, const string &, bool) 
+{
 }
 
 BOOST_AUTO_TEST_CASE(testGetConstructedLocation)
@@ -77,18 +78,18 @@ BOOST_AUTO_TEST_CASE(testIncludeSystem)
 {
 	TestFile file({"#include <test.h>"});
 
-	const File *tf = 0;
+	shared_ptr<const TokenInclude> tf;
 	string filename;
 	bool system = false;
 	
-	file.tokenize([&](const File *f, const string &n, bool s) /*-> shared_ptr<const File>*/ {
-		tf = f;
+	file.tokenize([&](const shared_ptr<TokenInclude> &ti, const string &n, bool s) {
+		tf = ti;
 		filename = n;
 		system = s;
-		return shared_ptr<File>();
 	});
 
-	BOOST_REQUIRE_EQUAL(tf, &file);
+	BOOST_REQUIRE_EQUAL(tf->getText(), "#include <test.h>");
+	BOOST_REQUIRE_EQUAL(tf->getLocation(), "testFile.cpp:1");
 	BOOST_REQUIRE_EQUAL(filename, "test.h");
 	BOOST_REQUIRE(system);
 	
@@ -103,18 +104,18 @@ BOOST_AUTO_TEST_CASE(testIncludeLocal)
 {
 	TestFile file({"#include \"test.h\""});
 
-	const File *tf = 0;
+	shared_ptr<const TokenInclude> tf;
 	string filename;
 	bool system = false;
 	
-	file.tokenize([&](const File *f, const string &n, bool s) {
-		tf = f;
+	file.tokenize([&](const shared_ptr<TokenInclude> &ti, const string &n, bool s) {
+		tf = ti;
 		filename = n;
 		system = s;
-		return shared_ptr<File>();
 	});
 
-	BOOST_REQUIRE_EQUAL(tf, &file);
+	BOOST_REQUIRE_EQUAL(tf->getText(), "#include \"test.h\"");
+	BOOST_REQUIRE_EQUAL(tf->getLocation(), "testFile.cpp:1");
 	BOOST_REQUIRE_EQUAL(filename, "test.h");
 	BOOST_REQUIRE(!system);
 	

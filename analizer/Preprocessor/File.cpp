@@ -8,6 +8,7 @@
 #include "Line.h"
 #include "Token.h"
 #include "TokenList.h"
+#include "TokenInclude.h"
 #include "Tokenizer.h"
 
 using namespace std;
@@ -40,7 +41,7 @@ void File::getTokens(function<void (const shared_ptr<const Token> &)> add_token)
 	}
 }
 
-void File::tokenize(function<shared_ptr<const File> (const File *, const string &, bool)> include)
+void File::tokenize(function<void (const shared_ptr<TokenInclude> &, const string &, bool)> include)
 {
 	Tokenizer tokenizer([&](const shared_ptr<const Token> &t) { 
 		tokens.push_back(t); 
@@ -76,7 +77,7 @@ void File::dropEscapedNewline()
 	}
 }
 
-void File::tokenizeIncludes(function<shared_ptr<const File> (const File *, const string &, bool)> include)
+void File::tokenizeIncludes(function<void (const shared_ptr<TokenInclude> &, const string &, bool)> include)
 {
 	const auto is_sharp = [](shared_ptr<const Token> &t){ return t->getText() == "#"; };
 	const auto is_rb = [](shared_ptr<const Token> &t){ return is_any_of(">\n")(t->getText()[0]); };
@@ -107,11 +108,11 @@ void File::tokenizeIncludes(function<shared_ptr<const File> (const File *, const
 
 			// local include
 			auto filename = string((*end)->getText(), 1, (*end)->getText().size() - 2);
-			include(this, filename, false);
-			
 			++end;
-			auto itoken = shared_ptr<Token>(new TokenList(list<shared_ptr<const Token>>(begin, end)));
+			auto itoken = shared_ptr<TokenInclude>(new TokenInclude(list<shared_ptr<const Token>>(begin, end)));
 			replaceTokens(begin, end, itoken);
+			
+			include(itoken, filename, false);
 			
 			begin = find_if(end, tokens.end(), is_sharp);
 			continue;
@@ -127,11 +128,12 @@ void File::tokenizeIncludes(function<shared_ptr<const File> (const File *, const
 		
 		auto fntoken = shared_ptr<Token>(new TokenList(list<shared_ptr<const Token>>(end, end2)));
 		replaceTokens(end, end2, fntoken);
-		include(this, fntoken->getText(), true);
 		
 		++end2;
-		auto itoken = shared_ptr<Token>(new TokenList(list<shared_ptr<const Token>>(begin, end2)));
+		auto itoken = shared_ptr<TokenInclude>(new TokenInclude(list<shared_ptr<const Token>>(begin, end2)));
 		replaceTokens(begin, end2, itoken);
+
+		include(itoken, fntoken->getText(), true);
 		
 		begin = find_if(end2, tokens.end(), is_sharp);
 	}

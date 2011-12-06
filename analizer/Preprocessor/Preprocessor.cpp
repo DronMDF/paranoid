@@ -11,6 +11,8 @@
 
 using namespace std;
 
+class TokenInclude;
+
 Preprocessor::Preprocessor(const string &filename)
 	: files()
 {
@@ -26,7 +28,7 @@ void Preprocessor::tokenize()
 {
 	auto fit = files.begin();
 	while (fit != files.end()) {
-		fit->second->tokenize([](const File *, const string &, bool){ return shared_ptr<File>(); });
+		fit->second->tokenize([](const shared_ptr<TokenInclude> &, const string &, bool){});
 		++fit;
 	}
 }
