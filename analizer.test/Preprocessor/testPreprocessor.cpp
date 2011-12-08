@@ -57,4 +57,41 @@ BOOST_AUTO_TEST_CASE(testTokenize)
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
 }
 
+BOOST_AUTO_TEST_CASE(testInclude)
+{
+	struct testPreprocessor : public Preprocessor {
+		testPreprocessor() : Preprocessor("test.cpp") {}
+		using Preprocessor::files;
+	} pp;
+	
+	typedef shared_ptr<const Line> line_ptr;
+	
+	struct testFile1 : public File {
+		testFile1() : File("included.h") {}
+		virtual void forEachLine(function<void (const line_ptr &)> lineparser) const {
+			line_ptr line(new Line(1, "", this));
+			lineparser(line);
+		}
+	};
+	auto included = shared_ptr<File>(new testFile1());
+	
+	struct testFile2 : public File {
+		testFile2() : File("includer.cpp") {}
+		virtual void forEachLine(function<void (const line_ptr &)> lineparser) const {
+			line_ptr line(new Line(1, "#include \"included.h\"", this));
+			lineparser(line);
+		}
+	};
+	
+	auto includer = shared_ptr<File>(new testFile2());
+	
+	pp.files.push_back(make_pair("included.h", included));
+	pp.files.push_back(make_pair("includer.cpp", includer));
+
+	pp.tokenize();
+	
+	// included should be marked as 'included' from includer.cpp
+	BOOST_REQUIRE_EQUAL(included->getLocation(), "includer.cpp:1\nincluded.h");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
