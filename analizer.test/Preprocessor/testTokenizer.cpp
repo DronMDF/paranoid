@@ -18,7 +18,7 @@ struct fixtureTokenizer {
 	Tokenizer tokenizer;
 	
 	fixtureTokenizer()
-		: file("test_tokenizer.cpp"), tokens(),
+		: file("test_tokenizer.cpp", {}), tokens(),
 		  tokenizer([&](const std::shared_ptr<const Token> &t) { tokens.push_back(t->getText()); })
 	{
 	}
