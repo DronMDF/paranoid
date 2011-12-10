@@ -8,6 +8,7 @@
 #include <Preprocessor/Line.h>
 #include <Preprocessor/Token.h>
 #include <Preprocessor/TokenInclude.h>
+#include "TestFile.h"
 #include "../Assertions.h"
 
 using namespace std;
@@ -15,18 +16,6 @@ using boost::lexical_cast;
 using boost::transform;
 
 BOOST_AUTO_TEST_SUITE(suiteFile)
-
-struct TestFile : public File {
-	const list<string> lines;
-	TestFile(const list<string> &lines) : File("testFile.cpp"), lines(lines) {}
-	void forEachLine(function<void (const shared_ptr<const Line> &)> lineparser) const {
-		unsigned n = 0;
-		BOOST_FOREACH(const auto &l, lines) {
-			shared_ptr<const Line> line(new Line(++n, l, this));
-			lineparser(line);
-		}
-	}
-};
 
 void include(const shared_ptr<TokenInclude> &, const string &, bool) 
 {
@@ -40,7 +29,7 @@ BOOST_AUTO_TEST_CASE(testGetConstructedLocation)
 
 BOOST_AUTO_TEST_CASE(testTokenize)
 {
-	TestFile file({"012345"});
+	TestFile file("testFile.cpp", {"012345"});
 	file.tokenize(include);
 	
 	list<string> tokens;
@@ -52,7 +41,7 @@ BOOST_AUTO_TEST_CASE(testTokenize)
 
 BOOST_AUTO_TEST_CASE(testTokenize2)
 {
-	TestFile file({"aaa bbb"});
+	TestFile file("testFile.cpp", {"aaa bbb"});
 	file.tokenize(include);
 	
 	list<string> tokens;
@@ -64,7 +53,7 @@ BOOST_AUTO_TEST_CASE(testTokenize2)
 
 BOOST_AUTO_TEST_CASE(testEscapedNewline)
 {
-	TestFile file({"#define a \\", "(foo)"});
+	TestFile file("testFile.cpp", {"#define a \\", "(foo)"});
 	file.tokenize(include);
 	
 	list<string> tokens;
@@ -76,7 +65,7 @@ BOOST_AUTO_TEST_CASE(testEscapedNewline)
 
 BOOST_AUTO_TEST_CASE(testIncludeSystem)
 {
-	TestFile file({"#include <test.h>"});
+	TestFile file("testFile.cpp", {"#include <test.h>"});
 
 	shared_ptr<const TokenInclude> tf;
 	string filename;
@@ -102,7 +91,7 @@ BOOST_AUTO_TEST_CASE(testIncludeSystem)
 
 BOOST_AUTO_TEST_CASE(testIncludeLocal)
 {
-	TestFile file({"#include \"test.h\""});
+	TestFile file("testFile.cpp", {"#include \"test.h\""});
 
 	shared_ptr<const TokenInclude> tf;
 	string filename;
@@ -133,7 +122,7 @@ BOOST_AUTO_TEST_CASE(testIncludeFrom)
 		string getLocation() const { return "Parent.cpp:5"; }
 	};
 	
-	TestFile file({});
+	TestFile file("testFile.cpp", {});
 	file.includedFrom(shared_ptr<TokenInclude>(new TestToken()));
 	BOOST_REQUIRE_EQUAL(file.getLocation(), "Parent.cpp:5\ntestFile.cpp");
 }
