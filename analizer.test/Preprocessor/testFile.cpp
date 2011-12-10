@@ -135,7 +135,7 @@ BOOST_AUTO_TEST_CASE(testIncludeFrom)
 	};
 	
 	TestFile file({});
-	file.includedFrom(shared_ptr<Token>(new TestToken()));
+	file.includedFrom(shared_ptr<TokenInclude>(new TokenInclude({})));
 	BOOST_REQUIRE_EQUAL(file.getLocation(), "Parent.cpp:5\ntestFile.cpp");
 }
 

@@ -54,7 +54,7 @@ void File::tokenize(function<void (const shared_ptr<TokenInclude> &, const strin
 	tokenizeIncludes(include);
 }
 
-void File::includedFrom(const shared_ptr<const Token> &token)
+void File::includedFrom(const shared_ptr<const TokenInclude> &token)
 {
 	included_from.push_back(token);
 }

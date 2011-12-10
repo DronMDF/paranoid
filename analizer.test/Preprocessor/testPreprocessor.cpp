@@ -4,6 +4,7 @@
 #include <boost/foreach.hpp>
 #include <Preprocessor/File.h>
 #include <Preprocessor/Line.h>
+#include <Preprocessor/Token.h>
 #include <Preprocessor/Preprocessor.h>
 #include "../Assertions.h"
 
@@ -85,6 +86,7 @@ BOOST_AUTO_TEST_CASE(testInclude)
 	
 	auto includer = shared_ptr<File>(new testFile2());
 	
+	pp.files.clear();
 	pp.files.push_back(make_pair("included.h", included));
 	pp.files.push_back(make_pair("includer.cpp", includer));
 

@@ -13,17 +13,15 @@ class TokenInclude;
 
 class File : public Location {
 public:
-	typedef std::function<void (const std::shared_ptr<TokenInclude> &, const std::string &, bool)> include_function;
-	
 	File(const std::string &filename);
 	virtual ~File();
 	
-	void tokenize(include_function include);
+	void tokenize(std::function<void (const std::shared_ptr<TokenInclude> &, const std::string &, bool)> include);
 	
 	virtual std::string getLocation() const;
 	virtual void getTokens(std::function<void (const std::shared_ptr<const Token> &)> add_token) const;
 	
-	void includedFrom(const std::shared_ptr<const Token> &token);
+	void includedFrom(const std::shared_ptr<const TokenInclude> &token);
 	
 private:
 	const std::string filename;
@@ -35,7 +33,7 @@ private:
 	
 	virtual void forEachLine(std::function<void (const std::shared_ptr<const Line> &)> lineparser) const;
 	void dropEscapedNewline();
-	void tokenizeIncludes(include_function include);
+	void tokenizeIncludes(std::function<void (const std::shared_ptr<TokenInclude> &, const std::string &, bool)> include);
 	
 	void replaceTokens(tokens_iterator begin, tokens_iterator end, const std::shared_ptr<Token> &token);
 };
