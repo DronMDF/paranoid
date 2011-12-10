@@ -1,5 +1,4 @@
 
-#include <boost/range/algorithm/transform.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/foreach.hpp>
 #include <Preprocessor/File.h>
@@ -10,27 +9,23 @@
 #include "../Assertions.h"
 
 using namespace std;
-using boost::transform;
 
 BOOST_AUTO_TEST_SUITE(suitePreprocessor)
 
+struct TestPreprocessor : public Preprocessor {
+	TestPreprocessor() : Preprocessor("test.cpp") {}
+	using Preprocessor::files;
+};
+
 BOOST_AUTO_TEST_CASE(testConstruct)
 {
-	struct testPreprocessor : public Preprocessor {
-		testPreprocessor() : Preprocessor("test.cpp") {}
-		using Preprocessor::files;
-	} pp;
-
+	TestPreprocessor pp;
 	BOOST_REQUIRE_EQUAL(pp.files.front().second->getLocation(), "test.cpp");
 }
 
 BOOST_AUTO_TEST_CASE(testTokenize)
 {
-	struct testPreprocessor : public Preprocessor {
-		testPreprocessor() : Preprocessor("test.cpp") {}
-		using Preprocessor::files;
-	} pp;
-	
+	TestPreprocessor pp;
 	auto file = shared_ptr<File>(new TestFile("test.cpp", 
 		{ "int main(int argc, char **argv) {", " return 0;", " }" }));
 	pp.files.clear();
@@ -50,11 +45,7 @@ BOOST_AUTO_TEST_CASE(testTokenize)
 
 BOOST_AUTO_TEST_CASE(testInclude)
 {
-	struct testPreprocessor : public Preprocessor {
-		testPreprocessor() : Preprocessor("test.cpp") {}
-		using Preprocessor::files;
-	} pp;
-	
+	TestPreprocessor pp;
 	auto included = shared_ptr<File>(new TestFile("included.h", {}));
 	auto includer = shared_ptr<File>(new TestFile("includer.cpp", {"#include \"included.h\""}));
 	
