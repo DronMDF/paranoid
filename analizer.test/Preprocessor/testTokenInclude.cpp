@@ -24,20 +24,22 @@ struct TestToken : public Token {
 
 BOOST_AUTO_TEST_CASE(testSystemInclude)
 {
-	const auto token = shared_ptr<Token>(new TestToken("<...>"));
+	const auto token = shared_ptr<Token>(new TestToken("<test.h>"));
 	const list<shared_ptr<const Token>> tokens = { token };
 	TokenInclude ti(tokens);
 	ti.include(shared_ptr<File>());
 	BOOST_REQUIRE(ti.isSystem());
+	BOOST_REQUIRE_EQUAL(ti.getFileName(), "test.h");
 }
 
 BOOST_AUTO_TEST_CASE(testLocalInclude)
 {
-	const auto token = shared_ptr<Token>(new TestToken("\"...\""));
+	const auto token = shared_ptr<Token>(new TestToken("\"local.h\""));
 	const list<shared_ptr<const Token>> tokens = { token };
 	TokenInclude ti(tokens);
 	ti.include(shared_ptr<File>());
 	BOOST_REQUIRE(!ti.isSystem());
+	BOOST_REQUIRE_EQUAL(ti.getFileName(), "local.h");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

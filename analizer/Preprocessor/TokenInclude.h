@@ -10,5 +10,5 @@ public:
 
 	void include(const std::shared_ptr<const File> &file);
 	bool isSystem() const;
-	
+	std::string getFileName() const;
 };
