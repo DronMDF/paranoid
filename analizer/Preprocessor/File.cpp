@@ -81,6 +81,7 @@ void File::tokenizeIncludes(function<void (const shared_ptr<TokenInclude> &, con
 {
 	const auto is_sharp = [](shared_ptr<const Token> &t){ return t->getText() == "#"; };
 	const auto is_rb = [](shared_ptr<const Token> &t){ return is_any_of(">\n")(t->getText()[0]); };
+	
 	auto begin = find_if(tokens, is_sharp);
 	while (begin != tokens.end()) {
 		auto end = begin;
@@ -106,34 +107,29 @@ void File::tokenizeIncludes(function<void (const shared_ptr<TokenInclude> &, con
 				continue;
 			}
 
-			// local include
-			auto filename = string((*end)->getText(), 1, (*end)->getText().size() - 2);
 			++end;
 			auto itoken = shared_ptr<TokenInclude>(new TokenInclude(list<shared_ptr<const Token>>(begin, end)));
 			replaceTokens(begin, end, itoken);
-			
-			include(itoken, filename, false);
+			include(itoken, itoken->getFileName(), itoken->isSystem());
 			
 			begin = find_if(end, tokens.end(), is_sharp);
 			continue;
 		}
 		
 		// System include
-		++end;
 		auto end2 = find_if(end, tokens.end(), is_rb);
 		if ((*end2)->getText() == "\n") {
 			begin = find_if(end, tokens.end(), is_sharp);
 			continue;
 		}
+		++end2;
 		
 		auto fntoken = shared_ptr<Token>(new TokenList(list<shared_ptr<const Token>>(end, end2)));
 		replaceTokens(end, end2, fntoken);
 		
-		++end2;
 		auto itoken = shared_ptr<TokenInclude>(new TokenInclude(list<shared_ptr<const Token>>(begin, end2)));
 		replaceTokens(begin, end2, itoken);
-
-		include(itoken, fntoken->getText(), true);
+		include(itoken, itoken->getFileName(), itoken->isSystem());
 		
 		begin = find_if(end2, tokens.end(), is_sharp);
 	}

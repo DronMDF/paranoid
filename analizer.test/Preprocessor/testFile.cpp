@@ -67,20 +67,13 @@ BOOST_AUTO_TEST_CASE(testIncludeSystem)
 {
 	TestFile file("testFile.cpp", {"#include <test.h>"});
 
-	shared_ptr<const TokenInclude> tf;
-	string filename;
-	bool system = false;
-	
-	file.tokenize([&](const shared_ptr<TokenInclude> &ti, const string &n, bool s) {
-		tf = ti;
-		filename = n;
-		system = s;
-	});
+	shared_ptr<const TokenInclude> ti;
+	file.tokenize([&](const shared_ptr<TokenInclude> &t, const string &, bool) { ti = t; });
 
-	BOOST_REQUIRE_EQUAL(tf->getText(), "#include <test.h>");
-	BOOST_REQUIRE_EQUAL(tf->getLocation(), "testFile.cpp:1");
-	BOOST_REQUIRE_EQUAL(filename, "test.h");
-	BOOST_REQUIRE(system);
+	BOOST_REQUIRE_EQUAL(ti->getText(), "#include <test.h>");
+	BOOST_REQUIRE_EQUAL(ti->getLocation(), "testFile.cpp:1");
+	BOOST_REQUIRE_EQUAL(ti->getFileName(), "test.h");
+	BOOST_REQUIRE(ti->isSystem());
 	
 	list<string> tokens;
 	file.getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
@@ -93,20 +86,13 @@ BOOST_AUTO_TEST_CASE(testIncludeLocal)
 {
 	TestFile file("testFile.cpp", {"#include \"test.h\""});
 
-	shared_ptr<const TokenInclude> tf;
-	string filename;
-	bool system = false;
-	
-	file.tokenize([&](const shared_ptr<TokenInclude> &ti, const string &n, bool s) {
-		tf = ti;
-		filename = n;
-		system = s;
-	});
+	shared_ptr<const TokenInclude> ti;
+	file.tokenize([&](const shared_ptr<TokenInclude> &t, const string &, bool) { ti = t; });
 
-	BOOST_REQUIRE_EQUAL(tf->getText(), "#include \"test.h\"");
-	BOOST_REQUIRE_EQUAL(tf->getLocation(), "testFile.cpp:1");
-	BOOST_REQUIRE_EQUAL(filename, "test.h");
-	BOOST_REQUIRE(!system);
+	BOOST_REQUIRE_EQUAL(ti->getText(), "#include \"test.h\"");
+	BOOST_REQUIRE_EQUAL(ti->getLocation(), "testFile.cpp:1");
+	BOOST_REQUIRE_EQUAL(ti->getFileName(), "test.h");
+	BOOST_REQUIRE(!ti->isSystem());
 	
 	list<string> tokens;
 	file.getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
