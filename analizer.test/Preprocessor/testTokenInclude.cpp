@@ -14,4 +14,30 @@ BOOST_AUTO_TEST_CASE(testConstruct)
 	ti.include(shared_ptr<File>(new File("test.h")));
 }
 
+struct TestToken : public Token {
+	string text;
+	TestToken(const string &text) : text(text) {};
+	string getText() const { return text; };
+	string getLocation() const { return ""; };
+	string getTextInString(const string &, const string &) const { return ""; }
+};
+
+BOOST_AUTO_TEST_CASE(testSystemInclude)
+{
+	const auto token = shared_ptr<Token>(new TestToken("<...>"));
+	const list<shared_ptr<const Token>> tokens = { token };
+	TokenInclude ti(tokens);
+	ti.include(shared_ptr<File>());
+	BOOST_REQUIRE(ti.isSystem());
+}
+
+BOOST_AUTO_TEST_CASE(testLocalInclude)
+{
+	const auto token = shared_ptr<Token>(new TestToken("\"...\""));
+	const list<shared_ptr<const Token>> tokens = { token };
+	TokenInclude ti(tokens);
+	ti.include(shared_ptr<File>());
+	BOOST_REQUIRE(!ti.isSystem());
+}
+
 BOOST_AUTO_TEST_SUITE_END()
