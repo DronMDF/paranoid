@@ -8,6 +8,7 @@
 #include "Preprocessor.h"
 #include "File.h"
 #include "Line.h"
+#include "TokenInclude.h"
 
 using namespace std;
 using namespace std::placeholders;
@@ -27,13 +28,14 @@ void Preprocessor::tokenize()
 {
 	auto fit = files.begin();
 	while (fit != files.end()) {
-		fit->second->tokenize(bind(&Preprocessor::include, this, _1, _2, _3));
+		fit->second->tokenize(bind(&Preprocessor::include, this, _1));
 		++fit;
 	}
 }
 
-void Preprocessor::include(const shared_ptr<TokenInclude> &token, const string &file, bool system)
+void Preprocessor::include(const shared_ptr<TokenInclude> &token)
 {
+	const auto file = token->getFileName();
 	BOOST_FOREACH(auto &fit, files) {
 		if (fit.first == file) {
 			fit.second->includedFrom(token);

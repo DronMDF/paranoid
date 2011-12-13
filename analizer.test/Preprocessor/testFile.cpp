@@ -17,7 +17,7 @@ using boost::transform;
 
 BOOST_AUTO_TEST_SUITE(suiteFile)
 
-void include(const shared_ptr<TokenInclude> &, const string &, bool) 
+void include(const shared_ptr<TokenInclude> &)
 {
 }
 
@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_CASE(testIncludeSystem)
 	TestFile file("testFile.cpp", {"#include <test.h>"});
 
 	shared_ptr<const TokenInclude> ti;
-	file.tokenize([&](const shared_ptr<TokenInclude> &t, const string &, bool) { ti = t; });
+	file.tokenize([&](const shared_ptr<TokenInclude> &t) { ti = t; });
 
 	BOOST_REQUIRE_EQUAL(ti->getText(), "#include <test.h>");
 	BOOST_REQUIRE_EQUAL(ti->getLocation(), "testFile.cpp:1");
@@ -87,7 +87,7 @@ BOOST_AUTO_TEST_CASE(testIncludeLocal)
 	TestFile file("testFile.cpp", {"#include \"test.h\""});
 
 	shared_ptr<const TokenInclude> ti;
-	file.tokenize([&](const shared_ptr<TokenInclude> &t, const string &, bool) { ti = t; });
+	file.tokenize([&](const shared_ptr<TokenInclude> &t) { ti = t; });
 
 	BOOST_REQUIRE_EQUAL(ti->getText(), "#include \"test.h\"");
 	BOOST_REQUIRE_EQUAL(ti->getLocation(), "testFile.cpp:1");

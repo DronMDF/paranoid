@@ -41,7 +41,7 @@ void File::getTokens(function<void (const shared_ptr<const Token> &)> add_token)
 	}
 }
 
-void File::tokenize(function<void (const shared_ptr<TokenInclude> &, const string &, bool)> include)
+void File::tokenize(function<void (const shared_ptr<TokenInclude> &)> include)
 {
 	Tokenizer tokenizer([&](const shared_ptr<const Token> &t) { 
 		tokens.push_back(t); 
@@ -77,7 +77,7 @@ void File::dropEscapedNewline()
 	}
 }
 
-void File::tokenizeIncludes(function<void (const shared_ptr<TokenInclude> &, const string &, bool)> include)
+void File::tokenizeIncludes(function<void (const shared_ptr<TokenInclude> &)> include)
 {
 	const auto is_sharp = [](shared_ptr<const Token> &t){ return t->getText() == "#"; };
 	const auto is_rb = [](shared_ptr<const Token> &t){ return is_any_of(">\n")(t->getText()[0]); };
@@ -110,7 +110,7 @@ void File::tokenizeIncludes(function<void (const shared_ptr<TokenInclude> &, con
 			++end;
 			auto itoken = shared_ptr<TokenInclude>(new TokenInclude(list<shared_ptr<const Token>>(begin, end)));
 			replaceTokens(begin, end, itoken);
-			include(itoken, itoken->getFileName(), itoken->isSystem());
+			include(itoken);
 			
 			begin = find_if(end, tokens.end(), is_sharp);
 			continue;
@@ -129,7 +129,7 @@ void File::tokenizeIncludes(function<void (const shared_ptr<TokenInclude> &, con
 		
 		auto itoken = shared_ptr<TokenInclude>(new TokenInclude(list<shared_ptr<const Token>>(begin, end2)));
 		replaceTokens(begin, end2, itoken);
-		include(itoken, itoken->getFileName(), itoken->isSystem());
+		include(itoken);
 		
 		begin = find_if(end2, tokens.end(), is_sharp);
 	}

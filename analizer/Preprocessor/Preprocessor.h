@@ -21,7 +21,7 @@ public:
 	void getTokens(std::function<void (const std::shared_ptr<const Token> &)> add_token) const;
 	
 protected:
-	void include(const std::shared_ptr<TokenInclude> &token, const std::string &file, bool system);
+	void include(const std::shared_ptr<TokenInclude> &token);
 	
 	std::list<std::pair<std::string, std::shared_ptr<File>>> files;
 };
