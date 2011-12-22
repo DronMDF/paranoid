@@ -18,4 +18,16 @@ BOOST_AUTO_TEST_CASE(testSystemLocate)
 	BOOST_REQUIRE_EQUAL(locator.locate("", "foo.h", true), "/Include/foo.h");
 }
 
+BOOST_AUTO_TEST_CASE(testNotExists)
+{
+	struct testIncludeLocator : public IncludeLocator {
+		testIncludeLocator() : IncludeLocator({}) {}
+		bool isExists(const string &include) const {
+			return false;
+		}
+	} locator;
+	
+	BOOST_REQUIRE_THROW(locator.locate("", "foo.h", true), exception);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

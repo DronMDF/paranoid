@@ -30,5 +30,5 @@ string IncludeLocator::locate(const string &file, const string &include, bool sy
 		}
 	}
 	
-	return "";
+	throw runtime_error("File not found");
 }
