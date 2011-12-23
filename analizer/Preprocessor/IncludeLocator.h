@@ -6,7 +6,7 @@
 
 class IncludeLocator {
 public:
-	explicit IncludeLocator(const std::vector<const char *> &args);
+	IncludeLocator(const std::vector<const char *> &args, const std::list<std::string> spec_path);
 	virtual ~IncludeLocator();
 	
 	std::string locate(const std::string &file, const std::string &include, bool system) const;

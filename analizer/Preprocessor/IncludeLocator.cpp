@@ -9,7 +9,7 @@ using boost::filesystem::exists;
 using boost::filesystem::path;
 using boost::starts_with;
 
-IncludeLocator::IncludeLocator(const vector<const char *> &args)
+IncludeLocator::IncludeLocator(const vector<const char *> &args, const list<string> spec_path)
 	: system_paths(), local_paths()
 {
 	vector<const char *>::const_iterator it = args.begin();
