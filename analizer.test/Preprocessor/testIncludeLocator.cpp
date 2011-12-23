@@ -16,7 +16,7 @@ BOOST_AUTO_TEST_CASE(testNotExists)
 	BOOST_REQUIRE_THROW(locator.locate("", "foo.h", true), exception);
 }
 
-BOOST_AUTO_TEST_CASE(testFileInCurrentDir)
+BOOST_AUTO_TEST_CASE(testQuotedInCurrentDir)
 {
 	struct testIncludeLocator : public IncludeLocator {
 		testIncludeLocator() : IncludeLocator({}) {}
@@ -28,7 +28,19 @@ BOOST_AUTO_TEST_CASE(testFileInCurrentDir)
 	BOOST_REQUIRE_EQUAL(locator.locate("/test/file.cpp", "foo.h", false), "/test/foo.h");
 }
 
-BOOST_AUTO_TEST_CASE(testSystemLocate)
+BOOST_AUTO_TEST_CASE(testQuotedInSelectedDir)
+{
+	struct testIncludeLocator : public IncludeLocator {
+		testIncludeLocator() : IncludeLocator({"-I/manual/include"}) {}
+		bool isExists(const string &include) const {
+			return include == "/manual/include/foo.h";
+		}
+	} locator;
+	
+	BOOST_REQUIRE_EQUAL(locator.locate("", "foo.h", false), "/manual/include/foo.h");
+}
+
+BOOST_AUTO_TEST_CASE(testBracesInSystemDir)
 {
 	struct testIncludeLocator : public IncludeLocator {
 		testIncludeLocator() : IncludeLocator({"-isystem", "/Include"}) {}
