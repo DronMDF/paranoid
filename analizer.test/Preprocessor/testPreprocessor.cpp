@@ -1,6 +1,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include <boost/foreach.hpp>
+#include <Preprocessor/Error.h>
 #include <Preprocessor/File.h>
 #include <Preprocessor/Line.h>
 #include <Preprocessor/Token.h>
@@ -61,6 +62,24 @@ BOOST_AUTO_TEST_CASE(testInclude)
 	
 	// included should be marked as 'included' from includer.cpp
 	BOOST_REQUIRE_EQUAL(included->getLocation(), "includer.cpp:1\nincluded.h");
+}
+
+BOOST_AUTO_TEST_CASE(testLocate)
+{
+	struct tpp : public Preprocessor {
+		tpp() : Preprocessor(
+			[](const string &, const string &, bool) -> string { throw runtime_error("test"); }, 
+			"nothing")
+		{}
+		using Preprocessor::files;
+	} pp;
+
+	auto file = shared_ptr<File>(new TestFile("throw.cpp", {"#include \"included.h\""}));
+	
+	pp.files.clear();
+	pp.files.push_back(make_pair("throw.cpp", file));
+
+	BOOST_REQUIRE_THROW(pp.tokenize(), Error);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
