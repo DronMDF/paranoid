@@ -6,7 +6,6 @@
 #include <string>
 
 class File;
-class Line;
 class Token;
 class TokenInclude;
 
@@ -14,7 +13,9 @@ class TokenInclude;
 class Preprocessor {
 public:
 	// TODO: construct with include/sysinclude paths
-	explicit Preprocessor(const std::string &filename);
+	explicit Preprocessor(
+		std::function<std::string(const std::string &, const std::string &, bool)> locate, 
+		const std::string &filename);
 	virtual ~Preprocessor();
 
 	void tokenize();
@@ -23,5 +24,6 @@ public:
 protected:
 	void include(const std::shared_ptr<TokenInclude> &token);
 	
+	std::function<std::string(const std::string &, const std::string &, bool)> locate;
 	std::list<std::pair<std::string, std::shared_ptr<File>>> files;
 };

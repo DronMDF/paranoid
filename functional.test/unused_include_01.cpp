@@ -1,5 +1,5 @@
 
-#include <stdio.h>
+#include "unused_include_01.h"
 
 // Trivial unused include case.
 // Module not have a code.

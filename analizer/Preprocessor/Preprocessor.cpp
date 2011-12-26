@@ -16,8 +16,9 @@ using namespace std;
 using namespace std::placeholders;
 using boost::filesystem::exists;
 
-Preprocessor::Preprocessor(const string &filename)
-	: files()
+Preprocessor::Preprocessor(function<string(const string &, const string &, bool)> locate, 
+			   const string &filename)
+	: locate(locate), files()
 {
 	// First file created, but not parse. Later.
 	files.push_back(make_pair(filename, shared_ptr<File>(new File(filename))));
@@ -38,20 +39,20 @@ void Preprocessor::tokenize()
 
 void Preprocessor::include(const shared_ptr<TokenInclude> &token)
 {
-	const auto file = token->getFileName();
-	// TODO: Processing throught locator
-	//if (!exists(file)) {
-	//	throw Error(*token, "File not found");
-	//}
-
-	BOOST_FOREACH(auto &fit, files) {
-		if (fit.first == file) {
-			fit.second->includedFrom(token);
-			return;
+	try {
+		const auto ffp = locate("", token->getFileName(), token->isSystem());
+		
+		BOOST_FOREACH(auto &fit, files) {
+			if (fit.first == ffp) {
+				fit.second->includedFrom(token);
+				return;
+			}
 		}
+		
+		files.push_back(make_pair(ffp, shared_ptr<File>(new File(ffp))));
+	} catch (const std::exception &e) {
+		throw Error(*token, e.what());
 	}
-	
-	files.push_back(make_pair(file, shared_ptr<File>(new File(file))));
 }
 
 void Preprocessor::getTokens(function<void (const shared_ptr<const Token> &)> add_token) const

@@ -22,7 +22,7 @@ void checkSource(const vector<const char *> &args)
 	}
 
 	if (exists(source) && (ends_with(source, ".cpp") || ends_with(source, ".c"))) {
-		Preprocessor pp(source);
+		Preprocessor pp([](const string &, const string &include, bool){ return include; }, source);
 		pp.tokenize();
 	}
 }

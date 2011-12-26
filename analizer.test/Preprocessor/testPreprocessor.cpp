@@ -13,7 +13,11 @@ using namespace std;
 BOOST_AUTO_TEST_SUITE(suitePreprocessor)
 
 struct TestPreprocessor : public Preprocessor {
-	TestPreprocessor() : Preprocessor("test.cpp") {}
+	TestPreprocessor() : 
+		Preprocessor([](const string &, const string &include, bool){ return include; }, 
+			     "test.cpp") 
+	{}
+	
 	using Preprocessor::files;
 };
 
