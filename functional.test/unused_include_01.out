@@ -1,0 +1,2 @@
+functional.test/unused_include_01.cpp:2 error: Unused include
+[1;31m#include <stdio.h>[0m

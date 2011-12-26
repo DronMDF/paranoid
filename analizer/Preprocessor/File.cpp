@@ -144,11 +144,13 @@ void File::replaceTokens(tokens_iterator begin, tokens_iterator end, const share
 void File::forEachLine(function<void (const shared_ptr<const Line> &)> lineparser) const
 {
 	ifstream file(filename);
-	for (unsigned i = 1; !file.eof(); i++) {
-		string line;
-		getline(file, line);
-		if (!line.empty()) {
-			lineparser(shared_ptr<Line>(new Line(i, line, this)));
+	if (file.good()) {
+		for (unsigned i = 1; !file.eof(); i++) {
+			string line;
+			getline(file, line);
+			if (!line.empty()) {
+				lineparser(shared_ptr<Line>(new Line(i, line, this)));
+			}
 		}
 	}
 }

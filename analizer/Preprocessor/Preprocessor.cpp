@@ -5,13 +5,16 @@
 #include <functional>
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
+#include <boost/filesystem.hpp>
 #include "Preprocessor.h"
 #include "File.h"
 #include "Line.h"
 #include "TokenInclude.h"
+#include "Error.h"
 
 using namespace std;
 using namespace std::placeholders;
+using boost::filesystem::exists;
 
 Preprocessor::Preprocessor(const string &filename)
 	: files()
@@ -36,6 +39,11 @@ void Preprocessor::tokenize()
 void Preprocessor::include(const shared_ptr<TokenInclude> &token)
 {
 	const auto file = token->getFileName();
+	// TODO: Processing throught locator
+	//if (!exists(file)) {
+	//	throw Error(*token, "File not found");
+	//}
+
 	BOOST_FOREACH(auto &fit, files) {
 		if (fit.first == file) {
 			fit.second->includedFrom(token);
