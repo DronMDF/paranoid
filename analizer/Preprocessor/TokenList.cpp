@@ -35,3 +35,8 @@ string TokenList::getTextInString(const string &begin_marker, const string &end_
 	}
 	return string();
 }
+
+string TokenList::getFileName() const
+{
+	return "";
+}

@@ -24,3 +24,8 @@ string TokenNewline::getTextInString(const string &begin_marker __attribute__((u
 {
 	return line->getText();
 }
+
+string TokenNewline::getFileName() const
+{
+	return "";
+}

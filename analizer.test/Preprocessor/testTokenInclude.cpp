@@ -16,10 +16,11 @@ BOOST_AUTO_TEST_CASE(testConstruct)
 
 struct TestToken : public Token {
 	string text;
-	TestToken(const string &text) : text(text) {};
-	string getText() const { return text; };
-	string getLocation() const { return ""; };
+	TestToken(const string &text) : text(text) {}
+	string getText() const { return text; }
+	string getLocation() const { return ""; }
 	string getTextInString(const string &, const string &) const { return ""; }
+	string getFileName() const { return ""; }
 };
 
 BOOST_AUTO_TEST_CASE(testSystemInclude)

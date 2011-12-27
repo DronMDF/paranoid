@@ -10,4 +10,5 @@ public:
 	virtual std::string getLocation() const = 0;
 	virtual std::string getTextInString(const std::string &begin_marker = std::string(), 
 				    const std::string &end_marker = std::string()) const = 0;
+	virtual std::string getFileName() const = 0;
 };

@@ -34,3 +34,8 @@ string TokenWord::getTextInString(const string &begin_marker, const string &end_
 	text.insert(begin, begin_marker);
 	return text;
 }
+
+string TokenWord::getFileName() const
+{
+	return "";
+}
