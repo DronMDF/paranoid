@@ -28,7 +28,7 @@ bool TokenInclude::isSystem() const
 	return starts_with(text, "<");
 }
 
-string TokenInclude::getFileName() const
+string TokenInclude::getHeaderName() const
 {
 	if (!tokens.empty()) {
 		const string text = tokens.back()->getText();

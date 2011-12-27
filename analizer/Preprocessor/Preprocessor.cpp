@@ -40,7 +40,7 @@ void Preprocessor::tokenize()
 void Preprocessor::include(const shared_ptr<TokenInclude> &token)
 {
 	try {
-		const auto ffp = locate("", token->getFileName(), token->isSystem());
+		const auto ffp = locate("", token->getHeaderName(), token->isSystem());
 		
 		BOOST_FOREACH(auto &fit, files) {
 			if (fit.first == ffp) {

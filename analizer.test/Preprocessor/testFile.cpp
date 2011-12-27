@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE(testIncludeSystem)
 
 	BOOST_REQUIRE_EQUAL(ti->getText(), "#include <test.h>");
 	BOOST_REQUIRE_EQUAL(ti->getLocation(), "testFile.cpp:1");
-	BOOST_REQUIRE_EQUAL(ti->getFileName(), "test.h");
+	BOOST_REQUIRE_EQUAL(ti->getHeaderName(), "test.h");
 	BOOST_REQUIRE(ti->isSystem());
 	
 	list<string> tokens;
@@ -91,7 +91,7 @@ BOOST_AUTO_TEST_CASE(testIncludeLocal)
 
 	BOOST_REQUIRE_EQUAL(ti->getText(), "#include \"test.h\"");
 	BOOST_REQUIRE_EQUAL(ti->getLocation(), "testFile.cpp:1");
-	BOOST_REQUIRE_EQUAL(ti->getFileName(), "test.h");
+	BOOST_REQUIRE_EQUAL(ti->getHeaderName(), "test.h");
 	BOOST_REQUIRE(!ti->isSystem());
 	
 	list<string> tokens;

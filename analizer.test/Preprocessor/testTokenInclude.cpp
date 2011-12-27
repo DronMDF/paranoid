@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_CASE(testSystemInclude)
 	TokenInclude ti(tokens);
 	ti.include(shared_ptr<File>());
 	BOOST_REQUIRE(ti.isSystem());
-	BOOST_REQUIRE_EQUAL(ti.getFileName(), "test.h");
+	BOOST_REQUIRE_EQUAL(ti.getHeaderName(), "test.h");
 }
 
 BOOST_AUTO_TEST_CASE(testLocalInclude)
@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE(testLocalInclude)
 	TokenInclude ti(tokens);
 	ti.include(shared_ptr<File>());
 	BOOST_REQUIRE(!ti.isSystem());
-	BOOST_REQUIRE_EQUAL(ti.getFileName(), "local.h");
+	BOOST_REQUIRE_EQUAL(ti.getHeaderName(), "local.h");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
