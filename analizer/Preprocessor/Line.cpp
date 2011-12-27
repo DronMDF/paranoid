@@ -25,3 +25,8 @@ string Line::getLocation() const
 	return (file != 0 ? file->getLocation() : "<unknown>") + 
 		":" + lexical_cast<string>(number);
 }
+
+string Line::getFileName() const
+{
+	return "";
+}

@@ -15,6 +15,7 @@ public:
 	
 	virtual std::string getText() const;
 	virtual std::string getLocation() const;
+	virtual std::string getFileName() const;
 
 private:
 	const unsigned number;
