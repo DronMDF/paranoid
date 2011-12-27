@@ -19,6 +19,7 @@ public:
 	void tokenize(std::function<void (const std::shared_ptr<TokenInclude> &)> include);
 	
 	virtual std::string getLocation() const;
+	virtual std::string getFileName() const;
 	virtual void getTokens(std::function<void (const std::shared_ptr<const Token> &)> add_token) const;
 	
 	void includedFrom(const std::shared_ptr<const TokenInclude> &token);

@@ -34,6 +34,11 @@ string File::getLocation() const
 	return location + filename;
 }
 
+string File::getFileName() const
+{
+	return filename;
+}
+
 void File::getTokens(function<void (const shared_ptr<const Token> &)> add_token) const
 {
 	BOOST_FOREACH(const auto &token, tokens) {

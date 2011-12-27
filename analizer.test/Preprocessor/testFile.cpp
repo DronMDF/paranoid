@@ -27,6 +27,12 @@ BOOST_AUTO_TEST_CASE(testGetConstructedLocation)
 	BOOST_REQUIRE_EQUAL(file.getLocation(), "test.cpp");
 }
 
+BOOST_AUTO_TEST_CASE(testGetFileName)
+{
+	const File file("test.cpp");
+	BOOST_REQUIRE_EQUAL(file.getFileName(), "test.cpp");
+}
+
 BOOST_AUTO_TEST_CASE(testTokenize)
 {
 	TestFile file("testFile.cpp", {"012345"});
