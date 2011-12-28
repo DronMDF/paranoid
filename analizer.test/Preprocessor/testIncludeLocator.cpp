@@ -1,67 +1,75 @@
 
 #include <boost/test/unit_test.hpp>
 #include <Preprocessor/IncludeLocator.h>
+#include <Preprocessor/TokenInclude.h>
 
 using namespace std;
 
 BOOST_AUTO_TEST_SUITE(suiteIncludeLocator)
 
+struct TestToken : public Token {
+	string text;
+	TestToken(const string &text) : text(text) {}
+	string getText() const { return text; }
+	string getLocation() const { return ""; }
+	string getTextInString(const string &, const string &) const { return ""; }
+	string getFileName() const { return ""; }
+};
+
+struct TestTokenInclude : public TokenInclude {
+	TestTokenInclude(const string &arg) : TokenInclude({
+		shared_ptr<Token>(new TestToken("#")),
+		shared_ptr<Token>(new TestToken("include")),
+		shared_ptr<Token>(new TestToken(" ")),
+		shared_ptr<Token>(new TestToken(arg))})
+	{
+	}
+	string getFileName() const { return "/test/test.cpp"; }
+};
+
+struct TestIncludeLocator : public IncludeLocator {
+	const string expected;
+	TestIncludeLocator(const vector<const char *> &args, const string &expected) 
+		: IncludeLocator(args, {"/usr/include"}), expected(expected) 
+	{}
+	bool isExists(const string &include) const {
+		return include == expected;
+	}
+};
+
 BOOST_AUTO_TEST_CASE(testNotExists)
 {
-	struct testIncludeLocator : public IncludeLocator {
-		testIncludeLocator() : IncludeLocator({}, {}) {}
-		bool isExists(const string &include) const { return false; }
-	} locator;
-	
-	BOOST_REQUIRE_THROW(locator.locate("", "foo.h", true), exception);
+	const TestIncludeLocator locator({}, "none");
+	auto token = shared_ptr<const TokenInclude>(new TestTokenInclude("\"foo.h\""));
+	BOOST_REQUIRE_THROW(locator.locate(token), exception);
 }
 
 BOOST_AUTO_TEST_CASE(testQuotedInCurrentDir)
 {
-	struct testIncludeLocator : public IncludeLocator {
-		testIncludeLocator() : IncludeLocator({}, {}) {}
-		bool isExists(const string &include) const {
-			return include == "/test/foo.h";
-		}
-	} locator;
-	
-	BOOST_REQUIRE_EQUAL(locator.locate("/test/file.cpp", "foo.h", false), "/test/foo.h");
+	const TestIncludeLocator locator({}, "/test/foo.h");
+	auto token = shared_ptr<const TokenInclude>(new TestTokenInclude("\"foo.h\""));
+	BOOST_REQUIRE_EQUAL(locator.locate(token), "/test/foo.h");
 }
 
 BOOST_AUTO_TEST_CASE(testQuotedInSelectedDir)
 {
-	struct testIncludeLocator : public IncludeLocator {
-		testIncludeLocator() : IncludeLocator({"-I/manual/include"}, {}) {}
-		bool isExists(const string &include) const {
-			return include == "/manual/include/foo.h";
-		}
-	} locator;
-	
-	BOOST_REQUIRE_EQUAL(locator.locate("", "foo.h", false), "/manual/include/foo.h");
+	const TestIncludeLocator locator({"-I/manual/include"}, "/manual/include/foo.h");
+	auto token = shared_ptr<const TokenInclude>(new TestTokenInclude("\"foo.h\""));
+	BOOST_REQUIRE_EQUAL(locator.locate(token), "/manual/include/foo.h");
 }
 
 BOOST_AUTO_TEST_CASE(testBracesInSystemDir)
 {
-	struct testIncludeLocator : public IncludeLocator {
-		testIncludeLocator() : IncludeLocator({"-isystem", "/Include"}, {}) {}
-		bool isExists(const string &include) const {
-			return include == "/Include/foo.h";
-		}
-	} locator;
-	
-	BOOST_REQUIRE_EQUAL(locator.locate("", "foo.h", true), "/Include/foo.h");
+	const TestIncludeLocator locator({"-isystem", "/Include"}, "/Include/foo.h");
+	auto token = shared_ptr<const TokenInclude>(new TestTokenInclude("<foo.h>"));
+	BOOST_REQUIRE_EQUAL(locator.locate(token), "/Include/foo.h");
 }
 
 BOOST_AUTO_TEST_CASE(testNoStdInc)
 {
-	struct testIncludeLocator : public IncludeLocator {
-		testIncludeLocator() : IncludeLocator({"-nostdinc"}, {"/usr/include"}) {}
-		bool isExists(const string &include) const {
-			return include == "/usr/include/foo.h";
-		}
-	} locator;
-	
-	BOOST_REQUIRE_THROW(locator.locate("", "foo.h", true), exception);
+	const TestIncludeLocator locator({"-nostdinc"}, "/usr/include/foo.h");
+	auto token = shared_ptr<const TokenInclude>(new TestTokenInclude("<foo.h>"));
+	BOOST_REQUIRE_THROW(locator.locate(token), exception);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

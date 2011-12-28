@@ -2,7 +2,9 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
+#include "Error.h"
 #include "IncludeLocator.h"
+#include "TokenInclude.h"
 
 using namespace std;
 using boost::filesystem::exists;
@@ -45,21 +47,21 @@ bool IncludeLocator::isExists(const string &include) const
 	return exists(include);
 }
 
-string IncludeLocator::locate(const string &file, const string &include, bool system) const
+string IncludeLocator::locate(const shared_ptr<const TokenInclude> &token) const
 {
-	if (!system) {
-		auto cp = path(file).parent_path().string() + '/' + include;
+	if (!token->isSystem()) {
+		auto cp = path(token->getFileName()).parent_path().string() + '/' + token->getHeaderName();
 		if (isExists(cp)) {
 			return cp;
 		}
 	}
 	
-	BOOST_FOREACH(const auto &p, system ? system_paths : local_paths) {
-		auto cp = p + '/' + include;
+	BOOST_FOREACH(const auto &p, token->isSystem() ? system_paths : local_paths) {
+		auto cp = p + '/' + token->getHeaderName();
 		if (isExists(cp)) {
 			return cp;
 		}
 	}
 	
-	throw runtime_error("File not found");
+	throw Error(*token, "File not found");
 }

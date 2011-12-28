@@ -6,9 +6,10 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
+#include <Preprocessor/File.h>
+#include <Preprocessor/Preprocessor.h>
+#include <Preprocessor/TokenInclude.h>
 #include "CommandLine.h"
-#include "analizer/Preprocessor/File.h"
-#include "analizer/Preprocessor/Preprocessor.h"
 
 using namespace std;
 using boost::ends_with;
@@ -22,7 +23,9 @@ void checkSource(const vector<const char *> &args)
 	}
 
 	if (exists(source) && (ends_with(source, ".cpp") || ends_with(source, ".c"))) {
-		Preprocessor pp([](const string &, const string &include, bool){ return include; }, source);
+		Preprocessor pp([](const shared_ptr<const TokenInclude> &token) -> string { 
+				return token->getHeaderName(); 
+			}, source);
 		pp.tokenize();
 	}
 }

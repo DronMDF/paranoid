@@ -5,6 +5,7 @@
 #include <Preprocessor/File.h>
 #include <Preprocessor/Line.h>
 #include <Preprocessor/Token.h>
+#include <Preprocessor/TokenInclude.h>
 #include <Preprocessor/Preprocessor.h>
 #include "TestFile.h"
 #include "../Assertions.h"
@@ -15,8 +16,10 @@ BOOST_AUTO_TEST_SUITE(suitePreprocessor)
 
 struct TestPreprocessor : public Preprocessor {
 	TestPreprocessor() : 
-		Preprocessor([](const string &, const string &include, bool){ return include; }, 
-			     "test.cpp") 
+		Preprocessor([](const std::shared_ptr<const TokenInclude> &token){ 
+				return token->getHeaderName(); 
+			},
+			"test.cpp")
 	{}
 	
 	using Preprocessor::files;
@@ -68,7 +71,9 @@ BOOST_AUTO_TEST_CASE(testLocate)
 {
 	struct tpp : public Preprocessor {
 		tpp() : Preprocessor(
-			[](const string &, const string &, bool) -> string { throw runtime_error("test"); }, 
+			[](const std::shared_ptr<const TokenInclude> &token) -> string { 
+				throw Error(*token, "test");
+			}, 
 			"nothing")
 		{}
 		using Preprocessor::files;
