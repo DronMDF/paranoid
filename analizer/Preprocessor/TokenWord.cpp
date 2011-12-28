@@ -37,5 +37,5 @@ string TokenWord::getTextInString(const string &begin_marker, const string &end_
 
 string TokenWord::getFileName() const
 {
-	return "";
+	return line->getFileName();
 }
