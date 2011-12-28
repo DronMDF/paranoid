@@ -1,14 +1,14 @@
 
 #pragma once
-
 #include <string>
-#include "Location.h"
 
-class Line : public Location {
+class File;
+
+class Line {
 public:
 	Line() = delete;
 	Line(const Line &line) = delete;
-	Line(unsigned number, const std::string &text, const Location *file);
+	Line(unsigned number, const std::string &text, const File *file);
 	virtual ~Line();
 
 	Line &operator = (const Line &) = delete;
@@ -20,5 +20,5 @@ public:
 private:
 	const unsigned number;
 	const std::string text;
-	const Location *file;
+	const File *file;
 };

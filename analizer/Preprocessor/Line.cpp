@@ -6,7 +6,7 @@
 using namespace std;
 using boost::lexical_cast;
 
-Line::Line(unsigned number, const string &text, const Location *file)
+Line::Line(unsigned number, const string &text, const File *file)
 	: number(number), text(text), file(file)
 {
 }
@@ -28,5 +28,5 @@ string Line::getLocation() const
 
 string Line::getFileName() const
 {
-	return "";
+	return file != 0 ? file->getFileName() : "<unknown>";
 }

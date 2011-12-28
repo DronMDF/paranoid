@@ -4,14 +4,13 @@
 #include <list>
 #include <memory>
 #include <string>
-#include "Location.h"
 
 class Line;
 class Preprocessor;
 class Token;
 class TokenInclude;
 
-class File : public Location {
+class File {
 public:
 	File(const std::string &filename);
 	virtual ~File();
