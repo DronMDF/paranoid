@@ -38,5 +38,6 @@ string TokenList::getTextInString(const string &begin_marker, const string &end_
 
 string TokenList::getFileName() const
 {
-	return "";
+	// Get filename from first token, this is correct?
+	return tokens.empty() ? "unknown" : tokens.front()->getFileName();
 }

@@ -1,6 +1,8 @@
 
 #include <boost/test/unit_test.hpp>
 #include <Preprocessor/TokenList.h>
+#include <Preprocessor/TokenWord.h>
+#include "TestFile.h"
 
 using namespace std;
 
@@ -14,6 +16,14 @@ struct TestToken : public Token {
 	string getTextInString(const string &, const string &) const { return ""; }
 	string getFileName() const { return ""; }
 };
+
+BOOST_AUTO_TEST_CASE(testGetFileName)
+{
+	TestFile file("test.cpp", {});
+	const shared_ptr<const Line> line(new Line(10, "aaaxxxxxaaa", &file));
+	const TokenList tokens({shared_ptr<const Token>(new TokenWord(line, 3, 8))});
+	BOOST_REQUIRE_EQUAL(tokens.getFileName(), file.getFileName());
+}
 
 BOOST_AUTO_TEST_CASE(testEmptyList)
 {

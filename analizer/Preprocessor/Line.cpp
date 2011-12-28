@@ -22,11 +22,11 @@ string Line::getText() const
 
 string Line::getLocation() const
 {
-	return (file != 0 ? file->getLocation() : "<unknown>") + 
+	return (file != 0 ? file->getLocation() : "unknown") + 
 		":" + lexical_cast<string>(number);
 }
 
 string Line::getFileName() const
 {
-	return file != 0 ? file->getFileName() : "<unknown>";
+	return file != 0 ? file->getFileName() : "unknown";
 }
