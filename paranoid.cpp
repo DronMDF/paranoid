@@ -1,17 +1,20 @@
 
 #include <unistd.h>
 #include <fstream>
+#include <functional>
 #include <string>
 #include <vector>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 #include <Preprocessor/File.h>
+#include <Preprocessor/IncludeLocator.h>
 #include <Preprocessor/Preprocessor.h>
 #include <Preprocessor/TokenInclude.h>
 #include "CommandLine.h"
 
 using namespace std;
+using namespace std::placeholders;
 using boost::ends_with;
 using boost::filesystem::exists;
 
@@ -23,9 +26,9 @@ void checkSource(const vector<const char *> &args)
 	}
 
 	if (exists(source) && (ends_with(source, ".cpp") || ends_with(source, ".c"))) {
-		Preprocessor pp([](const shared_ptr<const TokenInclude> &token) -> string { 
-				return token->getHeaderName(); 
-			}, source);
+		// TODO: pass paths in locator
+		IncludeLocator locator({}, {});
+		Preprocessor pp(bind(&IncludeLocator::locate, locator, _1), source);
 		pp.tokenize();
 	}
 }
