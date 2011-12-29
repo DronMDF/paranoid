@@ -51,9 +51,12 @@ void Preprocessor::include(const shared_ptr<TokenInclude> &token)
 	files.push_back(make_pair(ffp, shared_ptr<File>(new File(ffp))));
 }
 
-void Preprocessor::getTokens(function<void (const shared_ptr<const Token> &)> add_token) const
+void Preprocessor::getTokens(const string &filename, 
+	function<void (const shared_ptr<const Token> &)> add_token) const
 {
 	BOOST_FOREACH(const auto &file, files) {
-		file.second->getTokens(add_token);
+		if (file.first == filename) {
+			file.second->getTokens(add_token);
+		}
 	}
 }

@@ -17,7 +17,8 @@ public:
 	virtual ~Preprocessor();
 
 	void tokenize();
-	void getTokens(std::function<void (const std::shared_ptr<const Token> &)> add_token) const;
+	void getTokens(const std::string &filename, 
+		       std::function<void (const std::shared_ptr<const Token> &)> add_token) const;
 	
 protected:
 	void include(const std::shared_ptr<TokenInclude> &token);
