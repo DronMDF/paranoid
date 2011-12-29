@@ -7,10 +7,12 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
+#include <Preprocessor/Error.h>
 #include <Preprocessor/File.h>
 #include <Preprocessor/IncludeLocator.h>
 #include <Preprocessor/Preprocessor.h>
 #include <Preprocessor/TokenInclude.h>
+#include <Preprocessor/TokenSpace.h>
 #include "CommandLine.h"
 
 using namespace std;
@@ -30,6 +32,25 @@ void checkSource(const vector<const char *> &args)
 		IncludeLocator locator({}, {});
 		Preprocessor pp(bind(&IncludeLocator::locate, locator, _1), source);
 		pp.tokenize();
+		
+		list<shared_ptr<const Token>> tokens;
+		pp.getTokens(source, [&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t); });
+
+		list<shared_ptr<const Token>> includes;
+		list<shared_ptr<const Token>> others;
+		BOOST_FOREACH(const auto &t, tokens) {
+			if (dynamic_cast<const TokenInclude *>(t.get()) != 0) {
+				includes.push_back(t);
+			} else if (dynamic_cast<const TokenSpace *>(t.get()) == 0) {
+				others.push_back(t);
+			}
+		}
+		
+		if (others.empty()) {
+			BOOST_FOREACH(const auto &i, includes) {
+				cerr << Error(*i, "Unused include").what() << endl;
+			}
+		}
 	}
 }
 
