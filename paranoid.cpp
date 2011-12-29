@@ -12,6 +12,7 @@
 #include <Preprocessor/IncludeLocator.h>
 #include <Preprocessor/Preprocessor.h>
 #include <Preprocessor/TokenInclude.h>
+#include <Preprocessor/TokenNewline.h>
 #include <Preprocessor/TokenSpace.h>
 #include "CommandLine.h"
 
@@ -41,11 +42,20 @@ void checkSource(const vector<const char *> &args)
 		BOOST_FOREACH(const auto &t, tokens) {
 			if (dynamic_cast<const TokenInclude *>(t.get()) != 0) {
 				includes.push_back(t);
-			} else if (dynamic_cast<const TokenSpace *>(t.get()) == 0) {
-				others.push_back(t);
+				continue;
 			}
+			
+			if (dynamic_cast<const TokenSpace *>(t.get()) == 0) {
+				continue;
+			}
+			
+			if (dynamic_cast<const TokenNewline *>(t.get()) == 0) {
+				continue;
+			}
+			
+			others.push_back(t);
 		}
-		
+
 		if (others.empty()) {
 			BOOST_FOREACH(const auto &i, includes) {
 				cerr << Error(*i, "Unused include").what() << endl;
