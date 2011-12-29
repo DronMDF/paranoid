@@ -1,2 +1,2 @@
 functional.test/test0002.cpp:4 error: Open quote
-	return [1;31m"xxxx;[0m
+	return "xxxx;

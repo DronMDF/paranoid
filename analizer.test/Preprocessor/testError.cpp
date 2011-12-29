@@ -10,8 +10,11 @@ using namespace std;
 
 BOOST_AUTO_TEST_SUITE(suiteError)
 
-const string SSEL = "\033[1;31m";
-const string ESEL = "\033[0m";
+//const string SSEL = "\033[1;31m";
+//const string ESEL = "\033[0m";
+// TODO: Coloring temporary off
+const string SSEL = "";
+const string ESEL = "";
 
 BOOST_AUTO_TEST_CASE(testErrorFromToken)
 {

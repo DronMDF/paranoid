@@ -7,8 +7,7 @@
 using namespace std;
 
 Error::Error(const Token &token, const string &message)
-	: whatstr(token.getLocation() + " error: " + message + "\n" + 
-		token.getTextInString("\033[1;31m", "\033[0m"))
+	: whatstr(token.getLocation() + " error: " + message + "\n" + token.getTextInString("", ""))
 {
 }
 
@@ -19,14 +18,7 @@ Error::Error(const Line &line, string::size_type begin, string::size_type end, c
 	BOOST_ASSERT(begin < line.getText().size());
 	BOOST_ASSERT(end == string::npos || end <= line.getText().size());
 	
-	string text = line.getText();
-	if (end == string::npos) {
-		text.append("\033[0m");
-	} else {
-		text.insert(end, "\033[0m");
-	}
-	text.insert(begin, "\033[1;31m");
-	whatstr += text;
+	whatstr += line.getText();
 }
 
 Error::~Error() throw()
