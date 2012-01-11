@@ -45,11 +45,11 @@ void checkSource(const vector<const char *> &args)
 				continue;
 			}
 			
-			if (dynamic_cast<const TokenSpace *>(t.get()) == 0) {
+			if (dynamic_cast<const TokenSpace *>(t.get()) != 0) {
 				continue;
 			}
 			
-			if (dynamic_cast<const TokenNewline *>(t.get()) == 0) {
+			if (dynamic_cast<const TokenNewline *>(t.get()) != 0) {
 				continue;
 			}
 			
