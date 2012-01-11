@@ -63,5 +63,6 @@ string IncludeLocator::locate(const shared_ptr<const TokenInclude> &token) const
 		}
 	}
 	
-	throw Error(*token, "File not found");
+	// Unknown include is normal way for paranoid, not error
+	return "";
 }

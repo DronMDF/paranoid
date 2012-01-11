@@ -41,6 +41,10 @@ void Preprocessor::include(const shared_ptr<TokenInclude> &token)
 {
 	const auto ffp = locate(token);
 	
+	if (ffp.empty()) {
+		return;
+	}
+	
 	BOOST_FOREACH(auto &fit, files) {
 		if (fit.first == ffp) {
 			fit.second->includedFrom(token);

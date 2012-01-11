@@ -41,7 +41,8 @@ BOOST_AUTO_TEST_CASE(testNotExists)
 {
 	const TestIncludeLocator locator({}, "none");
 	auto token = shared_ptr<const TokenInclude>(new TestTokenInclude("\"foo.h\""));
-	BOOST_REQUIRE_THROW(locator.locate(token), exception);
+	// Not located, no error
+	BOOST_REQUIRE(locator.locate(token).empty());
 }
 
 BOOST_AUTO_TEST_CASE(testQuotedInCurrentDir)
@@ -69,7 +70,8 @@ BOOST_AUTO_TEST_CASE(testNoStdInc)
 {
 	const TestIncludeLocator locator({"-nostdinc"}, "/usr/include/foo.h");
 	auto token = shared_ptr<const TokenInclude>(new TestTokenInclude("<foo.h>"));
-	BOOST_REQUIRE_THROW(locator.locate(token), exception);
+	// Not located, no error
+	BOOST_REQUIRE(locator.locate(token).empty());
 }
 
 BOOST_AUTO_TEST_SUITE_END()
