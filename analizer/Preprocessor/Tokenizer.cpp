@@ -44,6 +44,9 @@ void Tokenizer::parse(const shared_ptr<const Line> &line)
 			position = parseSpace(line, position);
 		} else if (starts_with(string(line->getText(), position), "/*")) {
 			position = parseCComment(line, position);
+		} else if (starts_with(string(line->getText(), position), "//")) {
+			add_token(shared_ptr<Token>(new TokenSpace(line, position, string::npos)));
+			break;
 		} else if (is_any_of("{}[]#()<>%:;.?*+-/^&|∼!=,\\")(line->getText()[position])) {
 			add_token(shared_ptr<Token>(new TokenWord(line, position, position + 1)));
 			position++;

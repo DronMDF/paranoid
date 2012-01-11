@@ -112,6 +112,14 @@ BOOST_FIXTURE_TEST_CASE(testMultilineComment, fixtureTokenizer)
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
 }
 
+BOOST_FIXTURE_TEST_CASE(testCppComment, fixtureTokenizer)
+{
+	shared_ptr<const Line> line1(new Line(101, "token; // Comment", &file));
+	tokenizer.parse(line1);
+	list<string> expected = { "token", ";", " ", " ", "\n"};
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
+}
+
 BOOST_FIXTURE_TEST_CASE(testMultilineDoubleQuoteString, fixtureTokenizer)
 {
 	shared_ptr<const Line> line1(new Line(101, "seq_printf(m, \"%d (%s) %c \\", &file));
