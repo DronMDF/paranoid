@@ -23,7 +23,7 @@ Tokenizer::Tokenizer(add_token_t add_token)
 Tokenizer::~Tokenizer()
 {
 	if (!string_tokens.empty()) {
-		Error error(*(string_tokens.front()), "Open quote");
+		Error error(string_tokens.front(), "Open quote");
 		cerr << error.what() << endl;
 	}
 }

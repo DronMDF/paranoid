@@ -14,7 +14,7 @@ BOOST_AUTO_TEST_CASE(testErrorFromToken)
 {
 	const File file("test.cpp");
 	const shared_ptr<Line> line(new Line(1, "123456789", &file));
-	const TokenWord token(line, 3, 8);
+	const shared_ptr<Token> token(new TokenWord(line, 3, 8));
 	Error error(token, "numbers error");
 	BOOST_REQUIRE_EQUAL(error.what(), "test.cpp:1 error: numbers error\n123456789");
 }

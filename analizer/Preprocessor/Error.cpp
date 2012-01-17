@@ -6,8 +6,8 @@
 
 using namespace std;
 
-Error::Error(const Token &token, const string &message)
-	: whatstr(token.getLocation() + " error: " + message + "\n" + token.getTextInString("", ""))
+Error::Error(const shared_ptr<const Token> &token, const string &message)
+	: whatstr(token->getLocation() + " error: " + message + "\n" + token->getTextInString("", ""))
 {
 }
 

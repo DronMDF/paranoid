@@ -58,7 +58,7 @@ void checkSource(const vector<const char *> &args)
 
 		if (others.empty()) {
 			BOOST_FOREACH(const auto &i, includes) {
-				cerr << Error(*i, "Unused include").what() << endl;
+				cerr << Error(i, "Unused include").what() << endl;
 			}
 		}
 	}

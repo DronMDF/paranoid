@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE(testLocate)
 	struct tpp : public Preprocessor {
 		tpp() : Preprocessor(
 			[](const std::shared_ptr<const TokenInclude> &token) -> string { 
-				throw Error(*token, "test");
+				throw Error(token, "test");
 			}, 
 			"nothing")
 		{}
