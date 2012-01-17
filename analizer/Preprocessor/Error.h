@@ -10,8 +10,6 @@ class Line;
 class Error : public std::exception {
 public:
 	Error(const Token &token, const std::string &message);
-	Error(const Line &line, std::string::size_type begin, std::string::size_type end,
-	      const std::string &message);
 	virtual ~Error() throw();
 	const char *what() const throw();
 	

@@ -26,13 +26,4 @@ BOOST_AUTO_TEST_CASE(testErrorFromToken)
 		"123" + SSEL + "45678" + ESEL + "9");
 }
 
-BOOST_AUTO_TEST_CASE(testErrorFromLine)
-{
-	const File file("test.cpp");
-	const Line line(1, "123456789", &file);
-	Error error(line, 5, string::npos, "wrong quote");
-	BOOST_REQUIRE_EQUAL(error.what(), "test.cpp:1 error: wrong quote\n"
-		"12345" + SSEL + "6789" + ESEL);
-}
-
 BOOST_AUTO_TEST_SUITE_END()
