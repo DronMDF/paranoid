@@ -70,7 +70,7 @@ int main(int argc, const char **argv)
 
 	try {
 		checkSource(args);
-	} catch (const exception &e) {
+	} catch (const Error &e) {
 		cerr << e.what() << endl;
 		return -1;	// Let it fail
 	}
