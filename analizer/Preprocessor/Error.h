@@ -3,16 +3,13 @@
 
 #include <memory>
 #include <string>
-#include <stdexcept>
 
 class Token;
-class Line;
 
-class Error : public std::exception {
+class Error {
 public:
 	Error(const std::shared_ptr<const Token> &token, const std::string &message);
-	virtual ~Error() throw();
-	const char *what() const throw();
+	std::string what() const;
 	
 private:
 	const std::shared_ptr<const Token> &token;
