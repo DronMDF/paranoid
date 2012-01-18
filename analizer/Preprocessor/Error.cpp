@@ -7,7 +7,7 @@
 using namespace std;
 
 Error::Error(const shared_ptr<const Token> &token, const string &message)
-	: whatstr(token->getLocation() + " error: " + message + "\n" + token->getTextInString("", ""))
+	: token(token), message(message)
 {
 }
 
@@ -17,5 +17,6 @@ Error::~Error() throw()
 
 const char *Error::what() const throw()
 {
-	return whatstr.c_str();
+	static string fm = token->getLocation() + " error: " + message + "\n" + token->getTextInString("", "");
+	return fm.c_str();
 }

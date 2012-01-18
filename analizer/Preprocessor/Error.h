@@ -15,5 +15,6 @@ public:
 	const char *what() const throw();
 	
 private:
-	std::string whatstr;
+	const std::shared_ptr<const Token> &token;
+	const std::string message;
 };
