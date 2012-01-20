@@ -1,5 +1,4 @@
 
-
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/range/algorithm/replace_copy_if.hpp>
 #include "ErrorFormatter.h"
@@ -16,7 +15,9 @@ std::string ErrorFormatter(const Error &error)
 	auto line = error.token->getLine();
 	auto linetext = line->getText();
 	string tokenmask;
-	replace_copy_if(linetext, back_inserter(tokenmask), !is_space(), string(" "));
+	replace_copy_if(linetext, back_inserter(tokenmask), !is_space(), ' ');
+	auto len = error.token->getEndPos() - error.token->getBeginPos();
+	tokenmask.replace(error.token->getBeginPos(), len, len, '~');
 	return line->getLocation() + " error: " + error.message + "\n" 
 		+ linetext + '\n' + tokenmask;
 }

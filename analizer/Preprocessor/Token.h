@@ -15,4 +15,6 @@ public:
 				    const std::string &end_marker = std::string()) const = 0;
 	virtual std::string getFileName() const = 0;
 	virtual std::shared_ptr<const Line> getLine() const = 0;
+	virtual size_t getBeginPos() const = 0;
+	virtual size_t getEndPos() const = 0;
 };

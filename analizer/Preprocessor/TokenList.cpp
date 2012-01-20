@@ -46,3 +46,13 @@ shared_ptr<const Line> TokenList::getLine() const
 {
 	return tokens.empty() ? shared_ptr<const Line>() : tokens.front()->getLine();
 }
+
+size_t TokenList::getBeginPos() const
+{
+	return tokens.empty() ? 0 : tokens.front()->getBeginPos();
+}
+
+size_t TokenList::getEndPos() const
+{
+	return tokens.empty() ? 0 : tokens.back()->getBeginPos();
+}

@@ -44,3 +44,13 @@ shared_ptr<const Line> TokenWord::getLine() const
 {
 	return line;
 }
+
+size_t TokenWord::getBeginPos() const
+{
+	return begin;
+}
+
+size_t TokenWord::getEndPos() const
+{
+	return end;
+}
