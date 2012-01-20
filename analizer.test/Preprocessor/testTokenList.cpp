@@ -15,6 +15,7 @@ struct TestToken : public Token {
 	string getLocation() const { return ""; }
 	string getTextInString(const string &, const string &) const { return ""; }
 	string getFileName() const { return ""; }
+	shared_ptr<const Line> getLine() const { return shared_ptr<const Line>(); }
 };
 
 BOOST_AUTO_TEST_CASE(testGetFileName)

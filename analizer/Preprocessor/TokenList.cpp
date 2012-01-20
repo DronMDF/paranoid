@@ -41,3 +41,8 @@ string TokenList::getFileName() const
 	// Get filename from first token, this is correct?
 	return tokens.empty() ? "unknown" : tokens.front()->getFileName();
 }
+
+shared_ptr<const Line> TokenList::getLine() const
+{
+	return tokens.empty() ? shared_ptr<const Line>() : tokens.front()->getLine();
+}

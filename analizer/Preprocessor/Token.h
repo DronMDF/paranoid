@@ -1,6 +1,9 @@
 
 #pragma once
+#include <memory>
 #include <string>
+
+class Line;
 
 class Token {
 public:
@@ -11,4 +14,5 @@ public:
 	virtual std::string getTextInString(const std::string &begin_marker = std::string(), 
 				    const std::string &end_marker = std::string()) const = 0;
 	virtual std::string getFileName() const = 0;
+	virtual std::shared_ptr<const Line> getLine() const = 0;
 };
