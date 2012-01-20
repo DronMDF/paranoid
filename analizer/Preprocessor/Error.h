@@ -10,8 +10,8 @@ class Error {
 public:
 	Error(const std::shared_ptr<const Token> &token, const std::string &message);
 	std::string what() const;
-	
-private:
+
+	// Field are accessible
 	const std::shared_ptr<const Token> &token;
 	const std::string message;
 };
