@@ -27,14 +27,6 @@ string TokenWord::getLocation() const
 	return line->getLocation();
 }
 
-string TokenWord::getTextInString(const string &begin_marker, const string &end_marker) const
-{
-	string text = line->getText();
-	text.insert(end, end_marker);
-	text.insert(begin, begin_marker);
-	return text;
-}
-
 string TokenWord::getFileName() const
 {
 	return line->getFileName();
