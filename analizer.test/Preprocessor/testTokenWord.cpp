@@ -18,7 +18,7 @@ BOOST_AUTO_TEST_CASE(testGetTextFromLine)
 
 BOOST_AUTO_TEST_CASE(testGetFileName)
 {
-	TestFile file("test.cpp", {});
+	const TestFile file("test.cpp", {});
 	const shared_ptr<const Line> line(new Line(10, "aaaxxxxxaaa", &file));
 	const TokenWord token(line, 3, 8);
 	BOOST_REQUIRE_EQUAL(token.getFileName(), file.getFileName());

@@ -2,29 +2,18 @@
 #include <boost/test/unit_test.hpp>
 #include <Preprocessor/IncludeLocator.h>
 #include <Preprocessor/TokenInclude.h>
+#include "DummyToken.h"
 
 using namespace std;
 
 BOOST_AUTO_TEST_SUITE(suiteIncludeLocator)
 
-struct TestToken : public Token {
-	string text;
-	TestToken(const string &text) : text(text) {}
-	string getText() const { return text; }
-	string getLocation() const { return ""; }
-	string getTextInString(const string &, const string &) const { return ""; }
-	string getFileName() const { return ""; }
-	shared_ptr<const Line> getLine() const { return shared_ptr<const Line>(); }
-	size_t getBeginPos() const { return 0; }
-	size_t getEndPos() const { return 0; }
-};
-
 struct TestTokenInclude : public TokenInclude {
 	TestTokenInclude(const string &arg) : TokenInclude({
-		shared_ptr<Token>(new TestToken("#")),
-		shared_ptr<Token>(new TestToken("include")),
-		shared_ptr<Token>(new TestToken(" ")),
-		shared_ptr<Token>(new TestToken(arg))})
+		shared_ptr<Token>(new DummyToken("#")),
+		shared_ptr<Token>(new DummyToken("include")),
+		shared_ptr<Token>(new DummyToken(" ")),
+		shared_ptr<Token>(new DummyToken(arg))})
 	{
 	}
 	string getFileName() const { return "/test/test.cpp"; }
