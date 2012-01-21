@@ -29,3 +29,18 @@ string TokenNewline::getFileName() const
 {
 	return line->getFileName();
 }
+
+shared_ptr<const Line> TokenNewline::getLine() const
+{
+	return line;
+}
+
+size_t TokenNewline::getBeginPos() const
+{
+	return line->getText().size();
+}
+
+size_t TokenNewline::getEndPos() const
+{
+	return line->getText().size();
+}

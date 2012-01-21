@@ -14,6 +14,9 @@ struct TestToken : public Token {
 	string getLocation() const { return ""; }
 	string getTextInString(const string &, const string &) const { return ""; }
 	string getFileName() const { return ""; }
+	shared_ptr<const Line> getLine() const { return shared_ptr<const Line>(); }
+	size_t getBeginPos() const { return 0; }
+	size_t getEndPos() const { return 0; }
 };
 
 struct TestTokenInclude : public TokenInclude {

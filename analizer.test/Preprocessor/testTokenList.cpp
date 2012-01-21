@@ -15,6 +15,9 @@ struct TestToken : public Token {
 	string getLocation() const { return ""; }
 	string getTextInString(const string &, const string &) const { return ""; }
 	string getFileName() const { return ""; }
+	shared_ptr<const Line> getLine() const { return shared_ptr<const Line>(); }
+	size_t getBeginPos() const { return 0; }
+	size_t getEndPos() const { return 0; }
 };
 
 BOOST_AUTO_TEST_CASE(testGetFileName)
@@ -37,6 +40,18 @@ BOOST_AUTO_TEST_CASE(testOneInList)
 	const list<shared_ptr<const Token>> tokens(1, shared_ptr<const Token>(new TestToken("test")));
 	const TokenList token_list(tokens);
 	BOOST_REQUIRE_EQUAL(token_list.getText(), tokens.front()->getText());
+}
+
+BOOST_AUTO_TEST_CASE(testTwoInList)
+{
+	const shared_ptr<const Line> line(new Line(10, "aaaxxxxxaaa", 0));
+	const TokenList token_list({
+		shared_ptr<const Token>(new TokenWord(line, 3, 5)),
+		shared_ptr<const Token>(new TokenWord(line, 5, 7)),
+		shared_ptr<const Token>(new TokenWord(line, 7, 8))
+	});
+	BOOST_REQUIRE_EQUAL(token_list.getBeginPos(), 3);
+	BOOST_REQUIRE_EQUAL(token_list.getEndPos(), 8);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

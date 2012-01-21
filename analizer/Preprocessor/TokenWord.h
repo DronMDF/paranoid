@@ -17,6 +17,9 @@ public:
 	virtual std::string getTextInString(const std::string &begin_marker = std::string(), 
 				    const std::string &end_marker = std::string()) const;
 	virtual std::string getFileName() const;
+	virtual std::shared_ptr<const Line> getLine() const;
+	virtual size_t getBeginPos() const;
+	virtual size_t getEndPos() const;
 
 private:
 	const std::shared_ptr<const Line> line;

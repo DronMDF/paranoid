@@ -1,20 +1,17 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
-#include <stdexcept>
 
 class Token;
-class Line;
 
-class Error : public std::exception {
+class Error {
 public:
-	Error(const Token &token, const std::string &message);
-	Error(const Line &line, std::string::size_type begin, std::string::size_type end,
-	      const std::string &message);
-	virtual ~Error() throw();
-	const char *what() const throw();
-	
-private:
-	std::string whatstr;
+	Error(const std::shared_ptr<const Token> &token, const std::string &message);
+	std::string what() const;
+
+	// Field are accessible
+	const std::shared_ptr<const Token> &token;
+	const std::string message;
 };

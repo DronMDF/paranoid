@@ -8,6 +8,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 #include <Preprocessor/Error.h>
+#include <Preprocessor/ErrorFormatter.h>
 #include <Preprocessor/File.h>
 #include <Preprocessor/IncludeLocator.h>
 #include <Preprocessor/Preprocessor.h>
@@ -58,7 +59,7 @@ void checkSource(const vector<const char *> &args)
 
 		if (others.empty()) {
 			BOOST_FOREACH(const auto &i, includes) {
-				cerr << Error(*i, "Unused include").what() << endl;
+				cerr << ErrorFormatter(Error(i, "Unused include")) << endl;
 			}
 		}
 	}
@@ -70,8 +71,8 @@ int main(int argc, const char **argv)
 
 	try {
 		checkSource(args);
-	} catch (const exception &e) {
-		cerr << e.what() << endl;
+	} catch (const Error &e) {
+		cerr << ErrorFormatter(e) << endl;
 		return -1;	// Let it fail
 	}
 	

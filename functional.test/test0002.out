@@ -1,2 +1,3 @@
 functional.test/test0002.cpp:4 error: Open quote
 	return "xxxx;
+	       ~~~~~~
