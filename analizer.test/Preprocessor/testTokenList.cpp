@@ -42,4 +42,16 @@ BOOST_AUTO_TEST_CASE(testOneInList)
 	BOOST_REQUIRE_EQUAL(token_list.getText(), tokens.front()->getText());
 }
 
+BOOST_AUTO_TEST_CASE(testTwoInList)
+{
+	const shared_ptr<const Line> line(new Line(10, "aaaxxxxxaaa", 0));
+	const TokenList token_list({
+		shared_ptr<const Token>(new TokenWord(line, 3, 5)),
+		shared_ptr<const Token>(new TokenWord(line, 5, 7)),
+		shared_ptr<const Token>(new TokenWord(line, 7, 8))
+	});
+	BOOST_REQUIRE_EQUAL(token_list.getBeginPos(), 3);
+	BOOST_REQUIRE_EQUAL(token_list.getEndPos(), 8);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

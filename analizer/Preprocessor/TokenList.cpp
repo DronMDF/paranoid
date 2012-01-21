@@ -54,5 +54,5 @@ size_t TokenList::getBeginPos() const
 
 size_t TokenList::getEndPos() const
 {
-	return tokens.empty() ? 0 : tokens.back()->getBeginPos();
+	return tokens.empty() ? 0 : tokens.back()->getEndPos();
 }

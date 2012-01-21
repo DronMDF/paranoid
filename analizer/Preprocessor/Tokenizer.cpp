@@ -2,6 +2,7 @@
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include "Error.h"
+#include "ErrorFormatter.h"
 #include "Line.h"
 #include "Tokenizer.h"
 #include "TokenList.h"
@@ -23,8 +24,7 @@ Tokenizer::Tokenizer(add_token_t add_token)
 Tokenizer::~Tokenizer()
 {
 	if (!string_tokens.empty()) {
-		Error error(string_tokens.front(), "Open quote");
-		cerr << error.what() << endl;
+		cerr << ErrorFormatter(Error(string_tokens.front(), "Open quote")) << endl;
 	}
 }
 
