@@ -19,12 +19,6 @@ string TokenNewline::getLocation() const
 	return line->getLocation();
 }
 
-string TokenNewline::getTextInString(const string &begin_marker __attribute__((unused)),
-				     const string &end_marker __attribute__((unused))) const
-{
-	return line->getText();
-}
-
 string TokenNewline::getFileName() const
 {
 	return line->getFileName();

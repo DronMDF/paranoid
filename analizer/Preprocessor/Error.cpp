@@ -8,8 +8,3 @@ Error::Error(const shared_ptr<const Token> &token, const string &message)
 	: token(token), message(message)
 {
 }
-
-string Error::what() const
-{
-	return token->getLocation() + " error: " + message + "\n" + token->getTextInString("", "");
-}

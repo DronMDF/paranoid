@@ -27,15 +27,6 @@ string TokenList::getLocation() const
 	return string();
 }
 
-string TokenList::getTextInString(const string &begin_marker, const string &end_marker) const
-{
-	// TODO: Selection agregator can accumulate string from all token
-	if (!tokens.empty()) {
-		return tokens.front()->getTextInString(begin_marker, end_marker);
-	}
-	return string();
-}
-
 string TokenList::getFileName() const
 {
 	// Get filename from first token, this is correct?
