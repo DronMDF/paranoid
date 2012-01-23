@@ -1,5 +1,3 @@
 
 #pragma once
-
-// value use from cpp file, include threat as used.
-#define ZERO 1
+#include "unused_include_01.h"
