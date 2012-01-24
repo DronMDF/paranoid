@@ -64,3 +64,10 @@ void Preprocessor::getTokens(const string &filename,
 		}
 	}
 }
+
+void Preprocessor::forEachFile(function<void (const shared_ptr<File> &)> analyzer)
+{
+	BOOST_FOREACH(const auto &file, files) {
+		analyzer(file.second);
+	}
+}
