@@ -1,6 +1,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include <boost/foreach.hpp>
+#include <boost/range/algorithm/find.hpp>
 #include <Preprocessor/Error.h>
 #include <Preprocessor/File.h>
 #include <Preprocessor/Line.h>
@@ -11,6 +12,7 @@
 #include "../Assertions.h"
 
 using namespace std;
+using boost::find;
 
 BOOST_AUTO_TEST_SUITE(suitePreprocessor)
 
@@ -87,4 +89,19 @@ BOOST_AUTO_TEST_CASE(testLocate)
 	BOOST_REQUIRE_THROW(pp.tokenize(), Error);
 }
 
+BOOST_AUTO_TEST_CASE(testForEach)
+{
+	TestPreprocessor pp;
+	pp.files.clear();
+	pp.files.push_back(make_pair("f1.cpp", shared_ptr<File>(new TestFile("f1.cpp", {}))));
+	pp.files.push_back(make_pair("f2.cpp", shared_ptr<File>(new TestFile("f2.cpp", {}))));
+
+	list<string> names;
+	pp.forEachFile([&names](const shared_ptr<File> &f){ names.push_back(f->getFileName()); });
+	BOOST_REQUIRE_EQUAL(names.size(), 2);
+	BOOST_REQUIRE(find(names, "f1.cpp") != names.end());
+	BOOST_REQUIRE(find(names, "f2.cpp") != names.end());
+}
+
 BOOST_AUTO_TEST_SUITE_END()
+

@@ -12,7 +12,7 @@ class TokenInclude;
 // Preprocessor is main class for parse raw source
 class Preprocessor {
 public:
-	Preprocessor(std::function<std::string(const std::shared_ptr<const TokenInclude> &)> locate,
+	Preprocessor(std::function<std::string (const std::shared_ptr<const TokenInclude> &)> locate,
 		const std::string &filename);
 	virtual ~Preprocessor();
 
@@ -20,6 +20,8 @@ public:
 	void getTokens(const std::string &filename, 
 		       std::function<void (const std::shared_ptr<const Token> &)> add_token) const;
 	
+	void forEachFile(std::function<void (const std::shared_ptr<File> &)> analyzer);
+		
 protected:
 	void include(const std::shared_ptr<TokenInclude> &token);
 	
