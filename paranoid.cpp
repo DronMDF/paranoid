@@ -22,6 +22,37 @@ using namespace std::placeholders;
 using boost::ends_with;
 using boost::filesystem::exists;
 
+void Analize(const shared_ptr<File> &file)
+{
+	list<shared_ptr<const Token>> tokens;
+	file->getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t); });
+
+	list<shared_ptr<const Token>> includes;
+	list<shared_ptr<const Token>> others;
+	BOOST_FOREACH(const auto &t, tokens) {
+		if (dynamic_cast<const TokenInclude *>(t.get()) != 0) {
+			includes.push_back(t);
+			continue;
+		}
+		
+		if (dynamic_cast<const TokenSpace *>(t.get()) != 0) {
+			continue;
+		}
+		
+		if (dynamic_cast<const TokenNewline *>(t.get()) != 0) {
+			continue;
+		}
+		
+		others.push_back(t);
+	}
+
+	if (others.empty()) {
+		BOOST_FOREACH(const auto &i, includes) {
+			cerr << ErrorFormatter(Error(i, "Unused include")) << endl;
+		}
+	}
+}
+
 void checkSource(const vector<const char *> &args)
 {
 	const string source = getSourceFile(args);
@@ -35,33 +66,7 @@ void checkSource(const vector<const char *> &args)
 		Preprocessor pp(bind(&IncludeLocator::locate, locator, _1), source);
 		pp.tokenize();
 		
-		list<shared_ptr<const Token>> tokens;
-		pp.getTokens(source, [&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t); });
-
-		list<shared_ptr<const Token>> includes;
-		list<shared_ptr<const Token>> others;
-		BOOST_FOREACH(const auto &t, tokens) {
-			if (dynamic_cast<const TokenInclude *>(t.get()) != 0) {
-				includes.push_back(t);
-				continue;
-			}
-			
-			if (dynamic_cast<const TokenSpace *>(t.get()) != 0) {
-				continue;
-			}
-			
-			if (dynamic_cast<const TokenNewline *>(t.get()) != 0) {
-				continue;
-			}
-			
-			others.push_back(t);
-		}
-
-		if (others.empty()) {
-			BOOST_FOREACH(const auto &i, includes) {
-				cerr << ErrorFormatter(Error(i, "Unused include")) << endl;
-			}
-		}
+		pp.forEachFile(Analize);
 	}
 }
 
