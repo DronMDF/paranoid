@@ -6,6 +6,7 @@
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
 #include <boost/filesystem.hpp>
+#include <Filesystem.h>
 #include "Preprocessor.h"
 #include "File.h"
 #include "Line.h"
@@ -20,8 +21,8 @@ Preprocessor::Preprocessor(function<string(const std::shared_ptr<const TokenIncl
 			   const string &filename)
 	: locate(locate), files()
 {
-	// First file created, but not parse. Later.
-	files.push_back(make_pair(filename, shared_ptr<File>(new File(filename))));
+	const auto cfp = canonical(filename);
+	files.push_back(make_pair(cfp, shared_ptr<File>(new File(cfp))));
 }
 
 Preprocessor::~Preprocessor()
@@ -45,14 +46,15 @@ void Preprocessor::include(const shared_ptr<TokenInclude> &token)
 		return;
 	}
 	
+	const auto cfp = canonical(ffp);
 	BOOST_FOREACH(auto &fit, files) {
-		if (fit.first == ffp) {
+		if (fit.first == cfp) {
 			fit.second->includedFrom(token);
 			return;
 		}
 	}
 	
-	files.push_back(make_pair(ffp, shared_ptr<File>(new File(ffp))));
+	files.push_back(make_pair(cfp, shared_ptr<File>(new File(cfp))));
 }
 
 void Preprocessor::getTokens(const string &filename, 

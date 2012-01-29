@@ -119,4 +119,18 @@ BOOST_AUTO_TEST_CASE(testIncludeFrom)
 	BOOST_REQUIRE_EQUAL(file.getLocation(), "Parent.cpp:5\ntestFile.cpp");
 }
 
+// BOOST_AUTO_TEST_CASE(testFileTokenReplace)
+// {
+// 	File.file({"#include <blablabla>", "#include \"blablabla\"", "#define ZERO 0"});
+// 	//File::replaceToken(match_obj, creator);
+// 	file.replaceToken({"#", repeated(is_space, 0), "include", 
+// 			  repeated(is_space), "<", repeated(is_any), ">"},
+// 			  createSystemIncludeToken);
+// 	file.replaceToken({"#", repeated(is_space, 0), "include", repeated(is_space), is_string},
+// 			  createLocalIncludeToken);
+// 	file.replaceToken({"#", repeated(is_space, 0), "define", repeated(is_space), is_word, 
+// 			  repeated(is_space), repeated(is_any), exclude(is_endl)},
+// 			  createDefineToken);
+// }
+
 BOOST_AUTO_TEST_SUITE_END()
