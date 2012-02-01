@@ -18,7 +18,7 @@ void CUSTOM_REQUIRE_EQUAL_TEX(/*const*/ TokenExpression &tex, const string &text
 
 BOOST_AUTO_TEST_CASE(testSimple)
 {
-	TokenExpression tex({"a", "b"});
+	TokenExpression tex({"a", "b", TokenPredicate()});
 	CUSTOM_REQUIRE_EQUAL_TEX(tex, "x", TokenExpression::status::error);
 	//CUSTOM_REQUIRE_EQUAL_TEX(tex, "a", TokenExpression::continue);
 	//CUSTOM_REQUIRE_EQUAL_TEX(tex, "b", TokenExpression::last);

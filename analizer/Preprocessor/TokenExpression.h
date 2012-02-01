@@ -9,6 +9,7 @@ class Token;
 
 class TokenPredicate {
 public:
+	TokenPredicate() = default;
 	TokenPredicate(const char *text);
 };
 
