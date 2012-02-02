@@ -1,6 +1,7 @@
 
 #pragma once
 #include <memory>
+#include <string>
 
 class Token;
 
@@ -10,4 +11,7 @@ public:
 	virtual ~TokenPredicate();
 	
 	virtual bool operator()(const std::shared_ptr<Token> &token) const;
+	
+private:
+	const std::string text;
 };

@@ -12,6 +12,7 @@ BOOST_AUTO_TEST_CASE(testTextMatch)
 {
 	TokenPredicate pred("test");
 	BOOST_REQUIRE(pred(shared_ptr<Token>(new DummyToken("test"))));
+	BOOST_REQUIRE(!pred(shared_ptr<Token>(new DummyToken("text"))));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
