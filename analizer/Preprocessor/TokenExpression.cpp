@@ -3,10 +3,6 @@
 
 using namespace std; 
 
-TokenPredicate::TokenPredicate(const char *text)
-{
-}
-
 TokenExpression::TokenExpression(const list<TokenPredicate> &expr)
 {
 }

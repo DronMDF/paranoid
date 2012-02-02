@@ -6,12 +6,7 @@
 #include <functional>
 
 class Token;
-
-class TokenPredicate {
-public:
-	TokenPredicate() = default;
-	TokenPredicate(const char *text);
-};
+class TokenPredicate;
 
 class TokenExpression {
 public:
