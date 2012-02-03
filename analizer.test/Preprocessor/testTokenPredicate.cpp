@@ -15,4 +15,11 @@ BOOST_AUTO_TEST_CASE(testTextMatch)
 	BOOST_REQUIRE(!pred(shared_ptr<Token>(new DummyToken("text"))));
 }
 
+BOOST_AUTO_TEST_CASE(testNot)
+{
+	TokenPredicateNot predicate("test");
+	BOOST_REQUIRE(!predicate(shared_ptr<Token>(new DummyToken("test"))));
+	BOOST_REQUIRE(predicate(shared_ptr<Token>(new DummyToken("text"))));
+}
+
 BOOST_AUTO_TEST_SUITE_END()
