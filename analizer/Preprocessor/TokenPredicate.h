@@ -9,12 +9,14 @@ class TokenPredicateImpl;
 class TokenPredicate {
 public:
 	TokenPredicate() = delete;
+	TokenPredicate(const TokenPredicate &predicate);
+	TokenPredicate(const std::shared_ptr<TokenPredicateImpl> &impl);
 	TokenPredicate(const char *text);
 	
 	bool operator()(const std::shared_ptr<Token> &token) const;
 
 private:
-	std::shared_ptr<TokenPredicateImpl> predicate;
+	std::shared_ptr<TokenPredicateImpl> impl;
 };
 
 TokenPredicate Not(const TokenPredicate &predicate);
