@@ -4,28 +4,39 @@
 
 using namespace std;
 
-TokenPredicate::TokenPredicate(const char *text)
-	: text(text), except(false)
-{
-}
-
-TokenPredicate::TokenPredicate(const TokenPredicate &predicate, bool except)
-	: text(predicate.text), except(except)
-{
-}
-
-TokenPredicate::~TokenPredicate() = default;
-
-bool TokenPredicate::operator()(const shared_ptr<Token> &token) const
-{
-	if (except) {
-		return token->getText() != text;
-	}
+// TokenPredicateImpl
+class TokenPredicateImpl {
+public:
+	TokenPredicateImpl(const char *text);
+	bool match(const std::shared_ptr<Token> &token) const;
 	
+protected:
+	const std::string text;
+};
+
+TokenPredicateImpl::TokenPredicateImpl(const char *text)
+	: text(text)
+{
+}
+	
+bool TokenPredicateImpl::match(const std::shared_ptr<Token> &token) const
+{
 	return token->getText() == text;
 }
 
-TokenPredicateNot::TokenPredicateNot(const TokenPredicate &pred)
-	: TokenPredicate(pred, true)
+// TokenPredicate
+TokenPredicate::TokenPredicate(const char *text)
+	: predicate(shared_ptr<TokenPredicateImpl>(new TokenPredicateImpl(text)))
 {
+}
+
+bool TokenPredicate::operator()(const shared_ptr<Token> &token) const
+{
+	return predicate->match(token);
+}
+
+// TokenPredicate generators
+TokenPredicate Not(const TokenPredicate &pred)
+{
+	return TokenPredicate("noop");
 }
