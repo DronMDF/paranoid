@@ -1,6 +1,7 @@
 
 #include "Token.h"
 #include "TokenPredicate.h"
+#include "TokenSpace.h"
 
 using namespace std;
 
@@ -52,6 +53,15 @@ bool TokenPredicateNot::match(const std::shared_ptr<Token> &token) const
 	return !predicate(token);
 }
 
+// TokenPredicateTyped
+template<typename T>
+class TokenPredicateTyped : public TokenPredicateImpl {
+public:
+	virtual bool match(const std::shared_ptr<Token> &token) const {
+		return dynamic_cast<const T *>(token.get()) != 0;
+	}
+};
+
 // TokenPredicate
 TokenPredicate::TokenPredicate(const TokenPredicate &predicate)
 	: impl(predicate.impl)
@@ -77,4 +87,9 @@ bool TokenPredicate::operator()(const shared_ptr<Token> &token) const
 TokenPredicate Not(const TokenPredicate &predicate)
 {
 	return TokenPredicate(shared_ptr<TokenPredicateImpl>(new TokenPredicateNot(predicate)));
+}
+
+TokenPredicate createIsSpace()
+{
+	return TokenPredicate(shared_ptr<TokenPredicateImpl>(new TokenPredicateTyped<TokenSpace>()));
 }
