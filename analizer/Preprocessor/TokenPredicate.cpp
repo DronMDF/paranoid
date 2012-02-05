@@ -9,7 +9,7 @@ using namespace std;
 class TokenPredicateImpl {
 public:
 	virtual ~TokenPredicateImpl();
-	virtual bool match(const std::shared_ptr<Token> &token) const = 0;
+	virtual bool match(const std::shared_ptr<const Token> &token) const = 0;
 };
 
 TokenPredicateImpl::~TokenPredicateImpl() = default;
@@ -18,7 +18,7 @@ TokenPredicateImpl::~TokenPredicateImpl() = default;
 class TokenPredicateEqual : public TokenPredicateImpl {
 public:
 	TokenPredicateEqual(const char *text);
-	virtual bool match(const std::shared_ptr<Token> &token) const;
+	virtual bool match(const std::shared_ptr<const Token> &token) const;
 	
 protected:
 	const std::string text;
@@ -29,7 +29,7 @@ TokenPredicateEqual::TokenPredicateEqual(const char *text)
 {
 }
 	
-bool TokenPredicateEqual::match(const std::shared_ptr<Token> &token) const
+bool TokenPredicateEqual::match(const std::shared_ptr<const Token> &token) const
 {
 	return token->getText() == text;
 }
@@ -38,7 +38,7 @@ bool TokenPredicateEqual::match(const std::shared_ptr<Token> &token) const
 class TokenPredicateNot : public TokenPredicateImpl {
 public:
 	TokenPredicateNot(const TokenPredicate &predicate);
-	bool match(const std::shared_ptr<Token> &token) const;
+	bool match(const std::shared_ptr<const Token> &token) const;
 private:
 	const TokenPredicate predicate;
 };
@@ -48,7 +48,7 @@ TokenPredicateNot::TokenPredicateNot(const TokenPredicate &predicate)
 {
 }
 
-bool TokenPredicateNot::match(const std::shared_ptr<Token> &token) const
+bool TokenPredicateNot::match(const std::shared_ptr<const Token> &token) const
 {
 	return !predicate(token);
 }
@@ -57,7 +57,7 @@ bool TokenPredicateNot::match(const std::shared_ptr<Token> &token) const
 template<typename T>
 class TokenPredicateTyped : public TokenPredicateImpl {
 public:
-	virtual bool match(const std::shared_ptr<Token> &token) const {
+	virtual bool match(const std::shared_ptr<const Token> &token) const {
 		return dynamic_cast<const T *>(token.get()) != 0;
 	}
 };
@@ -78,7 +78,7 @@ TokenPredicate::TokenPredicate(const char *text)
 {
 }
 
-bool TokenPredicate::operator()(const shared_ptr<Token> &token) const
+bool TokenPredicate::operator()(const shared_ptr<const Token> &token) const
 {
 	return impl->match(token);
 }
