@@ -16,42 +16,29 @@ TokenPredicateImpl::~TokenPredicateImpl() = default;
 
 // TokenPredicateText
 class TokenPredicateEqual : public TokenPredicateImpl {
-public:
-	TokenPredicateEqual(const char *text);
-	virtual bool match(const std::shared_ptr<const Token> &token) const;
-	
-protected:
+private:
 	const std::string text;
-};
+public:
+	TokenPredicateEqual(const char *text) : text(text) {
+	}
 
-TokenPredicateEqual::TokenPredicateEqual(const char *text)
-	: text(text)
-{
-}
-	
-bool TokenPredicateEqual::match(const std::shared_ptr<const Token> &token) const
-{
-	return token->getText() == text;
-}
+	virtual bool match(const std::shared_ptr<const Token> &token) const {
+		return token->getText() == text;
+	}
+};
 
 // TokenPredicateNot
 class TokenPredicateNot : public TokenPredicateImpl {
-public:
-	TokenPredicateNot(const TokenPredicate &predicate);
-	bool match(const std::shared_ptr<const Token> &token) const;
 private:
 	const TokenPredicate predicate;
+public:
+	TokenPredicateNot(const TokenPredicate &predicate) : predicate(predicate) {
+	}
+
+	bool match(const std::shared_ptr<const Token> &token) const {
+		return !predicate(token);
+	}
 };
-
-TokenPredicateNot::TokenPredicateNot(const TokenPredicate &predicate)
-	: predicate(predicate)
-{
-}
-
-bool TokenPredicateNot::match(const std::shared_ptr<const Token> &token) const
-{
-	return !predicate(token);
-}
 
 // TokenPredicateTyped
 template<typename T>
