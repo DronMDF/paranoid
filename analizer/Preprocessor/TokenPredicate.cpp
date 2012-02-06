@@ -1,5 +1,6 @@
 
 #include "Token.h"
+#include "TokenNewline.h"
 #include "TokenPredicate.h"
 #include "TokenSpace.h"
 
@@ -65,18 +66,19 @@ TokenPredicate::TokenPredicate(const char *text)
 {
 }
 
-bool TokenPredicate::operator()(const shared_ptr<const Token> &token) const
-{
+bool TokenPredicate::operator()(const shared_ptr<const Token> &token) const {
 	return impl->match(token);
 }
 
 // TokenPredicate generators
-TokenPredicate Not(const TokenPredicate &predicate)
-{
+TokenPredicate Not(const TokenPredicate &predicate) {
 	return TokenPredicate(shared_ptr<TokenPredicateImpl>(new TokenPredicateNot(predicate)));
 }
 
-TokenPredicate createIsSpace()
-{
+TokenPredicate createIsSpace() {
 	return TokenPredicate(shared_ptr<TokenPredicateImpl>(new TokenPredicateTyped<TokenSpace>()));
+}
+
+TokenPredicate createIsEol() {
+	return TokenPredicate(shared_ptr<TokenPredicateImpl>(new TokenPredicateTyped<TokenNewline>()));
 }

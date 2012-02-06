@@ -23,3 +23,6 @@ TokenPredicate Not(const TokenPredicate &predicate);
 
 TokenPredicate createIsSpace();
 static const TokenPredicate isSpace = createIsSpace();
+
+TokenPredicate createIsEol();
+static const TokenPredicate isEol = createIsEol();
