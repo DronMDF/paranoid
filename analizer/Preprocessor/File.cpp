@@ -48,12 +48,10 @@ void File::getTokens(function<void (const shared_ptr<const Token> &)> add_token)
 
 void File::tokenize(function<void (const shared_ptr<TokenInclude> &)> include)
 {
-	Tokenizer tokenizer([&](const shared_ptr<const Token> &t) { 
-		tokens.push_back(t); 
-	});
-	forEachLine([&tokenizer](const shared_ptr<const Line> &line) { 
-		tokenizer.parse(line); 
-	});
+	auto add_token = [&](const shared_ptr<const Token> &t) { tokens.push_back(t); };
+	Tokenizer tokenizer(add_token);
+
+	forEachLine([&tokenizer](const shared_ptr<const Line> &line) { tokenizer.parse(line); });
 	
 	dropEscapedNewline();
 	tokenizeIncludes(include);
