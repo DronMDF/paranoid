@@ -8,7 +8,9 @@ TokenExpression::TokenExpression(const list<TokenPredicate> &expr)
 	: predicates(expr.begin(), expr.end()), position(0)
 {
 }
-	
+
+// This is not good solution, mutable state :(
+// Need to keep state outside of expression...
 bool TokenExpression::match(const shared_ptr<const Token> &token)
 {
 	if (position >= predicates.size()) {
@@ -22,4 +24,14 @@ bool TokenExpression::match(const shared_ptr<const Token> &token)
 	}
 	
 	return false;
+}
+
+bool TokenExpression::isMatched() const
+{
+	return position >= predicates.size();
+}
+
+void TokenExpression::reset()
+{
+	position = 0;
 }
