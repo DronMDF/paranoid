@@ -14,29 +14,29 @@ BOOST_AUTO_TEST_SUITE(suiteTokenPredicate)
 BOOST_AUTO_TEST_CASE(testTextMatch)
 {
 	TokenPredicate pred("test");
-	BOOST_REQUIRE(pred(shared_ptr<Token>(new DummyToken("test"))));
-	BOOST_REQUIRE(!pred(shared_ptr<Token>(new DummyToken("text"))));
+	BOOST_REQUIRE(pred(make_shared<DummyToken>("test")));
+	BOOST_REQUIRE(!pred(make_shared<DummyToken>("text")));
 }
 
 BOOST_AUTO_TEST_CASE(testNot)
 {
 	TokenPredicate predicate = Not("test");
-	BOOST_REQUIRE(!predicate(shared_ptr<Token>(new DummyToken("test"))));
-	BOOST_REQUIRE(predicate(shared_ptr<Token>(new DummyToken("text"))));
+	BOOST_REQUIRE(!predicate(make_shared<DummyToken>("test")));
+	BOOST_REQUIRE(predicate(make_shared<DummyToken>("text")));
 }
 
 BOOST_AUTO_TEST_CASE(testIsSpace)
 {
-	const shared_ptr<const Line> line_ptr(new Line(0, " ", 0));
-	BOOST_REQUIRE(isSpace(shared_ptr<Token>(new TokenSpace(line_ptr, 0, 1))));
-	BOOST_REQUIRE(!isSpace(shared_ptr<Token>(new DummyToken("text"))));
+	auto line_ptr = make_shared<Line>(0, " ", static_cast<const File *>(0));
+	BOOST_REQUIRE(isSpace(make_shared<TokenSpace>(line_ptr, 0, 1)));
+	BOOST_REQUIRE(!isSpace(make_shared<DummyToken>("text")));
 }
 
 BOOST_AUTO_TEST_CASE(testIsEol)
 {
-	const shared_ptr<const Line> line_ptr(new Line(0, "", 0));
-	BOOST_REQUIRE(isEol(shared_ptr<Token>(new TokenNewline(line_ptr))));
-	BOOST_REQUIRE(!isEol(shared_ptr<Token>(new DummyToken("text"))));
+	auto line_ptr = make_shared<Line>(0, " ", static_cast<const File *>(0));
+	BOOST_REQUIRE(isEol(make_shared<TokenNewline>(line_ptr)));
+	BOOST_REQUIRE(!isEol(make_shared<DummyToken>("text")));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

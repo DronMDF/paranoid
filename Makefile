@@ -17,7 +17,7 @@ paranoid: .obj/paranoid.o .obj/analizer.o
 
 test: .obj/test.o .obj/analizer.o
 	${CXX} -o $@ .obj/test.o .obj/analizer.o \
-		-lboost_test_exec_monitor-mt -lboost_filesystem-mt -lboost_regex-mt 
+		-lboost_test_exec_monitor-mt -lboost_filesystem-mt
 
 .PHONY: .obj/analizer.o
 .obj/analizer.o : ${OBJDIR}
