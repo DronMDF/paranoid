@@ -14,16 +14,16 @@ BOOST_AUTO_TEST_SUITE(suiteTokenExpression)
 BOOST_AUTO_TEST_CASE(testSimple)
 {
 	TokenExpression tex({"\\", isEol});
-	BOOST_REQUIRE(tex.match(shared_ptr<Token>(new DummyToken("\\"))));
-	const shared_ptr<const Line> line_ptr(new Line(0, " ", 0));
-	BOOST_REQUIRE(tex.match(shared_ptr<Token>(new TokenNewline(line_ptr))));
+	BOOST_REQUIRE(tex.match(make_shared<DummyToken>("\\")));
+	auto line = make_shared<Line>(0, " ", static_cast<File *>(0));
+	BOOST_REQUIRE(tex.match(make_shared<TokenNewline>(line)));
 	BOOST_REQUIRE(tex.isMatched());
-	BOOST_REQUIRE(!tex.match(shared_ptr<Token>(new DummyToken("more"))));
+	BOOST_REQUIRE(!tex.match(make_shared<DummyToken>("more")));
 	BOOST_REQUIRE(tex.isMatched());
 	
 	tex.reset();
 	BOOST_REQUIRE(!tex.isMatched());
-	BOOST_REQUIRE(tex.match(shared_ptr<Token>(new DummyToken("\\"))));
+	BOOST_REQUIRE(tex.match(make_shared<DummyToken>("\\")));
 	BOOST_REQUIRE(!tex.isMatched());
 }
 
