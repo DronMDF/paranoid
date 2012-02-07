@@ -72,13 +72,8 @@ bool TokenPredicate::operator()(const shared_ptr<const Token> &token) const {
 
 // TokenPredicate generators
 TokenPredicate Not(const TokenPredicate &predicate) {
-	return TokenPredicate(shared_ptr<TokenPredicateImpl>(new TokenPredicateNot(predicate)));
+	return TokenPredicate(make_shared<TokenPredicateNot>(predicate));
 }
 
-TokenPredicate createIsSpace() {
-	return TokenPredicate(shared_ptr<TokenPredicateImpl>(new TokenPredicateTyped<TokenSpace>()));
-}
-
-TokenPredicate createIsEol() {
-	return TokenPredicate(shared_ptr<TokenPredicateImpl>(new TokenPredicateTyped<TokenNewline>()));
-}
+const TokenPredicate isSpace(make_shared<TokenPredicateTyped<TokenSpace>>());
+const TokenPredicate isEol(make_shared<TokenPredicateTyped<TokenNewline>>());
