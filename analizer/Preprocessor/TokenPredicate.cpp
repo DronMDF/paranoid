@@ -62,7 +62,7 @@ TokenPredicate::TokenPredicate(const shared_ptr<TokenPredicateImpl> &impl)
 }
 
 TokenPredicate::TokenPredicate(const char *text)
-	: impl(shared_ptr<TokenPredicateImpl>(new TokenPredicateEqual(text)))
+	: impl(make_shared<TokenPredicateEqual>(text))
 {
 }
 

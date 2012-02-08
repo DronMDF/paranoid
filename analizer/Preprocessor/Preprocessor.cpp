@@ -22,7 +22,7 @@ Preprocessor::Preprocessor(function<string(const std::shared_ptr<const TokenIncl
 	: locate(locate), files()
 {
 	const auto cfp = canonical(filename);
-	files.push_back(make_pair(cfp, shared_ptr<File>(new File(cfp))));
+	files.push_back(make_pair(cfp, make_shared<File>(cfp)));
 }
 
 Preprocessor::~Preprocessor()
@@ -54,7 +54,7 @@ void Preprocessor::include(const shared_ptr<TokenInclude> &token)
 		}
 	}
 	
-	files.push_back(make_pair(cfp, shared_ptr<File>(new File(cfp))));
+	files.push_back(make_pair(cfp, make_shared<File>(cfp)));
 }
 
 void Preprocessor::getTokens(const string &filename, 

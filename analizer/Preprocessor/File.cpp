@@ -140,7 +140,7 @@ void File::forEachLine(function<void (const shared_ptr<const Line> &)> lineparse
 			string line;
 			getline(file, line);
 			if (!line.empty()) {
-				lineparser(shared_ptr<Line>(new Line(i, line, this)));
+				lineparser(make_shared<Line>(i, line, this));
 			}
 		}
 	}
