@@ -11,12 +11,12 @@ BOOST_AUTO_TEST_SUITE(suiteTokenInclude)
 BOOST_AUTO_TEST_CASE(testConstruct)
 {
 	TokenInclude ti({});
-	ti.include(shared_ptr<File>(new File("test.h")));
+	ti.include(make_shared<File>("test.h"));
 }
 
 BOOST_AUTO_TEST_CASE(testSystemInclude)
 {
-	TokenInclude ti({shared_ptr<Token>(new DummyToken("<test.h>"))});
+	TokenInclude ti({make_shared<DummyToken>("<test.h>")});
 	ti.include(shared_ptr<File>());
 	BOOST_REQUIRE(ti.isSystem());
 	BOOST_REQUIRE_EQUAL(ti.getHeaderName(), "test.h");
@@ -24,7 +24,7 @@ BOOST_AUTO_TEST_CASE(testSystemInclude)
 
 BOOST_AUTO_TEST_CASE(testLocalInclude)
 {
-	TokenInclude ti({shared_ptr<Token>(new DummyToken("\"local.h\""))});
+	TokenInclude ti({make_shared<DummyToken>("\"local.h\"")});
 	ti.include(shared_ptr<File>());
 	BOOST_REQUIRE(!ti.isSystem());
 	BOOST_REQUIRE_EQUAL(ti.getHeaderName(), "local.h");

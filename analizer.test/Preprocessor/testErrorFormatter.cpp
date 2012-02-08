@@ -13,8 +13,8 @@ BOOST_AUTO_TEST_SUITE(suiteErrorFormatter)
 BOOST_AUTO_TEST_CASE(testTokenFormat)
 {
 	const File file("test.cpp");
-	const shared_ptr<Line> line(new Line(1, "123456789", &file));
-	const shared_ptr<Token> token(new TokenWord(line, 3, 8));
+	auto line = make_shared<Line>(1, "123456789", &file);
+	auto token = make_shared<TokenWord>(line, 3, 8);
 	Error error(token, "numbers error");
 	BOOST_REQUIRE_EQUAL(ErrorFormatter(error), 
 		"test.cpp:1 error: numbers error\n"

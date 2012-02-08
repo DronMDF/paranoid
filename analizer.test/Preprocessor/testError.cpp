@@ -10,7 +10,7 @@ BOOST_AUTO_TEST_SUITE(suiteError)
 
 BOOST_AUTO_TEST_CASE(testErrorFromToken)
 {
-	const shared_ptr<const Token> token(new DummyToken("test"));
+	auto token = make_shared<DummyToken>("test");
 	const Error error(token, "numbers error");
 	BOOST_REQUIRE_EQUAL(error.token, token);
 	BOOST_REQUIRE_EQUAL(error.message, "numbers error");
