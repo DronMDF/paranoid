@@ -10,8 +10,10 @@
 #include "TokenList.h"
 #include "TokenInclude.h"
 #include "Tokenizer.h"
+#include "TokenPredicate.h"
 
 using namespace std;
+using namespace std::placeholders;
 using boost::find_if;
 using boost::is_any_of;
 
@@ -53,31 +55,15 @@ void File::tokenize(function<void (const shared_ptr<TokenInclude> &)> include)
 
 	forEachLine([&tokenizer](const shared_ptr<const Line> &line) { tokenizer.parse(line); });
 	
-	dropEscapedNewline();
+	replaceToken({"\\", isEol}, 
+		[](const list<shared_ptr<const Token>> &){ return shared_ptr<Token>(); });
+
 	tokenizeIncludes(include);
 }
 
 void File::includedFrom(const shared_ptr<const TokenInclude> &token)
 {
 	included_from.push_back(token);
-}
-
-void File::dropEscapedNewline()
-{
-	const auto predicate = [](shared_ptr<const Token> &t){ return t->getText() == "\\"; };
-	auto begin = find_if(tokens, predicate);
-	while (begin != tokens.end()) {
-		auto end = begin;
-		++end;
-		
-		if ((*end)->getText() == "\n") {
-			++end;
-			tokens.erase(begin, end);
-			
-		}
-		
-		begin = find_if(end, tokens.end(), predicate);
-	}
 }
 
 void File::tokenizeIncludes(function<void (const shared_ptr<TokenInclude> &)> include)
@@ -138,10 +124,12 @@ void File::tokenizeIncludes(function<void (const shared_ptr<TokenInclude> &)> in
 	}
 }
 
-void File::replaceTokens(tokens_iterator begin, tokens_iterator end, const shared_ptr<Token> &token)
+void File::replaceTokens(tokens_iterator begin, tokens_iterator end, const shared_ptr<const Token> &token)
 {
 	tokens.erase(begin, end);
-	tokens.insert(end, token);
+	if (token) {
+		tokens.insert(end, token);
+	}
 }
 
 void File::forEachLine(function<void (const shared_ptr<const Line> &)> lineparser) const
@@ -157,3 +145,36 @@ void File::forEachLine(function<void (const shared_ptr<const Line> &)> lineparse
 		}
 	}
 }
+
+void File::replaceToken(TokenExpression expression, 
+			 function<shared_ptr<const Token> (const list<shared_ptr<const Token>> &)> creator)
+{
+	auto lookup = tokens.begin();
+	while (lookup != tokens.end()) {
+		expression.reset();
+		
+		auto begin = find_if(lookup, tokens.end(), bind(&TokenExpression::match, &expression, _1));
+		if (begin == tokens.end()) {
+			return;
+		}
+		
+		auto end = begin;
+		++end;
+		while (end != tokens.end()) {
+			if (expression.match(*end)) {
+				++end;
+				continue;
+			}
+			
+			if (expression.isMatched()) {
+				const list<shared_ptr<const Token>> replaced(begin, end);
+				replaceTokens(begin, end, creator(replaced));
+				lookup = end;
+			} else {
+				lookup = ++begin;
+			}
+			break;
+		}
+	}
+}
+

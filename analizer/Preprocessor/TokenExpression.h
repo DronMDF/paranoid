@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <list>
+#include <initializer_list>
 #include <memory>
 #include <vector>
 
@@ -11,8 +11,7 @@ class TokenPredicate;
 class TokenExpression {
 public:
 	TokenExpression() = delete;
-	TokenExpression(const TokenExpression &) = delete;
-	TokenExpression(const std::list<TokenPredicate> &expr);
+	TokenExpression(const std::initializer_list<TokenPredicate> &expr);
 	
 	bool match(const std::shared_ptr<const Token> &token);
 	bool isMatched() const;

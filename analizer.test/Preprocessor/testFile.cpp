@@ -8,6 +8,7 @@
 #include <Preprocessor/Line.h>
 #include <Preprocessor/Token.h>
 #include <Preprocessor/TokenInclude.h>
+#include <Preprocessor/TokenPredicate.h>
 #include "TestFile.h"
 #include "../Assertions.h"
 
@@ -119,18 +120,19 @@ BOOST_AUTO_TEST_CASE(testIncludeFrom)
 	BOOST_REQUIRE_EQUAL(file.getLocation(), "Parent.cpp:5\ntestFile.cpp");
 }
 
-// BOOST_AUTO_TEST_CASE(testFileTokenReplace)
-// {
-// 	File.file({"#include <blablabla>", "#include \"blablabla\"", "#define ZERO 0"});
-// 	//File::replaceToken(match_obj, creator);
-// 	file.replaceToken({"#", repeated(is_space, 0), "include", 
-// 			  repeated(is_space), "<", repeated(is_any), ">"},
-// 			  createSystemIncludeToken);
-// 	file.replaceToken({"#", repeated(is_space, 0), "include", repeated(is_space), is_string},
-// 			  createLocalIncludeToken);
-// 	file.replaceToken({"#", repeated(is_space, 0), "define", repeated(is_space), is_word, 
-// 			  repeated(is_space), repeated(is_any), exclude(is_endl)},
-// 			  createDefineToken);
-// }
+BOOST_AUTO_TEST_CASE(testFileTokenReplace)
+{
+	TestFile file("none", {"#define a 0"});
+	file.tokenize(include);
+	
+	file.replaceToken({"a", " ", "0"},
+		[](const list<shared_ptr<const Token>> &l){ return make_shared<TokenList>(l); });
+
+	list<string> tokens;
+	file.getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
+	
+	list<string> expected = { "#", "define", " ",  "a 0", "\n" };
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
+}
 
 BOOST_AUTO_TEST_SUITE_END()

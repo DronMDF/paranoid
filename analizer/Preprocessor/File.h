@@ -4,6 +4,7 @@
 #include <list>
 #include <memory>
 #include <string>
+#include "TokenExpression.h"
 
 class Line;
 class Preprocessor;
@@ -22,6 +23,8 @@ public:
 	virtual void getTokens(std::function<void (const std::shared_ptr<const Token> &)> add_token) const;
 	
 	void includedFrom(const std::shared_ptr<const TokenInclude> &token);
+	void replaceToken(TokenExpression expression,
+		std::function<std::shared_ptr<const Token> (const std::list<std::shared_ptr<const Token>> &)> creator);
 	
 private:
 	const std::string filename;
@@ -35,5 +38,5 @@ private:
 	void dropEscapedNewline();
 	void tokenizeIncludes(std::function<void (const std::shared_ptr<TokenInclude> &)> include);
 	
-	void replaceTokens(tokens_iterator begin, tokens_iterator end, const std::shared_ptr<Token> &token);
+	void replaceTokens(tokens_iterator begin, tokens_iterator end, const std::shared_ptr<const Token> &token);
 };

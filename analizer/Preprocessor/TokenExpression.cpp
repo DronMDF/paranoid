@@ -4,7 +4,7 @@
 
 using namespace std; 
 
-TokenExpression::TokenExpression(const list<TokenPredicate> &expr)
+TokenExpression::TokenExpression(const initializer_list<TokenPredicate> &expr)
 	: predicates(expr.begin(), expr.end()), position(0)
 {
 }
