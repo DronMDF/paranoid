@@ -10,7 +10,7 @@ BOOST_AUTO_TEST_SUITE(suiteTokenNewline)
 
 BOOST_AUTO_TEST_CASE(testGetText)
 {
-	const shared_ptr<const Line> line(new Line(10, "aaaxxxxxaaa", 0));
+	auto line = make_shared<Line>(10, "aaaxxxxxaaa", static_cast<File *>(0));
 	const TokenNewline token(line);
 	BOOST_REQUIRE_EQUAL(token.getText(), "\n");
 }
@@ -18,7 +18,7 @@ BOOST_AUTO_TEST_CASE(testGetText)
 BOOST_AUTO_TEST_CASE(testGetFileName)
 {
 	TestFile file("test.cpp", {});
-	const shared_ptr<const Line> line(new Line(10, "aaaxxxxxaaa", &file));
+	auto line = make_shared<Line>(10, "aaaxxxxxaaa", &file);
 	const TokenNewline token(line);
 	BOOST_REQUIRE_EQUAL(token.getFileName(), file.getFileName());
 }

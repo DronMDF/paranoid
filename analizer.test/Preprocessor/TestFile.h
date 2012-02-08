@@ -12,8 +12,7 @@ struct TestFile : public File {
 	void forEachLine(std::function<void (const std::shared_ptr<const Line> &)> lineparser) const {
 		unsigned n = 0;
 		BOOST_FOREACH(const auto &l, lines) {
-			std::shared_ptr<const Line> line(new Line(++n, l, this));
-			lineparser(line);
+			lineparser(std::make_shared<Line>(++n, l, this));
 		}
 	}
 };
