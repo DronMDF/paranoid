@@ -59,8 +59,19 @@ void File::tokenize(function<void (const shared_ptr<TokenInclude> &)> include)
 	replaceToken({"\\", isEol}, 
 		[](const list<shared_ptr<const Token>> &){ return shared_ptr<Token>(); });
 	// TODO: It's broke include location
-	//replaceToken({"#", Optional(Some(isSpace)), isWord},
-	//	[](const list<shared_ptr<const Token>> &tokens){ return make_shared<TokenDirective>(tokens); });
+	// replaceToken({"#", Optional(Some(isSpace)), isWord},
+	// 	[](const list<shared_ptr<const Token>> &tokens){ 
+	// 		return make_shared<TokenDirective>(tokens); });
+	// replaceToken({"#include", Optional(Some(isSpace)), isWord},	// TODO: isString
+	// 	[include](const list<shared_ptr<const Token>> &tokens){
+	// 		auto token = make_shared<TokenInclude>(tokens);
+	// 		include(token);
+	// 		return token; });
+	// replaceToken({"#include", Optional(Some(isSpace)), "<", Some(Not(">")), ">"},
+	// 	[include](const list<shared_ptr<const Token>> &tokens){
+	// 		auto token = make_shared<TokenInclude>(tokens);
+	// 		include(token);
+	// 		return token; });
 
 	tokenizeIncludes(include);
 }
