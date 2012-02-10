@@ -60,6 +60,10 @@ public:
 	virtual bool isSome() const{
 		return true;
 	}
+
+	virtual bool isOptional() const{
+		return predicate.isOptional();
+	}
 };
 
 class TokenPredicateOptional : public TokenPredicateImpl {

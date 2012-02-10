@@ -28,7 +28,6 @@ BOOST_AUTO_TEST_CASE(testMetched)
 	BOOST_REQUIRE(!tex.isMatched());
 }
 
-
 BOOST_AUTO_TEST_CASE(testNot)
 {
 	TokenExpression tex({Not("a")});
@@ -68,6 +67,56 @@ BOOST_AUTO_TEST_CASE(testOptionalTail)
 {
 	TokenExpression tex({"a", Optional("b")});
 	BOOST_REQUIRE(tex.match(make_shared<DummyToken>("a")));
+	BOOST_REQUIRE(tex.isMatched());
+}
+
+BOOST_AUTO_TEST_CASE(testOptionalNot)
+{
+	TokenExpression tex({Optional(Not("a")), "a"});
+	// first "b" is matched as first expression element
+	BOOST_REQUIRE(tex.match(make_shared<DummyToken>("b")));
+	BOOST_REQUIRE(tex.match(make_shared<DummyToken>("a")));
+	BOOST_REQUIRE(tex.isMatched());
+	
+	// skip optional element of expression
+	tex.reset();
+	BOOST_REQUIRE(tex.match(make_shared<DummyToken>("a")));
+	BOOST_REQUIRE(tex.isMatched());
+}
+
+BOOST_AUTO_TEST_CASE(testOptionalSome)
+{
+	TokenExpression tex({Optional(Some("a")), "b"});
+	BOOST_REQUIRE(tex.match(make_shared<DummyToken>("b")));
+	BOOST_REQUIRE(tex.isMatched());
+	
+	tex.reset();
+	BOOST_REQUIRE(tex.match(make_shared<DummyToken>("a")));
+	BOOST_REQUIRE(tex.match(make_shared<DummyToken>("b")));
+	BOOST_REQUIRE(tex.isMatched());
+	
+	tex.reset();
+	BOOST_REQUIRE(tex.match(make_shared<DummyToken>("a")));
+	BOOST_REQUIRE(tex.match(make_shared<DummyToken>("a")));
+	BOOST_REQUIRE(tex.match(make_shared<DummyToken>("b")));
+	BOOST_REQUIRE(tex.isMatched());
+}
+
+BOOST_AUTO_TEST_CASE(testSomeOptional)
+{
+	TokenExpression tex({Some(Optional("a")), "b"});
+	BOOST_REQUIRE(tex.match(make_shared<DummyToken>("b")));
+	BOOST_REQUIRE(tex.isMatched());
+	
+	tex.reset();
+	BOOST_REQUIRE(tex.match(make_shared<DummyToken>("a")));
+	BOOST_REQUIRE(tex.match(make_shared<DummyToken>("b")));
+	BOOST_REQUIRE(tex.isMatched());
+	
+	tex.reset();
+	BOOST_REQUIRE(tex.match(make_shared<DummyToken>("a")));
+	BOOST_REQUIRE(tex.match(make_shared<DummyToken>("a")));
+	BOOST_REQUIRE(tex.match(make_shared<DummyToken>("b")));
 	BOOST_REQUIRE(tex.isMatched());
 }
 
