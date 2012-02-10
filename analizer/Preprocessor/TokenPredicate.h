@@ -15,6 +15,7 @@ public:
 	
 	bool operator()(const std::shared_ptr<const Token> &token) const;
 	bool isSome() const;
+	bool isOptional() const;
 
 private:
 	std::shared_ptr<TokenPredicateImpl> impl;
@@ -22,6 +23,7 @@ private:
 
 TokenPredicate Not(const TokenPredicate &predicate);
 TokenPredicate Some(const TokenPredicate &predicate);
+TokenPredicate Optional(const TokenPredicate &predicate);
 
 extern const TokenPredicate isSpace;
 extern const TokenPredicate isEol;

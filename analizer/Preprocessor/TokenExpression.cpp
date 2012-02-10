@@ -32,6 +32,11 @@ bool TokenExpression::match(const shared_ptr<const Token> &token)
 			quantity = 0;
 			return match(token);
 		}
+
+		if (predicates[position].isOptional()) {
+			position++;
+			return match(token);
+		}
 	}
 	
 	return false;

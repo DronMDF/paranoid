@@ -6,19 +6,22 @@
 
 using namespace std;
 
-// TokenPredicateImpl
 class TokenPredicateImpl {
 public:
 	virtual ~TokenPredicateImpl();
 	virtual bool match(const std::shared_ptr<const Token> &token) const = 0;
+
 	virtual bool isSome() const{
+		return false;
+	}
+
+	virtual bool isOptional() const{
 		return false;
 	}
 };
 
 TokenPredicateImpl::~TokenPredicateImpl() = default;
 
-// TokenPredicateText
 class TokenPredicateEqual : public TokenPredicateImpl {
 private:
 	const std::string text;
@@ -31,7 +34,6 @@ public:
 	}
 };
 
-// TokenPredicateNot
 class TokenPredicateNot : public TokenPredicateImpl {
 private:
 	const TokenPredicate predicate;
@@ -44,7 +46,6 @@ public:
 	}
 };
 
-// TokenPredicateSome
 class TokenPredicateSome : public TokenPredicateImpl {
 private:
 	const TokenPredicate predicate;
@@ -61,7 +62,26 @@ public:
 	}
 };
 
-// TokenPredicateTyped
+class TokenPredicateOptional : public TokenPredicateImpl {
+private:
+	const TokenPredicate predicate;
+public:
+	TokenPredicateOptional(const TokenPredicate &predicate) : predicate(predicate) {
+	}
+
+	virtual bool match(const shared_ptr<const Token> &token) const {
+		return predicate(token);
+	}
+
+	virtual bool isSome() const{
+		return predicate.isSome();
+	}
+
+	virtual bool isOptional() const{
+		return true;
+	}
+};
+
 template<typename T>
 class TokenPredicateTyped : public TokenPredicateImpl {
 public:
@@ -70,7 +90,7 @@ public:
 	}
 };
 
-// TokenPredicate
+// TokenPredicate impl
 TokenPredicate::TokenPredicate(const TokenPredicate &predicate)
 	: impl(predicate.impl)
 {
@@ -94,6 +114,10 @@ bool TokenPredicate::isSome() const {
 	return impl->isSome();
 }
 
+bool TokenPredicate::isOptional() const {
+	return impl->isOptional();
+}
+
 // TokenPredicate generators
 TokenPredicate Not(const TokenPredicate &predicate) {
 	return TokenPredicate(make_shared<TokenPredicateNot>(predicate));
@@ -101,6 +125,10 @@ TokenPredicate Not(const TokenPredicate &predicate) {
 
 TokenPredicate Some(const TokenPredicate &predicate) {
 	return TokenPredicate(make_shared<TokenPredicateSome>(predicate));
+}
+
+TokenPredicate Optional(const TokenPredicate &predicate) {
+	return TokenPredicate(make_shared<TokenPredicateOptional>(predicate));
 }
 
 const TokenPredicate isSpace(make_shared<TokenPredicateTyped<TokenSpace>>());
