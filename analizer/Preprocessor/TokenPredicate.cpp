@@ -11,6 +11,9 @@ class TokenPredicateImpl {
 public:
 	virtual ~TokenPredicateImpl();
 	virtual bool match(const std::shared_ptr<const Token> &token) const = 0;
+	virtual bool isSome() const{
+		return false;
+	}
 };
 
 TokenPredicateImpl::~TokenPredicateImpl() = default;
@@ -36,7 +39,7 @@ public:
 	TokenPredicateNot(const TokenPredicate &predicate) : predicate(predicate) {
 	}
 
-	bool match(const shared_ptr<const Token> &token) const {
+	virtual bool match(const shared_ptr<const Token> &token) const {
 		return !predicate(token);
 	}
 };
@@ -49,8 +52,12 @@ public:
 	TokenPredicateSome(const TokenPredicate &predicate) : predicate(predicate) {
 	}
 
-	bool match(const shared_ptr<const Token> &token) const {
+	virtual bool match(const shared_ptr<const Token> &token) const {
 		return predicate(token);
+	}
+
+	virtual bool isSome() const{
+		return true;
 	}
 };
 
@@ -81,6 +88,10 @@ TokenPredicate::TokenPredicate(const char *text)
 
 bool TokenPredicate::operator()(const shared_ptr<const Token> &token) const {
 	return impl->match(token);
+}
+
+bool TokenPredicate::isSome() const {
+	return impl->isSome();
 }
 
 // TokenPredicate generators

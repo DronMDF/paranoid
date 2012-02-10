@@ -19,4 +19,5 @@ public:
 private:
 	const std::vector<TokenPredicate> predicates;
 	unsigned position;
+	unsigned quantity;
 };

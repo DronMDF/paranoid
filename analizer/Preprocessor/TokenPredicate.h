@@ -14,6 +14,7 @@ public:
 	TokenPredicate(const char *text);
 	
 	bool operator()(const std::shared_ptr<const Token> &token) const;
+	bool isSome() const;
 
 private:
 	std::shared_ptr<TokenPredicateImpl> impl;

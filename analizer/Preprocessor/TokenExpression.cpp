@@ -5,7 +5,7 @@
 using namespace std; 
 
 TokenExpression::TokenExpression(const initializer_list<TokenPredicate> &expr)
-	: predicates(expr.begin(), expr.end()), position(0)
+	: predicates(expr.begin(), expr.end()), position(0), quantity(0)
 {
 }
 
@@ -19,8 +19,19 @@ bool TokenExpression::match(const shared_ptr<const Token> &token)
 	}
 	
 	if (predicates[position](token)) {
-		position++;
+		quantity++;
+		if (!predicates[position].isSome()) {
+			position++;
+			quantity = 0;
+		}
+		
 		return true;
+	} else {
+		if (quantity > 0) {
+			position++;
+			quantity = 0;
+			return match(token);
+		}
 	}
 	
 	return false;
