@@ -64,4 +64,11 @@ BOOST_AUTO_TEST_CASE(testOptional)
 	BOOST_REQUIRE(tex.isMatched());
 }
 
+BOOST_AUTO_TEST_CASE(testOptionalTail)
+{
+	TokenExpression tex({"a", Optional("b")});
+	BOOST_REQUIRE(tex.match(make_shared<DummyToken>("a")));
+	BOOST_REQUIRE(tex.isMatched());
+}
+
 BOOST_AUTO_TEST_SUITE_END()

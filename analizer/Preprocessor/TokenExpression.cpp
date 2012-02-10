@@ -44,7 +44,12 @@ bool TokenExpression::match(const shared_ptr<const Token> &token)
 
 bool TokenExpression::isMatched() const
 {
-	return position >= predicates.size();
+	unsigned last_position = position;
+	while (last_position < predicates.size() && predicates[last_position].isOptional()) {
+		last_position++;
+	}
+	
+	return last_position >= predicates.size();
 }
 
 void TokenExpression::reset()
