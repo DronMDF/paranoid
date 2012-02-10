@@ -28,18 +28,25 @@ BOOST_AUTO_TEST_CASE(testMetched)
 	BOOST_REQUIRE(!tex.isMatched());
 }
 
+
+BOOST_AUTO_TEST_CASE(testNot)
+{
+	TokenExpression tex({Not("a")});
+	BOOST_REQUIRE(!tex.match(make_shared<DummyToken>("a")));
+	BOOST_REQUIRE(tex.match(make_shared<DummyToken>("b")));
+	BOOST_REQUIRE(tex.isMatched());
+}
+
 BOOST_AUTO_TEST_CASE(testSome)
 {
-	TokenExpression tex({"#", Some(isSpace), "include"});
-	BOOST_REQUIRE(tex.match(make_shared<DummyToken>("#")));
-
-	// Any quantity of spaces
-	auto line = make_shared<Line>(0, " ", static_cast<File *>(0));
-	BOOST_REQUIRE(tex.match(make_shared<TokenSpace>(line, 0, 1)));
-	BOOST_REQUIRE(tex.match(make_shared<TokenSpace>(line, 0, 1)));
-	BOOST_REQUIRE(tex.match(make_shared<TokenSpace>(line, 0, 1)));
+	TokenExpression tex({"a", Some("b"), "c"});
+	BOOST_REQUIRE(tex.match(make_shared<DummyToken>("a")));
+	// Any quantity of b
+	BOOST_REQUIRE(tex.match(make_shared<DummyToken>("b")));
+	BOOST_REQUIRE(tex.match(make_shared<DummyToken>("b")));
+	BOOST_REQUIRE(tex.match(make_shared<DummyToken>("b")));
 	
-	BOOST_REQUIRE(tex.match(make_shared<DummyToken>("include")));
+	BOOST_REQUIRE(tex.match(make_shared<DummyToken>("c")));
 	BOOST_REQUIRE(tex.isMatched());
 }
 
