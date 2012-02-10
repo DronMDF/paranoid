@@ -26,4 +26,5 @@ TokenPredicate Some(const TokenPredicate &predicate);
 TokenPredicate Optional(const TokenPredicate &predicate);
 
 extern const TokenPredicate isSpace;
+extern const TokenPredicate isWord;
 extern const TokenPredicate isEol;

@@ -6,10 +6,11 @@
 #include <boost/algorithm/string/classification.hpp>
 #include "File.h"
 #include "Line.h"
+#include "TokenDirective.h"
 #include "Token.h"
-#include "TokenList.h"
 #include "TokenInclude.h"
 #include "Tokenizer.h"
+#include "TokenList.h"
 #include "TokenPredicate.h"
 
 using namespace std;
@@ -57,6 +58,9 @@ void File::tokenize(function<void (const shared_ptr<TokenInclude> &)> include)
 	
 	replaceToken({"\\", isEol}, 
 		[](const list<shared_ptr<const Token>> &){ return shared_ptr<Token>(); });
+	// TODO: It's broke include location
+	//replaceToken({"#", Optional(Some(isSpace)), isWord},
+	//	[](const list<shared_ptr<const Token>> &tokens){ return make_shared<TokenDirective>(tokens); });
 
 	tokenizeIncludes(include);
 }

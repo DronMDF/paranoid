@@ -3,6 +3,7 @@
 #include "TokenNewline.h"
 #include "TokenPredicate.h"
 #include "TokenSpace.h"
+#include "TokenWord.h"
 
 using namespace std;
 
@@ -136,4 +137,5 @@ TokenPredicate Optional(const TokenPredicate &predicate) {
 }
 
 const TokenPredicate isSpace(make_shared<TokenPredicateTyped<TokenSpace>>());
+const TokenPredicate isWord(make_shared<TokenPredicateTyped<TokenWord>>());
 const TokenPredicate isEol(make_shared<TokenPredicateTyped<TokenNewline>>());
