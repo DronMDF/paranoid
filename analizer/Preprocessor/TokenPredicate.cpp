@@ -36,8 +36,21 @@ public:
 	TokenPredicateNot(const TokenPredicate &predicate) : predicate(predicate) {
 	}
 
-	bool match(const std::shared_ptr<const Token> &token) const {
+	bool match(const shared_ptr<const Token> &token) const {
 		return !predicate(token);
+	}
+};
+
+// TokenPredicateSome
+class TokenPredicateSome : public TokenPredicateImpl {
+private:
+	const TokenPredicate predicate;
+public:
+	TokenPredicateSome(const TokenPredicate &predicate) : predicate(predicate) {
+	}
+
+	bool match(const shared_ptr<const Token> &token) const {
+		return predicate(token);
 	}
 };
 
@@ -73,6 +86,10 @@ bool TokenPredicate::operator()(const shared_ptr<const Token> &token) const {
 // TokenPredicate generators
 TokenPredicate Not(const TokenPredicate &predicate) {
 	return TokenPredicate(make_shared<TokenPredicateNot>(predicate));
+}
+
+TokenPredicate Some(const TokenPredicate &predicate) {
+	return TokenPredicate(make_shared<TokenPredicateSome>(predicate));
 }
 
 const TokenPredicate isSpace(make_shared<TokenPredicateTyped<TokenSpace>>());

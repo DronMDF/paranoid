@@ -20,6 +20,7 @@ private:
 };
 
 TokenPredicate Not(const TokenPredicate &predicate);
+TokenPredicate Some(const TokenPredicate &predicate);
 
 extern const TokenPredicate isSpace;
 extern const TokenPredicate isEol;
