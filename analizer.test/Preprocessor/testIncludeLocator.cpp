@@ -10,8 +10,7 @@ BOOST_AUTO_TEST_SUITE(suiteIncludeLocator)
 
 struct TestTokenInclude : public TokenInclude {
 	TestTokenInclude(const string &arg) : TokenInclude({
-		make_shared<DummyToken>("#"),
-		make_shared<DummyToken>("include"),
+		make_shared<DummyToken>("#include"),
 		make_shared<DummyToken>(" "),
 		make_shared<DummyToken>(arg)})
 	{
