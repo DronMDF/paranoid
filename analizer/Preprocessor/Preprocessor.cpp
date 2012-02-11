@@ -11,6 +11,7 @@
 #include "File.h"
 #include "Line.h"
 #include "TokenInclude.h"
+#include "TokenPredicate.h"
 #include "Error.h"
 
 using namespace std;
@@ -33,28 +34,40 @@ void Preprocessor::tokenize()
 {
 	auto fit = files.begin();
 	while (fit != files.end()) {
-		fit->second->tokenize(bind(&Preprocessor::include, this, _1));
+		fit->second->tokenize();
+		
+		auto createIncludeToken = bind(&Preprocessor::createIncludeToken, this, _1);
+		fit->second->replaceToken(
+			{"#include", Optional(Some(isSpace)), isWord}, // TODO: isString
+			createIncludeToken);
+		fit->second->replaceToken(
+			{"#include", Optional(Some(isSpace)), "<", Some(Not(">")), ">"}, 
+			createIncludeToken);
+		
 		++fit;
 	}
 }
 
-void Preprocessor::include(const shared_ptr<TokenInclude> &token)
+shared_ptr<Token> Preprocessor::createIncludeToken(const list<shared_ptr<const Token>> &tokens)
 {
+	auto token = make_shared<TokenInclude>(tokens);
 	const auto ffp = locate(token);
 	
-	if (ffp.empty()) {
-		return;
-	}
-	
-	const auto cfp = canonical(ffp);
-	BOOST_FOREACH(auto &fit, files) {
-		if (fit.first == cfp) {
-			fit.second->includedFrom(token);
-			return;
+	if (!ffp.empty()) {
+		const auto cfp = canonical(ffp);
+		BOOST_FOREACH(auto &fit, files) {
+			if (fit.first == cfp) {
+				fit.second->includedFrom(token);
+				return token;
+			}
 		}
+		
+		auto file = make_shared<File>(cfp);
+		file->includedFrom(token);
+		files.push_back(make_pair(cfp, file));
 	}
 	
-	files.push_back(make_pair(cfp, make_shared<File>(cfp)));
+	return token;
 }
 
 void Preprocessor::getTokens(const string &filename, 

@@ -1,3 +1,4 @@
+functional.test/unused_include_02.cpp:2
 functional.test/unused_include_02.h:3 error: Unused include
 #include "unused_include_01.h"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

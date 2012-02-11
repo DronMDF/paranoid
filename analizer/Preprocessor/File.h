@@ -16,7 +16,7 @@ public:
 	File(const std::string &filename);
 	virtual ~File();
 	
-	void tokenize(std::function<void (const std::shared_ptr<TokenInclude> &)> include);
+	void tokenize();
 	
 	virtual std::string getLocation() const;
 	virtual std::string getFileName() const;
@@ -35,8 +35,5 @@ private:
 	tokens_list included_from;
 	
 	virtual void forEachLine(std::function<void (const std::shared_ptr<const Line> &)> lineparser) const;
-	void dropEscapedNewline();
-	void tokenizeIncludes(std::function<void (const std::shared_ptr<TokenInclude> &)> include);
-	
 	void replaceTokens(tokens_iterator begin, tokens_iterator end, const std::shared_ptr<const Token> &token);
 };
