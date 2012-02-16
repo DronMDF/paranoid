@@ -36,7 +36,12 @@ void checkSource(const vector<const char *> &args)
 		Preprocessor pp(bind(&IncludeLocator::locate, locator, _1), source);
 		pp.tokenize();
 		
-		pp.forEachFile(Analizer());
+		Analizer analizer;
+		pp.forEachFile(bind(&Analizer::checkFile, &analizer, _1));
+		
+		BOOST_FOREACH(const auto &e, analizer.getResult()) {
+			cerr << ErrorFormatter(e) << endl;
+		}
 	}
 }
 

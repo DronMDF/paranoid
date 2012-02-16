@@ -12,7 +12,12 @@
 
 using namespace std;
 
-void Analizer::operator()(const shared_ptr<File> &file)
+Analizer::Analizer()
+	: errors()
+{
+}
+
+void Analizer::checkFile(const shared_ptr<File> &file)
 {
 	list<shared_ptr<const Token>> tokens;
 	file->getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t); });
@@ -38,12 +43,12 @@ void Analizer::operator()(const shared_ptr<File> &file)
 
 	if (others.empty()) {
 		BOOST_FOREACH(const auto &i, includes) {
-			cerr << ErrorFormatter(Error(i, "Unused include")) << endl;
+			errors.push_back(Error(i, "Unused include"));
 		}
 	}
 }
 
 list<Error> Analizer::getResult() const
 {
-	return {};
+	return errors;
 }

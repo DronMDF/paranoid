@@ -7,7 +7,12 @@ class Error;
 
 class Analizer {
 public:
-	void operator()(const std::shared_ptr<File> &file);
+	Analizer();
+	
+	void checkFile(const std::shared_ptr<File> &file);
 	
 	std::list<Error> getResult() const;
+	
+private:
+	std::list<Error> errors;
 };
