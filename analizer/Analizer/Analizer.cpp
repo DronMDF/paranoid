@@ -12,7 +12,7 @@
 
 using namespace std;
 
-void Analizer::operator()(const shared_ptr<File> &file) const
+void Analizer::operator()(const shared_ptr<File> &file)
 {
 	list<shared_ptr<const Token>> tokens;
 	file->getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t); });
@@ -41,4 +41,9 @@ void Analizer::operator()(const shared_ptr<File> &file) const
 			cerr << ErrorFormatter(Error(i, "Unused include")) << endl;
 		}
 	}
+}
+
+list<Error> Analizer::getResult() const
+{
+	return {};
 }
