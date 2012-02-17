@@ -124,14 +124,13 @@ BOOST_AUTO_TEST_CASE(testFileTokenReplace)
 {
 	TestFile file("none", {"#define a 0"});
 	file.tokenize();
-	
-	file.replaceToken({"a", " ", "0"},
+	file.replaceToken({"#define", isSpace, Some(Not(isEol))},
 		[](const list<shared_ptr<const Token>> &l){ return make_shared<TokenList>(l); });
 
 	list<string> tokens;
 	file.getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
 	
-	list<string> expected = { "#define", " ",  "a 0", "\n" };
+	list<string> expected = { "#define a 0", "\n" };
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
 }
 
