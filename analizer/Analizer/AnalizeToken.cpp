@@ -2,6 +2,7 @@
 #include <Preprocessor/TokenPredicate.h>
 #include <Preprocessor/TokenInclude.h>
 #include "AnalizeToken.h"
+#include "ExpressionDefine.h"
 
 using namespace std;
 
@@ -20,6 +21,11 @@ void AnalizeToken::checkToken(const shared_ptr<const Token> &token)
 		includes.push_back(token);
 		return;
 	}
+	
+	// TODO: collect names
+	if (dynamic_cast<const ExpressionDefine *>(token.get()) != 0) {
+		return;
+	} 
 	
 	// TODO: expression parser
 	
