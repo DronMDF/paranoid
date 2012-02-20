@@ -1,5 +1,5 @@
 
+#include "unused_include_01.h"
 #include "unused_include_03.h"
 
-// This expression does not use other names
-#define A 0
+#define A ZERO
