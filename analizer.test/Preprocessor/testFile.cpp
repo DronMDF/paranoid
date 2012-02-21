@@ -9,8 +9,8 @@
 #include <Preprocessor/Token.h>
 #include <Preprocessor/TokenInclude.h>
 #include <Preprocessor/TokenPredicate.h>
-#include "TestFile.h"
 #include "../Assertions.h"
+#include "../FileStub.h"
 
 using namespace std;
 using boost::lexical_cast;
@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE(testGetFileName)
 
 BOOST_AUTO_TEST_CASE(testTokenize)
 {
-	TestFile file("testFile.cpp", {"012345"});
+	FileStub file("testFile.cpp", {"012345"});
 	file.tokenize();
 	
 	list<string> tokens;
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(testTokenize)
 
 BOOST_AUTO_TEST_CASE(testTokenize2)
 {
-	TestFile file("testFile.cpp", {"aaa bbb"});
+	FileStub file("testFile.cpp", {"aaa bbb"});
 	file.tokenize();
 	
 	list<string> tokens;
@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_CASE(testTokenize2)
 
 BOOST_AUTO_TEST_CASE(testEscapedNewline)
 {
-	TestFile file("testFile.cpp", {"#define a \\", "(foo)"});
+	FileStub file("testFile.cpp", {"#define a \\", "(foo)"});
 	file.tokenize();
 	
 	list<string> tokens;
@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE(testEscapedNewline)
 
 // BOOST_AUTO_TEST_CASE(testIncludeSystem)
 // {
-// 	TestFile file("testFile.cpp", {"#include <test.h>"});
+// 	FileStub file("testFile.cpp", {"#include <test.h>"});
 // 
 // 	shared_ptr<const TokenInclude> ti;
 // 	file.tokenize();
@@ -91,7 +91,7 @@ BOOST_AUTO_TEST_CASE(testEscapedNewline)
 
 // BOOST_AUTO_TEST_CASE(testIncludeLocal)
 // {
-// 	TestFile file("testFile.cpp", {"#include \"test.h\""});
+// 	FileStub file("testFile.cpp", {"#include \"test.h\""});
 // 
 // 	shared_ptr<const TokenInclude> ti;
 // 	file.tokenize();
@@ -115,14 +115,14 @@ BOOST_AUTO_TEST_CASE(testIncludeFrom)
 		string getLocation() const { return "Parent.cpp:5"; }
 	};
 	
-	TestFile file("testFile.cpp", {});
+	FileStub file("testFile.cpp", {});
 	file.includedFrom(make_shared<TestToken>());
 	BOOST_REQUIRE_EQUAL(file.getLocation(), "Parent.cpp:5\ntestFile.cpp");
 }
 
 BOOST_AUTO_TEST_CASE(testFileTokenReplace)
 {
-	TestFile file("none", {"#define a 0"});
+	FileStub file("none", {"#define a 0"});
 	file.tokenize();
 	file.replaceToken({"#define", isSpace, Some(Not(isEol))},
 		[](const list<shared_ptr<const Token>> &l){ return make_shared<TokenList>(l); });

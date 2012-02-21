@@ -5,15 +5,15 @@
 #include <Preprocessor/Line.h>
 #include <Preprocessor/Token.h>
 #include <Preprocessor/Tokenizer.h>
-#include "TestFile.h"
 #include "../Assertions.h"
+#include "../FileStub.h"
 
 using namespace std;
 
 BOOST_AUTO_TEST_SUITE(suiteTokenizer)
 
 struct fixtureTokenizer {
-	const TestFile file;
+	const FileStub file;
 	list<string> tokens;
 	Tokenizer tokenizer;
 	

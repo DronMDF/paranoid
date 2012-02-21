@@ -3,9 +3,9 @@
 #include <Preprocessor/File.h>
 #include <Preprocessor/Line.h>
 
-struct TestFile : public File {
+struct FileStub : public File {
 	const std::list<std::string> lines;
-	TestFile(const std::string &filename, const std::list<std::string> &lines) 
+	FileStub(const std::string &filename, const std::list<std::string> &lines) 
 		: File(filename), lines(lines) 
 	{
 	}

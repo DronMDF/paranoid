@@ -2,7 +2,7 @@
 #include <boost/test/unit_test.hpp>
 #include <Preprocessor/Line.h>
 #include <Preprocessor/TokenNewline.h>
-#include "TestFile.h"
+#include "../FileStub.h"
 
 using namespace std;
 
@@ -17,7 +17,7 @@ BOOST_AUTO_TEST_CASE(testGetText)
 
 BOOST_AUTO_TEST_CASE(testGetFileName)
 {
-	TestFile file("test.cpp", {});
+	FileStub file("test.cpp", {});
 	auto line = make_shared<Line>(10, "aaaxxxxxaaa", &file);
 	const TokenNewline token(line);
 	BOOST_REQUIRE_EQUAL(token.getFileName(), file.getFileName());
