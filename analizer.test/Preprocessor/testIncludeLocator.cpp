@@ -2,7 +2,7 @@
 #include <boost/test/unit_test.hpp>
 #include <Preprocessor/IncludeLocator.h>
 #include <Preprocessor/TokenInclude.h>
-#include "DummyToken.h"
+#include "../TokenStub.h"
 
 using namespace std;
 
@@ -10,9 +10,9 @@ BOOST_AUTO_TEST_SUITE(suiteIncludeLocator)
 
 struct TestTokenInclude : public TokenInclude {
 	TestTokenInclude(const string &arg) : TokenInclude({
-		make_shared<DummyToken>("#include"),
-		make_shared<DummyToken>(" "),
-		make_shared<DummyToken>(arg)})
+		make_shared<TokenStub>("#include"),
+		make_shared<TokenStub>(" "),
+		make_shared<TokenStub>(arg)})
 	{
 	}
 	string getFileName() const { return "/test/test.cpp"; }

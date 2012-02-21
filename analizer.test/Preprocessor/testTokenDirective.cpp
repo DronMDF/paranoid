@@ -1,6 +1,6 @@
 #include <boost/test/unit_test.hpp>
 #include <Preprocessor/TokenDirective.h>
-#   include "DummyToken.h"
+#   include "../TokenStub.h"
 
 using namespace std;
 
@@ -9,10 +9,10 @@ BOOST_AUTO_TEST_SUITE(suiteTokenDirective)
 BOOST_AUTO_TEST_CASE(testDirectiveWithSpace)
 {
 	TokenDirective token({
-		make_shared<DummyToken>("#"),
-		make_shared<DummyToken>(" "),
-		make_shared<DummyToken>(" "),
-		make_shared<DummyToken>("include"),
+		make_shared<TokenStub>("#"),
+		make_shared<TokenStub>(" "),
+		make_shared<TokenStub>(" "),
+		make_shared<TokenStub>("include"),
 	});
 	
 	BOOST_REQUIRE_EQUAL(token.getText(), "#include");

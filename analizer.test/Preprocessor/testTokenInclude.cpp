@@ -3,7 +3,7 @@
 #include <Preprocessor/TokenInclude.h>
 #include <Preprocessor/TokenSpace.h>
 #include <Preprocessor/File.h>
-#include "DummyToken.h"
+#include "../TokenStub.h"
 
 using namespace std;
 
@@ -18,11 +18,11 @@ BOOST_AUTO_TEST_CASE(testConstruct)
 BOOST_AUTO_TEST_CASE(testSystemInclude)
 {
 	TokenInclude ti({
-		make_shared<DummyToken>("#include"),
-		make_shared<DummyToken>(" "),
-		make_shared<DummyToken>("<"),
-		make_shared<DummyToken>("test.h"),
-		make_shared<DummyToken>(">")});
+		make_shared<TokenStub>("#include"),
+		make_shared<TokenStub>(" "),
+		make_shared<TokenStub>("<"),
+		make_shared<TokenStub>("test.h"),
+		make_shared<TokenStub>(">")});
 	//ti.include(shared_ptr<File>());
 	BOOST_REQUIRE(ti.isSystem());
 	BOOST_REQUIRE_EQUAL(ti.getHeaderName(), "test.h");
@@ -31,9 +31,9 @@ BOOST_AUTO_TEST_CASE(testSystemInclude)
 BOOST_AUTO_TEST_CASE(testLocalInclude)
 {
 	TokenInclude ti({
-		make_shared<DummyToken>("#include"),
-		make_shared<DummyToken>(" "),
-		make_shared<DummyToken>("\"local.h\"")});
+		make_shared<TokenStub>("#include"),
+		make_shared<TokenStub>(" "),
+		make_shared<TokenStub>("\"local.h\"")});
 	//ti.include(shared_ptr<File>());
 	BOOST_REQUIRE(!ti.isSystem());
 	BOOST_REQUIRE_EQUAL(ti.getHeaderName(), "local.h");

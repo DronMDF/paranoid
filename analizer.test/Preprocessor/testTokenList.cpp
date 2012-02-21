@@ -3,7 +3,7 @@
 #include <Preprocessor/TokenList.h>
 #include <Preprocessor/TokenWord.h>
 #include "TestFile.h"
-#include "DummyToken.h"
+#include "../TokenStub.h"
 
 using namespace std;
 
@@ -25,7 +25,7 @@ BOOST_AUTO_TEST_CASE(testEmptyList)
 
 BOOST_AUTO_TEST_CASE(testOneInList)
 {
-	auto token = make_shared<DummyToken>("test");
+	auto token = make_shared<TokenStub>("test");
 	const TokenList token_list({token});
 	BOOST_REQUIRE_EQUAL(token_list.getText(), token->getText());
 }
