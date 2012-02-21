@@ -26,4 +26,16 @@ BOOST_AUTO_TEST_CASE(testUnusedInclude)
 	BOOST_REQUIRE_EQUAL(analizer.getResult().front().message, "Unused include");
 }
 
+BOOST_AUTO_TEST_CASE(testTransformDefine)
+{
+	list<string> flines = { "#define a 0" };
+	auto file = make_shared<FileStub>("none", flines);
+	file->tokenize();
+	
+	Analizer analizer;
+	analizer.transformFile(file);
+	
+	BOOST_REQUIRE_EQUAL(file->getTokensText().front(), "#define a 0");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
