@@ -9,7 +9,8 @@ class Analizer {
 public:
 	Analizer();
 	
-	void checkFile(const std::shared_ptr<File> &file);
+	void transformFile(const std::shared_ptr<File> &file) const;
+	void checkFile(const std::shared_ptr<const File> &file);
 	
 	std::list<Error> getResult() const;
 	

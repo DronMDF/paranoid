@@ -22,12 +22,16 @@ Analizer::Analizer()
 {
 }
 
-void Analizer::checkFile(const shared_ptr<File> &file)
+// Transform token chains in expression
+void Analizer::transformFile(const std::shared_ptr<File> &file) const
 {
-	// Transform tokens chain
 	file->replaceToken({"#define", Some(Not(isEol))},
 		[](const list<shared_ptr<const Token>> &t){ return make_shared<ExpressionDefine>(t); });
-	
+}
+
+void Analizer::checkFile(const shared_ptr<const File> &file)
+{
+	// Transform tokens chain
 	AnalizeToken helper;
 	// TODO: forEachToken
 	file->getTokens(bind(&AnalizeToken::checkToken, &helper, _1));
