@@ -42,8 +42,7 @@ BOOST_AUTO_TEST_CASE(testTokenize)
 	list<string> tokens;
 	file.getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
 	
-	list<string> expected = { "012345", "\n" };
-	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, { "012345", "\n" });
 }
 
 BOOST_AUTO_TEST_CASE(testTokenize2)
@@ -54,8 +53,7 @@ BOOST_AUTO_TEST_CASE(testTokenize2)
 	list<string> tokens;
 	file.getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
 	
-	list<string> expected = { "aaa", " ", "bbb", "\n" };
-	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, { "aaa", " ", "bbb", "\n" });
 }
 
 BOOST_AUTO_TEST_CASE(testEscapedNewline)
@@ -66,8 +64,7 @@ BOOST_AUTO_TEST_CASE(testEscapedNewline)
 	list<string> tokens;
 	file.getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
 	
-	list<string> expected = { "#define", " ", "a", " ", "(", "foo", ")", "\n" };
-	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, { "#define", " ", "a", " ", "(", "foo", ")", "\n" });
 }
 
 // BOOST_AUTO_TEST_CASE(testIncludeSystem)
@@ -130,8 +127,7 @@ BOOST_AUTO_TEST_CASE(testFileTokenReplace)
 	list<string> tokens;
 	file.getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
 	
-	list<string> expected = { "#define a 0", "\n" };
-	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, { "#define a 0", "\n" });
 }
 
 BOOST_AUTO_TEST_SUITE_END()
