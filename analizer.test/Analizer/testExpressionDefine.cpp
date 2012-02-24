@@ -17,7 +17,7 @@ BOOST_AUTO_TEST_CASE(testNoUsedNames)
 		make_shared<TokenStub>(" "),
 		make_shared<TokenStub>("0")});
 
-	BOOST_REQUIRE(ex.getUsedNames().empty());
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(ex.getUsedNames(), list<string>());
 }
 
 BOOST_AUTO_TEST_CASE(testUsedNames)
