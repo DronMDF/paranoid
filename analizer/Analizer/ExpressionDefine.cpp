@@ -13,7 +13,7 @@ ExpressionDefine::ExpressionDefine(const list<shared_ptr<const Token>> &tokens)
 {
 }
 
-list<string> ExpressionDefine::getUsedNamesFromToken(const shared_ptr<const Token> &token) const
+set<string> ExpressionDefine::getUsedNamesFromToken(const shared_ptr<const Token> &token) const
 {
 	if (all(token->getText(), is_digit())) {
 		return {};
@@ -22,7 +22,7 @@ list<string> ExpressionDefine::getUsedNamesFromToken(const shared_ptr<const Toke
 	return { token->getText() };
 }
 
-list<string> ExpressionDefine::getUsedNames() const
+set<string> ExpressionDefine::getUsedNames() const
 {
 	auto token = tokens.begin();
 	++token; // #define
@@ -30,9 +30,10 @@ list<string> ExpressionDefine::getUsedNames() const
 	++token; // <name>
 	++token; // <space>
 	
-	list<string> names;
+	set<string> names;
 	while (token != tokens.end()) {
-		names.splice(names.end(), getUsedNamesFromToken(*token));
+		auto token_names = getUsedNamesFromToken(*token);
+		names.insert(token_names.begin(), token_names.end());
 		++token;
 	}
 	
