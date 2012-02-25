@@ -31,9 +31,13 @@ void Analizer::transformFile(const std::shared_ptr<File> &file) const
 
 void Analizer::checkFile(const shared_ptr<const File> &file)
 {
-	// Transform tokens chain
+	// TODO: construct include graph
+	// TODO: gather exported names
+	
 	AnalizeToken helper;
 	// TODO: forEachToken
+	// TODO: Imported names check by namelist, if all names is present - detect unused include
+	// 	If any name is absent - unused include cannot be detected
 	file->getTokens(bind(&AnalizeToken::checkToken, &helper, _1));
 
 	if (helper.isAllClassified()) {
