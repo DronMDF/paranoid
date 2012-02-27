@@ -23,16 +23,21 @@ Analizer::Analizer()
 }
 
 // Transform token chains in expression
-void Analizer::transformFile(const std::shared_ptr<File> &file) const
+void Analizer::transformFile(const shared_ptr<File> &file) const
 {
 	file->replaceToken({"#define", Some(Not(isEol))},
 		[](const list<shared_ptr<const Token>> &t){ return make_shared<ExpressionDefine>(t); });
 }
 
+void Analizer::collectNames(const shared_ptr<File> &file)
+{
+	// TODO: collect declared names
+	file->getTokens([](const shared_ptr<const Token> &){});
+}
+
 void Analizer::checkFile(const shared_ptr<const File> &file)
 {
 	// TODO: construct include graph
-	// TODO: gather exported names
 	
 	AnalizeToken helper;
 	// TODO: forEachToken

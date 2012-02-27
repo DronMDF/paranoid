@@ -38,6 +38,7 @@ void checkSource(const vector<const char *> &args)
 		
 		Analizer analizer;
 		pp.forEachFile(bind(&Analizer::transformFile, &analizer, _1));
+		pp.forEachFile(bind(&Analizer::collectNames, &analizer, _1));
 		pp.forEachFile(bind(&Analizer::checkFile, &analizer, _1));
 		
 		BOOST_FOREACH(const auto &e, analizer.getResult()) {
