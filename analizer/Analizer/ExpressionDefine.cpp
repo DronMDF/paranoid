@@ -39,3 +39,11 @@ set<string> ExpressionDefine::getUsedNames() const
 	
 	return names;
 }
+
+set<string> ExpressionDefine::getDeclaredNames() const
+{
+	auto token = tokens.begin();
+	++token; // #define
+	++token; // <space>
+	return { (*token)->getText() };
+}

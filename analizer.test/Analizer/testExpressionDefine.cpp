@@ -32,4 +32,16 @@ BOOST_AUTO_TEST_CASE(testUsedNames)
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(ex.getUsedNames(), {"ZERO"});
 }
 
+BOOST_AUTO_TEST_CASE(testDeclaredNames)
+{
+	ExpressionDefine ex({
+		make_shared<TokenStub>("#define"),
+		make_shared<TokenStub>(" "),
+		make_shared<TokenStub>("A"),
+		make_shared<TokenStub>(" "),
+		make_shared<TokenStub>("ZERO")});
+
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(ex.getDeclaredNames(), {"A"});
+}
+
 BOOST_AUTO_TEST_SUITE_END()
