@@ -7,7 +7,7 @@
 using namespace std;
 
 AnalizeToken::AnalizeToken()
-	: includes(), unclassified(false)
+	: includes(), names(), unclassified(false)
 {
 }
 
@@ -22,8 +22,9 @@ void AnalizeToken::checkToken(const shared_ptr<const Token> &token)
 		return;
 	}
 	
-	// TODO: collect names
-	if (dynamic_cast<const ExpressionDefine *>(token.get()) != 0) {
+	if (auto exp = dynamic_cast<const ExpressionDefine *>(token.get())) {
+		auto token_names = exp->getUsedNames();
+		names.insert(token_names.begin(), token_names.end());
 		return;
 	} 
 	
@@ -40,4 +41,9 @@ list<shared_ptr<const Token>> AnalizeToken::getIncludes() const
 bool AnalizeToken::isAllClassified() const
 {
 	return !unclassified;
+}
+
+set<string> AnalizeToken::getUsedNames() const
+{
+	return names;
 }

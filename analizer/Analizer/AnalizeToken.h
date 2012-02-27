@@ -2,6 +2,7 @@
 #pragma once
 #include <list>
 #include <memory>
+#include <set>
 
 class Token;
 
@@ -13,7 +14,10 @@ public:
 	std::list<std::shared_ptr<const Token>> getIncludes() const;
 	bool isAllClassified() const;
 
+	std::set<std::string> getUsedNames() const;
+	
 private:
 	std::list<std::shared_ptr<const Token>> includes;
+	std::set<std::string> names;
 	bool unclassified;
 };
