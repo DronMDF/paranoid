@@ -41,16 +41,12 @@ BOOST_AUTO_TEST_CASE(testTokenize)
 	pp.files.clear();
 	pp.files.push_back(make_pair("test.cpp", file));
 	
-	// Parse
 	pp.tokenize();
-	
-	list<string> tokens;
-	file->forEachToken([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
 	
 	list<string> expected = { "int", " ", "main", "(", "int", " ", "argc", ",", " ", 
 		"char", " ", "*", "*", "argv", ")", " ", "{", "\n", 
 		" ", "return", " ", "0", ";", "\n", " ", "}", "\n" };
-	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(file->getTokensText(), expected);
 }
 
 BOOST_AUTO_TEST_CASE(testInclude)
