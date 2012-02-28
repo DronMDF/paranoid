@@ -36,8 +36,8 @@ BOOST_AUTO_TEST_CASE(testConstruct)
 BOOST_AUTO_TEST_CASE(testTokenize)
 {
 	TestPreprocessor pp;
-	auto file = make_shared<FileStub>("test.cpp", 
-		list<string>({ "int main(int argc, char **argv) {", " return 0;", " }" }));
+	list<string> lines = { "int main(int argc, char **argv) {", " return 0;", " }" };
+	auto file = make_shared<FileStub>("test.cpp", lines);
 	pp.files.clear();
 	pp.files.push_back(make_pair("test.cpp", file));
 	
@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE(testTokenize)
 	pp.tokenize();
 	
 	list<string> tokens;
-	pp.getTokens("test.cpp", [&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
+	file->getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
 	
 	list<string> expected = { "int", " ", "main", "(", "int", " ", "argc", ",", " ", 
 		"char", " ", "*", "*", "argv", ")", " ", "{", "\n", 

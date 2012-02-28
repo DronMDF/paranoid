@@ -70,16 +70,6 @@ shared_ptr<Token> Preprocessor::createIncludeToken(const list<shared_ptr<const T
 	return token;
 }
 
-void Preprocessor::getTokens(const string &filename, 
-	function<void (const shared_ptr<const Token> &)> add_token) const
-{
-	BOOST_FOREACH(const auto &file, files) {
-		if (file.first == filename) {
-			file.second->getTokens(add_token);
-		}
-	}
-}
-
 void Preprocessor::forEachFile(function<void (const shared_ptr<File> &)> analyzer)
 {
 	BOOST_FOREACH(const auto &file, files) {
