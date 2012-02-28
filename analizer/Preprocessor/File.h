@@ -20,9 +20,10 @@ public:
 	
 	virtual std::string getLocation() const;
 	virtual std::string getFileName() const;
-	virtual void getTokens(std::function<void (const std::shared_ptr<const Token> &)> add_token) const;
+	virtual void forEachToken(std::function<void (const std::shared_ptr<const Token> &)> func) const;
 	
 	void includedFrom(const std::shared_ptr<const TokenInclude> &token);
+	
 	void replaceToken(TokenExpression expression,
 		std::function<std::shared_ptr<const Token> (const std::list<std::shared_ptr<const Token>> &)> creator);
 	

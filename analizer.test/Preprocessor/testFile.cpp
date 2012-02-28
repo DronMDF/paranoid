@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(testTokenize)
 	file.tokenize();
 	
 	list<string> tokens;
-	file.getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
+	file.forEachToken([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
 	
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, { "012345", "\n" });
 }
@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_CASE(testTokenize2)
 	file.tokenize();
 	
 	list<string> tokens;
-	file.getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
+	file.forEachToken([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
 	
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, { "aaa", " ", "bbb", "\n" });
 }
@@ -62,48 +62,10 @@ BOOST_AUTO_TEST_CASE(testEscapedNewline)
 	file.tokenize();
 	
 	list<string> tokens;
-	file.getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
+	file.forEachToken([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
 	
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, { "#define", " ", "a", " ", "(", "foo", ")", "\n" });
 }
-
-// BOOST_AUTO_TEST_CASE(testIncludeSystem)
-// {
-// 	FileStub file("testFile.cpp", {"#include <test.h>"});
-// 
-// 	shared_ptr<const TokenInclude> ti;
-// 	file.tokenize();
-// 
-// 	BOOST_REQUIRE_EQUAL(ti->getText(), "#include <test.h>");
-// 	BOOST_REQUIRE_EQUAL(ti->getLocation(), "testFile.cpp:1");
-// 	BOOST_REQUIRE_EQUAL(ti->getHeaderName(), "test.h");
-// 	BOOST_REQUIRE(ti->isSystem());
-// 	
-// 	list<string> tokens;
-// 	file.getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
-// 	
-// 	list<string> expected = { "#include <test.h>", "\n" };
-// 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
-// }
-
-// BOOST_AUTO_TEST_CASE(testIncludeLocal)
-// {
-// 	FileStub file("testFile.cpp", {"#include \"test.h\""});
-// 
-// 	shared_ptr<const TokenInclude> ti;
-// 	file.tokenize();
-// 
-// 	BOOST_REQUIRE_EQUAL(ti->getText(), "#include \"test.h\"");
-// 	BOOST_REQUIRE_EQUAL(ti->getLocation(), "testFile.cpp:1");
-// 	BOOST_REQUIRE_EQUAL(ti->getHeaderName(), "test.h");
-// 	BOOST_REQUIRE(!ti->isSystem());
-// 	
-// 	list<string> tokens;
-// 	file.getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
-// 	
-// 	list<string> expected = { "#include \"test.h\"", "\n" };
-// 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
-// }
 
 BOOST_AUTO_TEST_CASE(testIncludeFrom)
 {
@@ -125,7 +87,7 @@ BOOST_AUTO_TEST_CASE(testFileTokenReplace)
 		[](const list<shared_ptr<const Token>> &l){ return make_shared<TokenList>(l); });
 
 	list<string> tokens;
-	file.getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
+	file.forEachToken([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
 	
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, { "#define a 0", "\n" });
 }

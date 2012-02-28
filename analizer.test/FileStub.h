@@ -19,7 +19,7 @@ struct FileStub : public File {
 	
 	std::list<std::string> getTokensText() const {
 		std::list<std::string> texts;
-		getTokens([&texts](const std::shared_ptr<const Token> &t) { texts.push_back(t->getText()); });
+		forEachToken([&texts](const std::shared_ptr<const Token> &t) { texts.push_back(t->getText()); });
 		return texts;
 	}
 };

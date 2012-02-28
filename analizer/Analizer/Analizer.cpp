@@ -32,7 +32,7 @@ void Analizer::transformFile(const shared_ptr<File> &file) const
 void Analizer::collectNames(const shared_ptr<File> &file)
 {
 	// TODO: collect declared names
-	file->getTokens([](const shared_ptr<const Token> &){});
+	file->forEachToken([](const shared_ptr<const Token> &){});
 }
 
 void Analizer::checkFile(const shared_ptr<const File> &file)
@@ -40,10 +40,9 @@ void Analizer::checkFile(const shared_ptr<const File> &file)
 	// TODO: construct include graph
 	
 	AnalizeToken helper;
-	// TODO: forEachToken
 	// TODO: Imported names check by namelist, if all names is present - detect unused include
 	// 	If any name is absent - unused include cannot be detected
-	file->getTokens(bind(&AnalizeToken::checkToken, &helper, _1));
+	file->forEachToken(bind(&AnalizeToken::checkToken, &helper, _1));
 
 	if (helper.isAllClassified()) {
 		BOOST_FOREACH(const auto &i, helper.getIncludes()) {

@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE(testTokenize)
 	pp.tokenize();
 	
 	list<string> tokens;
-	file->getTokens([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
+	file->forEachToken([&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
 	
 	list<string> expected = { "int", " ", "main", "(", "int", " ", "argc", ",", " ", 
 		"char", " ", "*", "*", "argv", ")", " ", "{", "\n", 

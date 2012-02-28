@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <boost/foreach.hpp>
 #include <boost/range/algorithm/find_if.hpp>
+#include <boost/range/algorithm/for_each.hpp>
 #include <boost/algorithm/string/classification.hpp>
 #include "File.h"
 #include "Line.h"
@@ -16,6 +17,7 @@
 using namespace std;
 using namespace std::placeholders;
 using boost::find_if;
+using boost::for_each;
 using boost::is_any_of;
 
 File::File(const string &filename)
@@ -42,11 +44,9 @@ string File::getFileName() const
 	return filename;
 }
 
-void File::getTokens(function<void (const shared_ptr<const Token> &)> add_token) const
+void File::forEachToken(function<void (const shared_ptr<const Token> &)> func) const
 {
-	BOOST_FOREACH(const auto &token, tokens) {
-		add_token(token);
-	}
+	for_each(tokens, func);
 }
 
 void File::tokenize()
