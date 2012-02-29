@@ -9,10 +9,13 @@ using namespace std;
 
 BOOST_AUTO_TEST_SUITE(suiteTokenInclude)
 
-BOOST_AUTO_TEST_CASE(testConstruct)
+BOOST_AUTO_TEST_CASE(testFile)
 {
 	TokenInclude ti({});
-	ti.include(make_shared<File>("test.h"));
+	auto file = make_shared<File>("test.h");
+	ti.include(file);
+	
+	BOOST_REQUIRE_EQUAL(ti.getIncludedFile(), file);
 }
 
 BOOST_AUTO_TEST_CASE(testSystemInclude)

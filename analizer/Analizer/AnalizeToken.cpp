@@ -1,4 +1,6 @@
 
+#include <iostream>
+#include <boost/foreach.hpp>
 #include <Preprocessor/TokenPredicate.h>
 #include <Preprocessor/TokenInclude.h>
 #include "AnalizeToken.h"
@@ -17,12 +19,12 @@ void AnalizeToken::checkToken(const shared_ptr<const Token> &token)
 		return;
 	}
 	
-	if (dynamic_cast<const TokenInclude *>(token.get()) != 0) {
-		includes.push_back(token);
+	if (auto include = dynamic_pointer_cast<const TokenInclude>(token)) {
+		includes.push_back(include);
 		return;
 	}
 	
-	if (auto exp = dynamic_cast<const ExpressionDefine *>(token.get())) {
+	if (auto exp = dynamic_pointer_cast<const ExpressionDefine>(token)) {
 		auto token_names = exp->getUsedNames();
 		names.insert(token_names.begin(), token_names.end());
 		return;
@@ -33,7 +35,7 @@ void AnalizeToken::checkToken(const shared_ptr<const Token> &token)
 	unclassified = true;
 }
 
-list<shared_ptr<const Token>> AnalizeToken::getIncludes() const
+list<shared_ptr<const TokenInclude>> AnalizeToken::getIncludes() const
 {
 	return includes;
 }

@@ -14,12 +14,18 @@ using boost::trim_copy_if;
 using boost::join;
 
 TokenInclude::TokenInclude(const list<shared_ptr<const Token>> &tokens)
-	: TokenList(tokens)
+	: TokenList(tokens), file()
 {
 }
 
-void TokenInclude::include(const shared_ptr<const File> &file __attribute__((unused)))
+void TokenInclude::include(const shared_ptr<const File> &f)
 {
+	file = f;
+}
+
+shared_ptr<const File> TokenInclude::getIncludedFile() const
+{
+	return file;
 }
 
 bool TokenInclude::isSystem() const

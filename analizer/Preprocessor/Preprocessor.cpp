@@ -58,12 +58,14 @@ shared_ptr<Token> Preprocessor::createIncludeToken(const list<shared_ptr<const T
 		BOOST_FOREACH(auto &fit, files) {
 			if (fit.first == cfp) {
 				fit.second->includedFrom(token);
+				token->include(fit.second);
 				return token;
 			}
 		}
 		
 		auto file = make_shared<File>(cfp);
 		file->includedFrom(token);
+		token->include(file);
 		files.push_back(make_pair(cfp, file));
 	}
 	

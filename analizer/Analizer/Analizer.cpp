@@ -32,7 +32,7 @@ void Analizer::transformFile(const shared_ptr<File> &file) const
 
 void Analizer::addName(const shared_ptr<const File> &file, const shared_ptr<const Token> &token)
 {
-	if (auto expression = dynamic_cast<const ExpressionDefine *>(token.get())) {
+	if (auto expression = dynamic_pointer_cast<const ExpressionDefine>(token)) {
 		auto names = expression->getDeclaredNames();
 		declarations[file].insert(names.begin(), names.end());
 	}
@@ -43,7 +43,6 @@ void Analizer::collectNames(const shared_ptr<const File> &file)
 	BOOST_ASSERT(declarations.count(file) == 0);
 	declarations[file] = {};
 	
-	// TODO: collect declared names
 	file->forEachToken(bind(&Analizer::addName, this, file, _1));
 }
 
@@ -56,10 +55,23 @@ void Analizer::checkFile(const shared_ptr<const File> &file)
 	// 	If any name is absent - unused include cannot be detected
 	file->forEachToken(bind(&AnalizeToken::checkToken, &helper, _1));
 
-	if (helper.isAllClassified()) {
-		BOOST_FOREACH(const auto &i, helper.getIncludes()) {
-			errors.push_back(Error(i, "Unused include"));
+	if (!helper.isAllClassified()) {
+		return;
+	}
+	
+	auto unused = helper.getIncludes();
+	BOOST_FOREACH(const auto &name, helper.getUsedNames()) {
+		BOOST_FOREACH(const auto fdecl, declarations) {
+			if (fdecl.second.count(name) > 0) {
+				unused.remove_if([&fdecl](const shared_ptr<const TokenInclude> &ti){
+					return ti->getIncludedFile() == fdecl.first;
+				});
+			}
 		}
+	}
+	
+	BOOST_FOREACH(const auto &i, unused) {
+		errors.push_back(Error(i, "Unused include"));
 	}
 }
 
