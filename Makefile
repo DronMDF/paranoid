@@ -2,7 +2,7 @@
 export OBJDIR=.obj
 
 export CXX=g++
-export CXXFLAGS=-std=c++0x -Wall -Wextra -Weffc++ -ggdb3 -O0 -Ianalizer
+export CXXFLAGS=-std=c++0x -Wall -Wextra -Weffc++ -O2 -g0 -Ianalizer
 
 all: paranoid
 
