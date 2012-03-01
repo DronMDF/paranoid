@@ -1,14 +1,14 @@
-#pragma once
 
+#pragma once
 #include <string>
 #include <memory>
 #include <Preprocessor/Token.h>
 
 class Line;
 
-struct DummyToken : public Token {
+struct TokenStub : public Token {
 	const std::string text;
-	DummyToken(const std::string &text) : text(text) {}
+	TokenStub(const std::string &text) : text(text) {}
 	std::string getText() const { return text; }
 	std::string getLocation() const { return ""; }
 	std::string getFileName() const { return ""; }

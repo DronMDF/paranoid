@@ -2,7 +2,7 @@
 export OBJDIR=.obj
 
 export CXX=g++
-export CXXFLAGS=-std=c++0x -Wall -Wextra -Weffc++ -ggdb3 -O0 -Ianalizer
+export CXXFLAGS=-std=c++0x -Wall -Wextra -Weffc++ -O2 -g0 -Ianalizer
 
 all: paranoid
 
@@ -17,7 +17,7 @@ paranoid: .obj/paranoid.o .obj/analizer.o
 
 test: .obj/test.o .obj/analizer.o
 	${CXX} -o $@ .obj/test.o .obj/analizer.o \
-		-lboost_test_exec_monitor-mt -lboost_filesystem-mt -lboost_regex-mt 
+		-lboost_unit_test_framework-mt -lboost_filesystem-mt
 
 .PHONY: .obj/analizer.o
 .obj/analizer.o : ${OBJDIR}

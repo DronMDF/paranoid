@@ -3,7 +3,7 @@
 #include <boost/test/unit_test.hpp>
 #include <Preprocessor/Line.h>
 #include <Preprocessor/TokenWord.h>
-#include "TestFile.h"
+#include "../FileStub.h"
 
 using namespace std;
 
@@ -11,15 +11,15 @@ BOOST_AUTO_TEST_SUITE(suiteTokenWord)
 
 BOOST_AUTO_TEST_CASE(testGetTextFromLine)
 {
-	const shared_ptr<const Line> line(new Line(10, "aaaxxxxxaaa", 0));
+	auto line = make_shared<Line>(10, "aaaxxxxxaaa", static_cast<File *>(0));
 	const TokenWord token(line, 3, 8);
 	BOOST_REQUIRE_EQUAL(token.getText(), "xxxxx");
 }
 
 BOOST_AUTO_TEST_CASE(testGetFileName)
 {
-	const TestFile file("test.cpp", {});
-	const shared_ptr<const Line> line(new Line(10, "aaaxxxxxaaa", &file));
+	const FileStub file("test.cpp", {});
+	auto line = make_shared<Line>(10, "aaaxxxxxaaa", &file);
 	const TokenWord token(line, 3, 8);
 	BOOST_REQUIRE_EQUAL(token.getFileName(), file.getFileName());
 }

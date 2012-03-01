@@ -8,7 +8,7 @@
 #include <Preprocessor/Token.h>
 #include <Preprocessor/TokenInclude.h>
 #include <Preprocessor/Preprocessor.h>
-#include "TestFile.h"
+#include "../FileStub.h"
 #include "../Assertions.h"
 
 using namespace std;
@@ -36,28 +36,24 @@ BOOST_AUTO_TEST_CASE(testConstruct)
 BOOST_AUTO_TEST_CASE(testTokenize)
 {
 	TestPreprocessor pp;
-	auto file = shared_ptr<File>(new TestFile("test.cpp", 
-		{ "int main(int argc, char **argv) {", " return 0;", " }" }));
+	list<string> lines = { "int main(int argc, char **argv) {", " return 0;", " }" };
+	auto file = make_shared<FileStub>("test.cpp", lines);
 	pp.files.clear();
 	pp.files.push_back(make_pair("test.cpp", file));
 	
-	// Parse
 	pp.tokenize();
-	
-	list<string> tokens;
-	pp.getTokens("test.cpp", [&tokens](const shared_ptr<const Token> &t){ tokens.push_back(t->getText()); });
 	
 	list<string> expected = { "int", " ", "main", "(", "int", " ", "argc", ",", " ", 
 		"char", " ", "*", "*", "argv", ")", " ", "{", "\n", 
 		" ", "return", " ", "0", ";", "\n", " ", "}", "\n" };
-	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tokens, expected);
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(file->getTokensText(), expected);
 }
 
 BOOST_AUTO_TEST_CASE(testInclude)
 {
 	TestPreprocessor pp;
-	auto included = shared_ptr<File>(new TestFile("included.h", {}));
-	auto includer = shared_ptr<File>(new TestFile("includer.cpp", {"#include \"included.h\""}));
+	auto included = make_shared<FileStub>("included.h", list<string>());
+	auto includer = make_shared<FileStub>("includer.cpp", list<string>({"#include \"included.h\""}));
 	
 	pp.files.clear();
 	pp.files.push_back(make_pair("included.h", included));
@@ -81,7 +77,7 @@ BOOST_AUTO_TEST_CASE(testLocate)
 		using Preprocessor::files;
 	} pp;
 
-	auto file = shared_ptr<File>(new TestFile("throw.cpp", {"#include \"included.h\""}));
+	auto file = make_shared<FileStub>("throw.cpp", list<string>({"#include \"included.h\""}));
 	
 	pp.files.clear();
 	pp.files.push_back(make_pair("throw.cpp", file));
@@ -93,8 +89,8 @@ BOOST_AUTO_TEST_CASE(testForEach)
 {
 	TestPreprocessor pp;
 	pp.files.clear();
-	pp.files.push_back(make_pair("f1.cpp", shared_ptr<File>(new TestFile("f1.cpp", {}))));
-	pp.files.push_back(make_pair("f2.cpp", shared_ptr<File>(new TestFile("f2.cpp", {}))));
+	pp.files.push_back(make_pair("f1.cpp", make_shared<FileStub>("f1.cpp", list<string>())));
+	pp.files.push_back(make_pair("f2.cpp", make_shared<FileStub>("f2.cpp", list<string>())));
 
 	list<string> names;
 	pp.forEachFile([&names](const shared_ptr<File> &f){ names.push_back(f->getFileName()); });
@@ -104,4 +100,3 @@ BOOST_AUTO_TEST_CASE(testForEach)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
-

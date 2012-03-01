@@ -45,10 +45,10 @@ void Tokenizer::parse(const shared_ptr<const Line> &line)
 		} else if (starts_with(string(line->getText(), position), "/*")) {
 			position = parseCComment(line, position);
 		} else if (starts_with(string(line->getText(), position), "//")) {
-			add_token(shared_ptr<Token>(new TokenSpace(line, position, string::npos)));
+			add_token(make_shared<TokenSpace>(line, position, string::npos));
 			break;
 		} else if (is_any_of("{}[]#()<>%:;.?*+-/^&|∼!=,\\")(line->getText()[position])) {
-			add_token(shared_ptr<Token>(new TokenWord(line, position, position + 1)));
+			add_token(make_shared<TokenWord>(line, position, position + 1));
 			position++;
 		} else if (is_from_range('0', '9')(line->getText()[position])) {
 			position = parseNumber(line, position);
@@ -62,16 +62,16 @@ void Tokenizer::parse(const shared_ptr<const Line> &line)
 	}
 	
 	if (string_tokens.empty()) {
-		add_token(shared_ptr<Token>(new TokenNewline(line)));
+		add_token(make_shared<TokenNewline>(line));
 	} else {
-		string_tokens.push_back(shared_ptr<Token>(new TokenNewline(line)));
+		string_tokens.push_back(make_shared<TokenNewline>(line));
 	}
 }
 
 Tokenizer::size_type Tokenizer::parseSpace(const shared_ptr<const Line> &line, size_type begin) const
 {
 	const size_type end = line->getText().find_first_not_of(" \t\v\r\f", begin);
-	add_token(shared_ptr<Token>(new TokenSpace(line, begin, end)));
+	add_token(make_shared<TokenSpace>(line, begin, end));
 	return end;
 }
 
@@ -80,18 +80,18 @@ Tokenizer::size_type Tokenizer::parseCComment(const shared_ptr<const Line> &line
 	const size_type end = line->getText().find("*/", begin);
 	in_ccomment = (end == string::npos);
 	if (in_ccomment) {
-		add_token(shared_ptr<Token>(new TokenSpace(line, begin, string::npos)));
+		add_token(make_shared<TokenSpace>(line, begin, string::npos));
 		return string::npos;
 	}
 	
-	add_token(shared_ptr<Token>(new TokenSpace(line, begin, end + 2)));
+	add_token(make_shared<TokenSpace>(line, begin, end + 2));
 	return end + 2;
 }
 
 Tokenizer::size_type Tokenizer::parseWord(const shared_ptr<const Line> &line, size_type begin) const
 {
 	const size_type end = line->getText().find_first_of(" \t\v\r\f{}[]#()<>%:;.?*+-/^&|∼!=,\\\"’", begin);
-	add_token(shared_ptr<Token>(new TokenWord(line, begin, end)));
+	add_token(make_shared<TokenWord>(line, begin, end));
 	return end;
 }
 
@@ -109,7 +109,7 @@ Tokenizer::size_type Tokenizer::parseNumber(const std::shared_ptr<const Line> &l
 		end = line->getText().find_first_not_of("01234567", begin);
 	}
 	
-	add_token(shared_ptr<Token>(new TokenWord(line, begin, end)));
+	add_token(make_shared<TokenWord>(line, begin, end));
 	return end;
 }
 
@@ -123,7 +123,7 @@ Tokenizer::size_type Tokenizer::parseString(const shared_ptr<const Line> &line, 
 	while(true) {
 		end = line->getText().find_first_of("\\\"", end);
 		if (end == string::npos) {
-			string_tokens.push_back(shared_ptr<Token>(new TokenWord(line, begin, end)));
+			string_tokens.push_back(make_shared<TokenWord>(line, begin, end));
 			return end;
 		}
 		
@@ -135,13 +135,12 @@ Tokenizer::size_type Tokenizer::parseString(const shared_ptr<const Line> &line, 
 	}
 	
 	end += 1;
-	shared_ptr<Token> token(new TokenWord(line, begin, end));
 	
 	if (string_tokens.empty()) {
-		add_token(token);
+		add_token(make_shared<TokenWord>(line, begin, end));
 	} else {
-		string_tokens.push_back(token);
-		add_token(shared_ptr<Token>(new TokenList(string_tokens)));
+		string_tokens.push_back(make_shared<TokenWord>(line, begin, end));
+		add_token(make_shared<TokenList>(string_tokens));
 		string_tokens.clear();
 	}
 	
@@ -153,16 +152,16 @@ Tokenizer::size_type Tokenizer::parseChar(const shared_ptr<const Line> &line, si
 	// Character literal is not a string. Only one char or escape sequence
 	// TODO: Parse escape sequence
 	if (line->getText()[begin + 1] == '\\' && line->getText()[begin + 3] == '\'') {
-		add_token(shared_ptr<Token>(new TokenWord(line, begin, begin + 4)));
+		add_token(make_shared<TokenWord>(line, begin, begin + 4));
 		return begin + 4;
 	}
 	
 	if (line->getText()[begin + 2] == '\'') {
-		add_token(shared_ptr<Token>(new TokenWord(line, begin, begin + 3)));
+		add_token(make_shared<TokenWord>(line, begin, begin + 3));
 		return begin + 3;
 	}
 	
 	// Parse single quote as a symbol
-	add_token(shared_ptr<Token>(new TokenWord(line, begin, begin + 1)));
+	add_token(make_shared<TokenWord>(line, begin, begin + 1));
 	return begin + 1;
 }

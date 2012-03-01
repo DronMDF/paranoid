@@ -11,6 +11,7 @@
 #include "File.h"
 #include "Line.h"
 #include "TokenInclude.h"
+#include "TokenPredicate.h"
 #include "Error.h"
 
 using namespace std;
@@ -22,7 +23,7 @@ Preprocessor::Preprocessor(function<string(const std::shared_ptr<const TokenIncl
 	: locate(locate), files()
 {
 	const auto cfp = canonical(filename);
-	files.push_back(make_pair(cfp, shared_ptr<File>(new File(cfp))));
+	files.push_back(make_pair(cfp, make_shared<File>(cfp)));
 }
 
 Preprocessor::~Preprocessor()
@@ -33,38 +34,42 @@ void Preprocessor::tokenize()
 {
 	auto fit = files.begin();
 	while (fit != files.end()) {
-		fit->second->tokenize(bind(&Preprocessor::include, this, _1));
+		fit->second->tokenize();
+		
+		auto createIncludeToken = bind(&Preprocessor::createIncludeToken, this, _1);
+		fit->second->replaceToken(
+			{"#include", Optional(Some(isSpace)), isWord}, // TODO: isString
+			createIncludeToken);
+		fit->second->replaceToken(
+			{"#include", Optional(Some(isSpace)), "<", Some(Not(">")), ">"}, 
+			createIncludeToken);
+		
 		++fit;
 	}
 }
 
-void Preprocessor::include(const shared_ptr<TokenInclude> &token)
+shared_ptr<Token> Preprocessor::createIncludeToken(const list<shared_ptr<const Token>> &tokens)
 {
+	auto token = make_shared<TokenInclude>(tokens);
 	const auto ffp = locate(token);
 	
-	if (ffp.empty()) {
-		return;
+	if (!ffp.empty()) {
+		const auto cfp = canonical(ffp);
+		BOOST_FOREACH(auto &fit, files) {
+			if (fit.first == cfp) {
+				fit.second->includedFrom(token);
+				token->include(fit.second);
+				return token;
+			}
+		}
+		
+		auto file = make_shared<File>(cfp);
+		file->includedFrom(token);
+		token->include(file);
+		files.push_back(make_pair(cfp, file));
 	}
 	
-	const auto cfp = canonical(ffp);
-	BOOST_FOREACH(auto &fit, files) {
-		if (fit.first == cfp) {
-			fit.second->includedFrom(token);
-			return;
-		}
-	}
-	
-	files.push_back(make_pair(cfp, shared_ptr<File>(new File(cfp))));
-}
-
-void Preprocessor::getTokens(const string &filename, 
-	function<void (const shared_ptr<const Token> &)> add_token) const
-{
-	BOOST_FOREACH(const auto &file, files) {
-		if (file.first == filename) {
-			file.second->getTokens(add_token);
-		}
-	}
+	return token;
 }
 
 void Preprocessor::forEachFile(function<void (const shared_ptr<File> &)> analyzer)

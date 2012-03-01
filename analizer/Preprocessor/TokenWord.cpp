@@ -6,7 +6,7 @@
 
 using namespace std;
 
-TokenWord::TokenWord(const shared_ptr<const Line> &line, std::string::size_type begin, std::string::size_type end)
+TokenWord::TokenWord(const shared_ptr<const Line> &line, string::size_type begin, string::size_type end)
 	: line(line), begin(begin), end(end)
 {
 	BOOST_ASSERT(line);
