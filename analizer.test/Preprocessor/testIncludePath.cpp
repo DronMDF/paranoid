@@ -1,18 +1,9 @@
 
 #include <boost/test/unit_test.hpp>
+#include <Preprocessor/IncludePath.h>
 #include "../Assertions.h"
 
 using namespace std;
-
-// TODO: Move to production
-class IncludePath {
-public:
-	virtual ~IncludePath();
-	list<string> getQuotedPath() const { return {}; };
-	list<string> getSystemPath() const { return {}; };
-};
-
-IncludePath::~IncludePath() = default;
 
 BOOST_AUTO_TEST_SUITE(suiteIncludePath)
 
