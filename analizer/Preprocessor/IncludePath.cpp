@@ -1,13 +1,18 @@
 
+#include <boost/algorithm/string/trim.hpp>
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/range/algorithm/find.hpp>
 #include "IncludePath.h"
 
 using namespace std;
+using boost::trim_copy;
+using boost::starts_with;
 
 IncludePath::~IncludePath() = default;
 
 list<string> IncludePath::readSpec() const 
 {
-	FILE *in = popen("sh -c 'echo | gcc -v -E -' 2>&1", "r");
+	FILE *in = popen("sh -c 'echo | LANG=C gcc -v -E -' 2>&1", "r");
 	if (in == 0) {
 		return {};
 	}
@@ -39,5 +44,19 @@ list<string> IncludePath::getQuotedPath() const
 
 list<string> IncludePath::getSystemPath() const 
 {
-	return readSpec();
+	auto spec = readSpec();
+	
+	auto sit = boost::range::find(spec, "#include <...> search starts here:");
+	if (sit == spec.end()) {
+		return {};
+	}
+	++sit;
+	
+	list<string> paths;
+	while (sit != spec.end() && starts_with(*sit, " ")) {
+		paths.push_back(trim_copy(*sit));
+		++sit;
+	}
+	
+	return paths;
 }
