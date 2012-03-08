@@ -37,16 +37,11 @@ list<string> IncludePath::readSpec() const
 	return result;
 }
 
-list<string> IncludePath::getQuotedPath() const 
-{
-	return {};
-}
-
-list<string> IncludePath::getSystemPath() const 
+list<string> IncludePath::getPath(const string &pattern) const
 {
 	auto spec = readSpec();
 	
-	auto sit = boost::range::find(spec, "#include <...> search starts here:");
+	auto sit = boost::range::find(spec, pattern);
 	if (sit == spec.end()) {
 		return {};
 	}
@@ -59,4 +54,14 @@ list<string> IncludePath::getSystemPath() const
 	}
 	
 	return paths;
+}
+
+list<string> IncludePath::getQuotedPath() const 
+{
+	return getPath("#include \"...\" search starts here:");
+}
+
+list<string> IncludePath::getSystemPath() const 
+{
+	return getPath("#include <...> search starts here:");
 }

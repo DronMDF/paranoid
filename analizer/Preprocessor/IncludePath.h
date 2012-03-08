@@ -11,4 +11,5 @@ public:
 	
 private:
 	std::list<std::string> readSpec() const;
+	std::list<std::string> getPath(const std::string &pattern) const;
 };
