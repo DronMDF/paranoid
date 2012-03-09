@@ -8,6 +8,10 @@ using namespace std;
 using boost::trim_copy;
 using boost::starts_with;
 
+IncludePath::IncludePath(const std::list<std::string> &args)
+{
+}
+
 IncludePath::~IncludePath() = default;
 
 list<string> IncludePath::readSpec() const 
