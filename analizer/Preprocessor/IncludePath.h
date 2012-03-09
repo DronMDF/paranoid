@@ -10,6 +10,6 @@ public:
 	std::list<std::string> getSystemPath() const;
 	
 private:
-	std::list<std::string> readSpec() const;
+	virtual std::list<std::string> readSpec() const;
 	std::list<std::string> getPath(const std::string &pattern) const;
 };

@@ -13,21 +13,18 @@ BOOST_AUTO_TEST_CASE(testParseVerbose)
 		const list<string> lines;
 		testIncludePath(const list<string> &lines) : lines(lines) { }
 		// TODO: Suspend invoking compiler
+		virtual list<string> readSpec() const { return lines; }
 	};
 	
 	// lines produced by gcc: 'echo | gcc -v -E -'
 	testIncludePath tip({
 		"#include \"...\" search starts here:",
 		"#include <...> search starts here:",
-		"/usr/lib/gcc/i686-pc-linux-gnu/4.5.3/include",
-		"/usr/lib/gcc/i686-pc-linux-gnu/4.5.3/include-fixed",
-		"/usr/include",
+		" /usr/include",
 		"End of search list." });
 	
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tip.getQuotedPath(), list<string>());
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tip.getSystemPath(), {
-		"/usr/lib/gcc/i686-pc-linux-gnu/4.5.3/include",
-		"/usr/lib/gcc/i686-pc-linux-gnu/4.5.3/include-fixed",
 		"/usr/include" });
 }
 
