@@ -19,7 +19,7 @@ BOOST_AUTO_TEST_CASE(testParseVerbose)
 		const list<string> lines;
 		testIncludePath(const list<string> &lines) : IncludePath({}), lines(lines) { }
 		// TODO: Suspend invoking compiler
-		virtual list<string> readSpec() const { return lines; }
+		virtual list<string> readSpec(const list<string> &) const { return lines; }
 	};
 	
 	// lines produced by gcc: 'echo | gcc -v -E -'
