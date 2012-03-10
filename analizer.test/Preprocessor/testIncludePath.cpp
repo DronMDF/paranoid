@@ -39,11 +39,9 @@ BOOST_AUTO_TEST_CASE(testFilterArgs)
 		"-isystem /usr/lib/gcc/i686-pc-linux-gnu/4.5.3/include "
 		"-I/home/dron/Store/tmp/linux/arch/x86/include -Iarch/x86/include/generated "
 		"-Iinclude  -include /home/dron/Store/tmp/linux/include/linux/kconfig.h "
-		"-D__KERNEL__ -I/home/dron/Store/tmp/linux/arch/x86/include "
-		"-Iarch/x86/include/generated -Iinclude "
-		"-include /home/dron/Store/tmp/linux/include/linux/kconfig.h -g -Os -D_SETUP "
-		"-D__KERNEL__ -DDISABLE_BRANCH_PROFILING -Wall -Wstrict-prototypes -march=i386 "
-		"-mregparm=3 -include /home/dron/Store/tmp/linux/arch/x86/boot/code16gcc.h "
+		"-D__KERNEL__ -include /home/dron/Store/tmp/linux/include/linux/kconfig.h -g -Os "
+		"-D_SETUP -D__KERNEL__ -DDISABLE_BRANCH_PROFILING -Wall -Wstrict-prototypes "
+		"-march=i386 -mregparm=3 -include /home/dron/Store/tmp/linux/arch/x86/boot/code16gcc.h "
 		"-fno-strict-aliasing -fomit-frame-pointer -ffreestanding -fno-toplevel-reorder "
 		"-fno-stack-protector -mpreferred-stack-boundary=2 -m32    -D\"KBUILD_STR(s)=#s\" "
 		"-D\"KBUILD_BASENAME=KBUILD_STR(video_bios)\" "
@@ -67,6 +65,7 @@ BOOST_AUTO_TEST_CASE(testFilterArgs)
 		"-I/home/dron/Store/tmp/linux/arch/x86/include",
 		"-Iarch/x86/include/generated", "-Iinclude", "-x", "c"};
 	
+	tip.getSystemPath();
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(tip.args, expected);
 }
 
