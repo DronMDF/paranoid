@@ -11,31 +11,9 @@ using namespace std;
 using boost::filesystem::exists;
 using boost::starts_with;
 
-IncludeLocator::IncludeLocator(const vector<const char *> &args, const list<string> spec_path)
-	: system_paths(), local_paths()
+IncludeLocator::IncludeLocator(const list<string> system, const list<string> quoted)
+	: system_paths(system), quoted_paths(quoted)
 {
-	vector<const char *>::const_iterator it = args.begin();
-	while (it != args.end()) {
-		if (starts_with(*it, "-I")) {
-			if (string(*it).size() == 2) {
-				++it;
-				if (it == args.end()) {
-					break;
-				}
-				local_paths.push_back(*it);
-			} else {
-				local_paths.push_back(*it + 2);
-			}
-		} else if (string(*it) == "-isystem") {
-			++it;
-			if (it == args.end()) {
-				break;
-			}
-			system_paths.push_back(*it);
-		}
-		
-		++it;
-	}
 }
 
 IncludeLocator::~IncludeLocator()
@@ -56,7 +34,7 @@ string IncludeLocator::locate(const shared_ptr<const TokenInclude> &token) const
 		}
 	}
 	
-	BOOST_FOREACH(const auto &p, token->isSystem() ? system_paths : local_paths) {
+	BOOST_FOREACH(const auto &p, token->isSystem() ? system_paths : quoted_paths) {
 		auto cp = p + '/' + token->getHeaderName();
 		if (isExists(cp)) {
 			return cp;

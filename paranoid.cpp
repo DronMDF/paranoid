@@ -37,8 +37,7 @@ void checkSource(const vector<const char *> &args)
 	}
 	
 	const IncludePath path(largs);
-	// TODO: pass paths in Locator, no args.
-	const IncludeLocator locator({}, path.getSystemPath());
+	const IncludeLocator locator(path.getSystemPath(), path.getQuotedPath());
 	
 	if (exists(source) && (ends_with(source, ".cpp") || ends_with(source, ".c"))) {
 		Preprocessor pp(bind(&IncludeLocator::locate, locator, _1), source);
