@@ -1,12 +1,14 @@
 
-#include <boost/algorithm/string/trim.hpp>
+#include <boost/algorithm/string/join.hpp>
 #include <boost/algorithm/string/predicate.hpp>
+#include <boost/algorithm/string/trim.hpp>
 #include <boost/range/algorithm/find.hpp>
 #include "IncludePath.h"
 
 using namespace std;
 using boost::ends_with;
 using boost::find;
+using boost::join;
 using boost::starts_with;
 using boost::trim_copy;
 
@@ -65,7 +67,8 @@ IncludePath::~IncludePath() = default;
 
 list<string> IncludePath::readSpec(const list<string> &args) const 
 {
-	FILE *in = popen("sh -c 'echo | LANG=C gcc -v -E -' 2>&1", "r");
+	auto command = "sh -c 'echo | LANG=C " + join(args, " ") + " -v -E -' 2>&1";
+	FILE *in = popen(command.c_str(), "r");
 	if (in == 0) {
 		return {};
 	}

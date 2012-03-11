@@ -12,6 +12,7 @@
 #include <Preprocessor/ErrorFormatter.h>
 #include <Preprocessor/File.h>
 #include <Preprocessor/IncludeLocator.h>
+#include <Preprocessor/IncludePath.h>
 #include <Preprocessor/Preprocessor.h>
 #include <Preprocessor/TokenInclude.h>
 #include <Preprocessor/TokenNewline.h>
@@ -30,9 +31,16 @@ void checkSource(const vector<const char *> &args)
 		return;
 	}
 
+	list<string> largs;
+	BOOST_FOREACH(const auto a, args) {
+		largs.push_back(a == 0 ? "" : a);
+	}
+	
+	const IncludePath path(largs);
+	// TODO: pass paths in Locator, no args.
+	const IncludeLocator locator({}, path.getSystemPath());
+	
 	if (exists(source) && (ends_with(source, ".cpp") || ends_with(source, ".c"))) {
-		// TODO: pass paths in locator
-		IncludeLocator locator({}, {});
 		Preprocessor pp(bind(&IncludeLocator::locate, locator, _1), source);
 		pp.tokenize();
 		
