@@ -38,10 +38,10 @@ void Preprocessor::tokenize()
 		
 		auto createIncludeToken = bind(&Preprocessor::createIncludeToken, this, _1);
 		fit->second->replaceToken(
-			{"#include", Optional(Some(isSpace)), isWord}, // TODO: isString
+			{"#include", Optional(Some(isSpace)), "<", Some(Not(">")), ">"}, 
 			createIncludeToken);
 		fit->second->replaceToken(
-			{"#include", Optional(Some(isSpace)), "<", Some(Not(">")), ">"}, 
+			{"#include", Optional(Some(isSpace)), isWord}, // TODO: isString
 			createIncludeToken);
 		
 		++fit;

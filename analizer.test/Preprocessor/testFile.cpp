@@ -77,4 +77,15 @@ BOOST_AUTO_TEST_CASE(testFileTokenReplace)
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(file.getTokensText(), { "#define a 0", "\n" });
 }
 
+BOOST_AUTO_TEST_CASE(testFileTokenReplace2)
+{
+	FileStub file("none", {"#include <stdio.h>"});
+	file.tokenize();
+	file.replaceToken({"#include", Optional(Some(isSpace)), "<", Some(Not(">")), ">"},
+		[](const list<shared_ptr<const Token>> &l){ return make_shared<TokenInclude>(l); });
+
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(file.getTokensText(), { "#include <stdio.h>", "\n" });
+}
+
+
 BOOST_AUTO_TEST_SUITE_END()
