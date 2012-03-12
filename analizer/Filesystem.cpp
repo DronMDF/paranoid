@@ -1,4 +1,7 @@
 
+#define _XOPEN_SOURCE 500
+#include <limits.h>
+#include <stdlib.h>
 #include <string>
 #include <boost/algorithm/string/erase.hpp>
 #include <boost/algorithm/string/find.hpp>
@@ -13,7 +16,7 @@ using boost::find_last;
 using boost::replace_all;
 using boost::iterator_range;
 
-std::string dirname(const std::string &filename)
+string dirname(const string &filename)
 {
 	path p(filename);
 	if (!p.has_parent_path()) {
@@ -22,7 +25,7 @@ std::string dirname(const std::string &filename)
 	return p.parent_path().string();
 }
 
-std::string canonical(const string &path)
+string canonical(const string &path)
 {
 	string canonicalized = path;
 	while (find_first(canonicalized, "/..")) {
@@ -36,4 +39,15 @@ std::string canonical(const string &path)
 		replace_all(canonicalized, "//", "/");
 	}
 	return canonicalized;
+}
+
+string realpath(const string &filename)
+{
+	vector<char> resolved(PATH_MAX);
+	const char *rstr = ::realpath(filename.c_str(), &resolved[0]);
+	if (rstr == 0) {
+		// fallback to canonical
+		return canonical(filename);
+	}
+	return rstr;
 }
