@@ -81,9 +81,9 @@ void File::replaceTokens(tokens_iterator begin, tokens_iterator end, const share
 
 void File::forEachLine(function<void (const shared_ptr<const Line> &)> lineparser) const
 {
-	BOOST_ASSERT(is_regular_file(filename));
 	ifstream file(filename);
 	if (file.good()) {
+		BOOST_ASSERT(is_regular_file(filename));
 		for (unsigned i = 1; !file.eof(); i++) {
 			string line;
 			getline(file, line);
