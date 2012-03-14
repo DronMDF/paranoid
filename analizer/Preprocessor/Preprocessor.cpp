@@ -22,8 +22,9 @@ Preprocessor::Preprocessor(function<string(const std::shared_ptr<const TokenIncl
 			   const string &filename)
 	: locate(locate), files()
 {
-	const auto cfp = canonical(filename);
-	files.push_back(make_pair(cfp, make_shared<File>(cfp)));
+	const auto realname = realpath(filename);
+	const auto canonicalname = canonical(filename);
+	files.push_back(make_pair(realname, make_shared<File>(canonicalname)));
 }
 
 Preprocessor::~Preprocessor()
@@ -38,10 +39,10 @@ void Preprocessor::tokenize()
 		
 		auto createIncludeToken = bind(&Preprocessor::createIncludeToken, this, _1);
 		fit->second->replaceToken(
-			{"#include", Optional(Some(isSpace)), isWord}, // TODO: isString
+			{"#include", Optional(Some(isSpace)), "<", Some(Not(">")), ">"}, 
 			createIncludeToken);
 		fit->second->replaceToken(
-			{"#include", Optional(Some(isSpace)), "<", Some(Not(">")), ">"}, 
+			{"#include", Optional(Some(isSpace)), isWord}, // TODO: isString
 			createIncludeToken);
 		
 		++fit;
@@ -51,22 +52,23 @@ void Preprocessor::tokenize()
 shared_ptr<Token> Preprocessor::createIncludeToken(const list<shared_ptr<const Token>> &tokens)
 {
 	auto token = make_shared<TokenInclude>(tokens);
-	const auto ffp = locate(token);
+	const auto located_name = locate(token);
 	
-	if (!ffp.empty()) {
-		const auto cfp = canonical(ffp);
+	if (!located_name.empty()) {
+		const auto canonical_name = canonical(located_name);
+		const auto real_name = realpath(located_name);
 		BOOST_FOREACH(auto &fit, files) {
-			if (fit.first == cfp) {
+			if (fit.first == real_name) {
 				fit.second->includedFrom(token);
 				token->include(fit.second);
 				return token;
 			}
 		}
 		
-		auto file = make_shared<File>(cfp);
+		auto file = make_shared<File>(canonical_name);
 		file->includedFrom(token);
 		token->include(file);
-		files.push_back(make_pair(cfp, file));
+		files.push_back(make_pair(real_name, file));
 	}
 	
 	return token;

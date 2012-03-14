@@ -1,10 +1,11 @@
 
 #include <fstream>
 #include <algorithm>
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 #include <boost/range/algorithm/find_if.hpp>
 #include <boost/range/algorithm/for_each.hpp>
-#include <boost/algorithm/string/classification.hpp>
 #include "File.h"
 #include "Line.h"
 #include "TokenDirective.h"
@@ -16,6 +17,7 @@
 
 using namespace std;
 using namespace std::placeholders;
+using boost::filesystem::is_regular_file;
 using boost::find_if;
 using boost::for_each;
 using boost::is_any_of;
@@ -81,6 +83,7 @@ void File::forEachLine(function<void (const shared_ptr<const Line> &)> lineparse
 {
 	ifstream file(filename);
 	if (file.good()) {
+		BOOST_ASSERT(is_regular_file(filename));
 		for (unsigned i = 1; !file.eof(); i++) {
 			string line;
 			getline(file, line);

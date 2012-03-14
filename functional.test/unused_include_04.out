@@ -1,0 +1,3 @@
+functional.test/unused_include_04.cpp:3 error: Unused include
+#include <stdlib.h>
+~~~~~~~~~~~~~~~~~~~
