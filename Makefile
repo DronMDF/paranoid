@@ -19,6 +19,10 @@ test: .obj/test.o .obj/analizer.o
 	${CXX} -o $@ .obj/test.o .obj/analizer.o \
 		-lboost_unit_test_framework-mt -lboost_filesystem-mt
 
+selftest: paranoid
+	find analizer analizer.test paranoid.cpp -name "*.cpp" -print \
+		-exec ./paranoid ${CXXFLAGS} {} \;
+
 .PHONY: .obj/analizer.o
 .obj/analizer.o : ${OBJDIR}
 	./script/build.py $@ analizer
