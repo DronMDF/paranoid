@@ -88,14 +88,14 @@ BOOST_AUTO_TEST_CASE(testFileTokenReplace2)
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(file.getTokensText(), { "#include <stdio.h>", "\n" });
 }
 
-BOOST_AUTO_TEST_CASE(testFileExportedName)
-{
-	FileStub file("none", {"#define a 0"});
-	file.tokenize();
-	file.replaceToken({"#define", isSpace, Some(Not(isEol))},
-		[](const list<shared_ptr<const Token>> &l){ return make_shared<ExpressionDefine>(l); });
-
-	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(file.getExportedText(), {"a"});
-}
+// BOOST_AUTO_TEST_CASE(testFileExportedName)
+// {
+// 	FileStub file("none", {"#define a 0"});
+// 	file.tokenize();
+// 	file.replaceToken({"#define", isSpace, Some(Not(isEol))},
+// 		[](const list<shared_ptr<const Token>> &l){ return make_shared<ExpressionDefine>(l); });
+// 
+// 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(file.getExportedText(), {"a"});
+// }
 
 BOOST_AUTO_TEST_SUITE_END()

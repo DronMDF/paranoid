@@ -13,6 +13,7 @@
 #include <Preprocessor/TokenSpace.h>
 #include "Analizer.h"
 #include "AnalizeToken.h"
+#include "AnalizeInclude.h"
 #include "ExpressionDefine.h"
 
 using namespace std;
@@ -71,6 +72,17 @@ void Analizer::checkFile(const shared_ptr<const File> &file)
 	}
 	
 	BOOST_FOREACH(const auto &i, unused) {
+		errors.push_back(Error(i, "Unused include"));
+	}
+}
+
+void Analizer::checkUsedIncludeInFile(const shared_ptr<const File> &file)
+{
+	AnalizeInclude helper;
+
+	file->forEachToken(bind(&AnalizeInclude::checkToken, &helper, _1));
+
+	BOOST_FOREACH(const auto &i, helper.getUnused()) {
 		errors.push_back(Error(i, "Unused include"));
 	}
 }

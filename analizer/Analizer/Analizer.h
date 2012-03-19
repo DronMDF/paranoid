@@ -15,6 +15,7 @@ public:
 	void transformFile(const std::shared_ptr<File> &file) const;
 	void collectNames(const std::shared_ptr<const File> &file);
 	void checkFile(const std::shared_ptr<const File> &file);
+	void checkUsedIncludeInFile(const std::shared_ptr<const File> &file);
 	
 	std::list<Error> getResult() const;
 	
