@@ -22,4 +22,8 @@ struct FileStub : public File {
 		forEachToken([&texts](const std::shared_ptr<const Token> &t) { texts.push_back(t->getText()); });
 		return texts;
 	}
+
+	std::list<std::string> getExportedText() const {
+		return {};
+	}
 };
