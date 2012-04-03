@@ -29,6 +29,8 @@ void Analizer::transformFile(const shared_ptr<File> &file) const
 {
 	file->replaceToken({"#define", Some(Not(isEol))},
 		[](const list<shared_ptr<const Token>> &t){ return make_shared<ExpressionDefine>(t); });
+	file->replaceToken({"#pragma", Some(Not(isEol))}, 
+		[](const list<shared_ptr<const Token>> &){ return shared_ptr<Token>(); });
 }
 
 void Analizer::checkUsedIncludeInFile(const shared_ptr<const File> &file)
