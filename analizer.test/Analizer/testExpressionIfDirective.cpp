@@ -16,7 +16,19 @@ BOOST_AUTO_TEST_CASE(testIf)
 		make_shared<TokenStub>(" "),
 		make_shared<TokenStub>("1")});
 	
-	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(exp.getUsedNames(), list<string>());
+	BOOST_REQUIRE(exp.getUsedNames().empty());
+	BOOST_REQUIRE(exp.getDeclaredNames().empty());
+}
+
+BOOST_AUTO_TEST_CASE(testIfdef)
+{
+	ExpressionIfDirective exp({
+		make_shared<TokenStub>("#ifdef"),
+		make_shared<TokenStub>(" "),
+		make_shared<TokenStub>("A")});
+	
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(exp.getUsedNames(), { "A" });
+	BOOST_REQUIRE(exp.getDeclaredNames().empty());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

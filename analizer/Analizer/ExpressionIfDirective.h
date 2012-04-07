@@ -9,7 +9,4 @@ public:
 
 	std::set<std::string> getUsedNames() const;
 	std::set<std::string> getDeclaredNames() const;
-
-private:
-	std::set<std::string> getUsedNamesFromToken(const std::shared_ptr<const Token> &token) const;
 };
