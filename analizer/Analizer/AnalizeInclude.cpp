@@ -3,7 +3,7 @@
 #include <Preprocessor/TokenInclude.h>
 #include <Preprocessor/TokenPredicate.h>
 #include "AnalizeInclude.h"
-#include "ExpressionDefine.h"
+#include "Expression.h"
 
 using namespace std;
 
@@ -23,7 +23,7 @@ void AnalizeInclude::checkToken(const shared_ptr<const Token> &token)
 		return;
 	}
 	
-	if (auto exp = dynamic_pointer_cast<const ExpressionDefine>(token)) {
+	if (auto exp = dynamic_pointer_cast<const Expression>(token)) {
 		BOOST_FOREACH(const auto &name, exp->getUsedNames()) {
 			BOOST_FOREACH(auto &inc, includes) {
 				inc.checkName(name);

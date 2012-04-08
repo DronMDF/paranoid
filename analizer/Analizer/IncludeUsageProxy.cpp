@@ -5,7 +5,7 @@
 #include <Preprocessor/TokenInclude.h>
 #include <Preprocessor/TokenPredicate.h>
 #include "IncludeUsageProxy.h"
-#include "ExpressionDefine.h"
+#include "Expression.h"
 
 using namespace std;
 using namespace std::placeholders;
@@ -36,7 +36,7 @@ void IncludeUsageProxy::getName(const shared_ptr<const Token> &token)
 		return;
 	}
 	
-	if (auto exp = dynamic_pointer_cast<const ExpressionDefine>(token)) {
+	if (auto exp = dynamic_pointer_cast<const Expression>(token)) {
 		BOOST_FOREACH(const auto &name, exp->getDeclaredNames()) {
 			names.insert(name);
 		}
