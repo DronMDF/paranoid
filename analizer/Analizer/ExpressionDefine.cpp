@@ -9,7 +9,7 @@ using boost::is_digit;
 using boost::all;
 
 ExpressionDefine::ExpressionDefine(const list<shared_ptr<const Token>> &tokens)
-	: TokenList(tokens)
+	: Expression(tokens)
 {
 }
 
