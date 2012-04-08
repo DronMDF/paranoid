@@ -5,11 +5,11 @@
 #include "ExpressionIfDirective.h"
 
 using namespace std;
-using boost::is_digit;
 using boost::all;
+using boost::is_digit;
 
 ExpressionIfDirective::ExpressionIfDirective(const list<shared_ptr<const Token>> &tokens)
-	: TokenList(tokens)
+	: Expression(tokens)
 {
 }
 

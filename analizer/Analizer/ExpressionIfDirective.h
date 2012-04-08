@@ -1,9 +1,8 @@
 
 #pragma once
-#include <set>
-#include <Preprocessor/TokenList.h>
+#include "Expression.h"
 
-class ExpressionIfDirective : public TokenList {
+class ExpressionIfDirective : public Expression {
 public:
 	ExpressionIfDirective(const std::list<std::shared_ptr<const Token>> &tokens);
 
