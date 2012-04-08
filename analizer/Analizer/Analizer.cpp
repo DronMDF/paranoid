@@ -15,6 +15,7 @@
 #include "AnalizeToken.h"
 #include "AnalizeInclude.h"
 #include "ExpressionDefine.h"
+#include "ExpressionIfDirective.h"
 
 using namespace std;
 using namespace std::placeholders;
@@ -27,10 +28,17 @@ Analizer::Analizer()
 // Transform token chains in expression
 void Analizer::transformFile(const shared_ptr<File> &file) const
 {
+	typedef const list<shared_ptr<const Token>> tokenlist;
+	
 	file->replaceToken({"#define", Some(Not(isEol))},
-		[](const list<shared_ptr<const Token>> &t){ return make_shared<ExpressionDefine>(t); });
-	file->replaceToken({"#pragma", Some(Not(isEol))}, 
-		[](const list<shared_ptr<const Token>> &){ return shared_ptr<Token>(); });
+		[](tokenlist &t){ return make_shared<ExpressionDefine>(t); });
+	
+	file->replaceToken({"#if", Some(Not(isEol))},
+		[](tokenlist &t){ return make_shared<ExpressionIfDirective>(t); });
+	file->replaceToken({"#ifdef", Some(Not(isEol))},
+		[](tokenlist &t){ return make_shared<ExpressionIfDirective>(t); });
+	file->replaceToken({"#ifndef", Some(Not(isEol))},
+		[](tokenlist &t){ return make_shared<ExpressionIfDirective>(t); });
 }
 
 void Analizer::checkUsedIncludeInFile(const shared_ptr<const File> &file)

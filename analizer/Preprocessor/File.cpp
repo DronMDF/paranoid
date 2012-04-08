@@ -58,12 +58,14 @@ void File::tokenize()
 
 	forEachLine([&tokenizer](const shared_ptr<const Line> &line) { tokenizer.parse(line); });
 	
-	replaceToken({"\\", isEol}, 
-		[](const list<shared_ptr<const Token>> &){ return shared_ptr<Token>(); });
-
-	replaceToken({"#", Optional(Some(isSpace)), isWord},
-		[](const list<shared_ptr<const Token>> &tokens){ 
-			return make_shared<TokenDirective>(tokens); });
+	
+	typedef const list<shared_ptr<const Token>> tokenlist;
+	replaceToken({"\\", isEol}, // Cut escaped endline
+		[](tokenlist &){ return shared_ptr<Token>(); });
+	replaceToken({"#", Optional(Some(isSpace)), isWord}, // Preprocessor directive
+		[](tokenlist &tokens){ return make_shared<TokenDirective>(tokens); });
+	replaceToken({"#pragma", Some(Not(isEol))}, // Cut any pragma
+		[](tokenlist &){ return shared_ptr<Token>(); });
 }
 
 void File::includedFrom(const shared_ptr<const TokenInclude> &token)
