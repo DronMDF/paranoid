@@ -4,7 +4,14 @@
 #include <string>
 
 class Token;
-class TokenPredicateImpl;
+
+class TokenPredicateImpl {
+public:
+	virtual ~TokenPredicateImpl();
+	virtual bool match(const std::shared_ptr<const Token> &token) const = 0;
+	virtual bool isSome() const;
+	virtual bool isOptional() const;
+};
 
 class TokenPredicate {
 public:
@@ -24,6 +31,19 @@ private:
 TokenPredicate Not(const TokenPredicate &predicate);
 TokenPredicate Some(const TokenPredicate &predicate);
 TokenPredicate Optional(const TokenPredicate &predicate);
+
+template<typename T>
+class TokenPredicateTyped : public TokenPredicateImpl {
+public:
+	virtual bool match(const std::shared_ptr<const Token> &token) const {
+		return bool(std::dynamic_pointer_cast<const T>(token));
+	}
+};
+
+template <typename T>
+TokenPredicate isType() {
+	return TokenPredicate(std::make_shared<TokenPredicateTyped<T>>());
+}
 
 extern const TokenPredicate isSpace;
 extern const TokenPredicate isWord;
