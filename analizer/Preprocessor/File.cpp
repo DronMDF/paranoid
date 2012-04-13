@@ -107,9 +107,17 @@ void File::replaceToken(TokenExpression expression,
 		if (begin == tokens.end()) {
 			return;
 		}
-		
+
 		auto end = begin;
 		++end;
+		
+		if (expression.isMatched()) {
+			const list<shared_ptr<const Token>> replaced(begin, end);
+			replaceTokens(begin, end, creator(replaced));
+			lookup = end;
+			continue;
+		}
+		
 		while (end != tokens.end()) {
 			if (expression.match(*end)) {
 				++end;

@@ -8,10 +8,12 @@
 #include <Preprocessor/File.h>
 #include <Preprocessor/Line.h>
 #include <Preprocessor/Token.h>
+#include <Preprocessor/TokenList.h>
 #include <Preprocessor/TokenInclude.h>
 #include <Preprocessor/TokenPredicate.h>
 #include "../Assertions.h"
 #include "../FileStub.h"
+#include "../TokenStub.h"
 
 using namespace std;
 using boost::lexical_cast;
@@ -88,14 +90,26 @@ BOOST_AUTO_TEST_CASE(testFileTokenReplace2)
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(file.getTokensText(), { "#include <stdio.h>", "\n" });
 }
 
-// BOOST_AUTO_TEST_CASE(testFileExportedName)
-// {
-// 	FileStub file("none", {"#define a 0"});
-// 	file.tokenize();
-// 	file.replaceToken({"#define", isSpace, Some(Not(isEol))},
-// 		[](const list<shared_ptr<const Token>> &l){ return make_shared<ExpressionDefine>(l); });
-// 
-// 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(file.getExportedText(), {"a"});
-// }
+BOOST_AUTO_TEST_CASE(ShouldReplaceTokensRecursively)
+{
+	// Given
+	FileStub file("none", { "" });
+	file.tokenize();
+	
+	typedef list<shared_ptr<const Token>> tokenlist_t;
+	tokenlist_t tokens = {
+		make_shared<TokenStub>("a"),
+		make_shared<TokenStub>("b"),
+		make_shared<TokenStub>("c")};
+	auto tokenlist = make_shared<TokenList>(tokens);
+	
+	file.replaceToken({isEol}, [&tokenlist](const tokenlist_t &){ return tokenlist; });
+	
+	// When
+	file.replaceToken({"b"}, [](const tokenlist_t &){ return make_shared<TokenStub>("x"); });
+	
+	// Then
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(file.getTokensText(), { "axc" });
+}
 
 BOOST_AUTO_TEST_SUITE_END()
