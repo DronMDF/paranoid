@@ -4,7 +4,7 @@
 
 using namespace std;
 
-TokenList::TokenList(const list<shared_ptr<const Token>> &tokens)
+TokenList::TokenList(const list<shared_ptr<Token>> &tokens)
 	: tokens(tokens)
 {
 }
@@ -46,4 +46,9 @@ size_t TokenList::getBeginPos() const
 size_t TokenList::getEndPos() const
 {
 	return tokens.empty() ? 0 : tokens.back()->getEndPos();
+}
+
+void TokenList::replaceToken(TokenExpression expression, 
+	function<shared_ptr<Token> (const list<shared_ptr<Token>> &)> creator)
+{
 }

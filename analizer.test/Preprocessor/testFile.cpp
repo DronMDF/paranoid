@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE(testFileTokenReplace)
 	FileStub file("none", {"#define a 0"});
 	file.tokenize();
 	file.replaceToken({"#define", isSpace, Some(Not(isEol))},
-		[](const list<shared_ptr<const Token>> &l){ return make_shared<TokenList>(l); });
+		[](const list<shared_ptr<Token>> &l){ return make_shared<TokenList>(l); });
 
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(file.getTokensText(), { "#define a 0", "\n" });
 }
@@ -85,7 +85,7 @@ BOOST_AUTO_TEST_CASE(testFileTokenReplace2)
 	FileStub file("none", {"#include <stdio.h>"});
 	file.tokenize();
 	file.replaceToken({"#include", Optional(Some(isSpace)), "<", Some(Not(">")), ">"},
-		[](const list<shared_ptr<const Token>> &l){ return make_shared<TokenInclude>(l); });
+		[](const list<shared_ptr<Token>> &l){ return make_shared<TokenInclude>(l); });
 
 	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(file.getTokensText(), { "#include <stdio.h>", "\n" });
 }
@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE(ShouldReplaceTokensRecursively)
 	FileStub file("none", { "" });
 	file.tokenize();
 	
-	typedef list<shared_ptr<const Token>> tokenlist_t;
+	typedef list<shared_ptr<Token>> tokenlist_t;
 	tokenlist_t tokens = {
 		make_shared<TokenStub>("a"),
 		make_shared<TokenStub>("b"),

@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE(TypedPredicateShouldBeTrue)
 {
 	auto predicate = isType<TokenStub>();
 	BOOST_REQUIRE(predicate(make_shared<TokenStub>("stub")));
-	BOOST_REQUIRE(!predicate(make_shared<TokenList>(list<shared_ptr<const Token>>())));
+	BOOST_REQUIRE(!predicate(make_shared<TokenList>(list<shared_ptr<Token>>())));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

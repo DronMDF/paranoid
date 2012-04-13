@@ -5,7 +5,7 @@
 
 class Expression : public TokenList {
 public:
-	Expression(const std::list<std::shared_ptr<const Token>> &tokens)
+	Expression(const std::list<std::shared_ptr<Token>> &tokens)
 		: TokenList(tokens)
 	{
 	}

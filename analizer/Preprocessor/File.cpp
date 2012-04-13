@@ -53,13 +53,13 @@ void File::forEachToken(function<void (const shared_ptr<const Token> &)> func) c
 
 void File::tokenize()
 {
-	auto add_token = [&](const shared_ptr<const Token> &t) { tokens.push_back(t); };
+	auto add_token = [&](const shared_ptr<Token> &t) { tokens.push_back(t); };
 	Tokenizer tokenizer(add_token);
 
 	forEachLine([&tokenizer](const shared_ptr<const Line> &line) { tokenizer.parse(line); });
 	
 	
-	typedef const list<shared_ptr<const Token>> tokenlist;
+	typedef const list<shared_ptr<Token>> tokenlist;
 	replaceToken({"\\", isEol}, // Cut escaped endline
 		[](tokenlist &){ return shared_ptr<Token>(); });
 	replaceToken({"#", Optional(Some(isSpace)), isWord}, // Preprocessor directive
@@ -73,7 +73,7 @@ void File::includedFrom(const shared_ptr<const TokenInclude> &token)
 	included_from.push_back(token);
 }
 
-void File::replaceTokens(tokens_iterator begin, tokens_iterator end, const shared_ptr<const Token> &token)
+void File::replaceTokens(tokens_iterator begin, tokens_iterator end, const shared_ptr<Token> &token)
 {
 	tokens.erase(begin, end);
 	if (token) {
@@ -97,13 +97,20 @@ void File::forEachLine(function<void (const shared_ptr<const Line> &)> lineparse
 }
 
 void File::replaceToken(TokenExpression expression, 
-	function<shared_ptr<const Token> (const list<shared_ptr<const Token>> &)> creator)
+	function<shared_ptr<Token> (const list<shared_ptr<Token>> &)> creator)
 {
 	auto lookup = tokens.begin();
 	while (lookup != tokens.end()) {
 		expression.reset();
 		
-		auto begin = find_if(lookup, tokens.end(), bind(&TokenExpression::match, &expression, _1));
+		auto begin = lookup;
+		while (begin != tokens.end()) {
+			if (expression.match(*begin)) {
+				break;
+			}
+			++begin;
+		}
+		
 		if (begin == tokens.end()) {
 			return;
 		}
@@ -112,7 +119,7 @@ void File::replaceToken(TokenExpression expression,
 		++end;
 		
 		if (expression.isMatched()) {
-			const list<shared_ptr<const Token>> replaced(begin, end);
+			const list<shared_ptr<Token>> replaced(begin, end);
 			replaceTokens(begin, end, creator(replaced));
 			lookup = end;
 			continue;
@@ -125,13 +132,19 @@ void File::replaceToken(TokenExpression expression,
 			}
 			
 			if (expression.isMatched()) {
-				const list<shared_ptr<const Token>> replaced(begin, end);
+				const list<shared_ptr<Token>> replaced(begin, end);
 				replaceTokens(begin, end, creator(replaced));
 				lookup = end;
 			} else {
 				lookup = ++begin;
 			}
 			break;
+		}
+	}
+	
+	BOOST_FOREACH(auto &token, tokens) {
+		if (auto tokenlist = dynamic_pointer_cast<TokenList>(token)) {
+			tokenlist->replaceToken(expression, creator);
 		}
 	}
 }

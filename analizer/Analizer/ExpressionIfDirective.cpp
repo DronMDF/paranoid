@@ -8,7 +8,7 @@ using namespace std;
 using boost::all;
 using boost::is_digit;
 
-ExpressionIfDirective::ExpressionIfDirective(const list<shared_ptr<const Token>> &tokens)
+ExpressionIfDirective::ExpressionIfDirective(const list<shared_ptr<Token>> &tokens)
 	: Expression(tokens)
 {
 }

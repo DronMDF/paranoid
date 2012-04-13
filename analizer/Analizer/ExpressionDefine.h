@@ -4,7 +4,7 @@
 
 class ExpressionDefine : public Expression {
 public:
-	ExpressionDefine(const std::list<std::shared_ptr<const Token>> &tokens);
+	ExpressionDefine(const std::list<std::shared_ptr<Token>> &tokens);
 
 	virtual std::set<std::string> getUsedNames() const;
 	virtual std::set<std::string> getDeclaredNames() const;

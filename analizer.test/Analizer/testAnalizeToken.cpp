@@ -11,7 +11,7 @@ BOOST_AUTO_TEST_SUITE(suiteAnalizeUsed)
 
 BOOST_AUTO_TEST_CASE(testGatherUsedNames)
 {
-	const list<shared_ptr<const Token>> tokens = {
+	const list<shared_ptr<Token>> tokens = {
 		make_shared<TokenStub>("#define"),
 		make_shared<TokenStub>(" "),
 		make_shared<TokenStub>("A"),

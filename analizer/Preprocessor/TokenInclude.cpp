@@ -13,7 +13,7 @@ using boost::starts_with;
 using boost::trim_copy_if;
 using boost::join;
 
-TokenInclude::TokenInclude(const list<shared_ptr<const Token>> &tokens)
+TokenInclude::TokenInclude(const list<shared_ptr<Token>> &tokens)
 	: TokenList(tokens), file()
 {
 }

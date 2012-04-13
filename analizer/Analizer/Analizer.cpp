@@ -28,7 +28,7 @@ Analizer::Analizer()
 // Transform token chains in expression
 void Analizer::transformFile(const shared_ptr<File> &file) const
 {
-	typedef const list<shared_ptr<const Token>> tokenlist;
+	typedef const list<shared_ptr<Token>> tokenlist;
 	
 	file->replaceToken({"#define", Some(Not(isEol))},
 		[](tokenlist &t){ return make_shared<ExpressionDefine>(t); });

@@ -10,7 +10,7 @@ class Token;
 
 class Tokenizer {
 public:
-	typedef std::function<void (const std::shared_ptr<const Token> &)> add_token_t;
+	typedef std::function<void (const std::shared_ptr<Token> &)> add_token_t;
 	
 	Tokenizer(add_token_t add_token);
 	virtual ~Tokenizer();
@@ -29,5 +29,5 @@ private:
 
 	add_token_t add_token;
 	bool in_ccomment;
-	std::list<std::shared_ptr<const Token>> string_tokens;
+	std::list<std::shared_ptr<Token>> string_tokens;
 };

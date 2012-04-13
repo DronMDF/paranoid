@@ -25,16 +25,15 @@ public:
 	void includedFrom(const std::shared_ptr<const TokenInclude> &token);
 	
 	void replaceToken(TokenExpression expression,
-		std::function<std::shared_ptr<const Token> (const std::list<std::shared_ptr<const Token>> &)> creator);
+		std::function<std::shared_ptr<Token> (const std::list<std::shared_ptr<Token>> &)> creator);
 	
 private:
 	const std::string filename;
-	typedef std::list<std::shared_ptr<const Token>> tokens_list;
-	typedef tokens_list::iterator tokens_iterator;
-	
-	tokens_list tokens;
-	tokens_list included_from;
+
+	typedef std::list<std::shared_ptr<Token>>::iterator tokens_iterator;
+	std::list<std::shared_ptr<Token>> tokens;
+	std::list<std::shared_ptr<const Token>> included_from;
 	
 	virtual void forEachLine(std::function<void (const std::shared_ptr<const Line> &)> lineparser) const;
-	void replaceTokens(tokens_iterator begin, tokens_iterator end, const std::shared_ptr<const Token> &token);
+	void replaceTokens(tokens_iterator begin, tokens_iterator end, const std::shared_ptr<Token> &token);
 };

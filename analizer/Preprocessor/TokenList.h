@@ -3,10 +3,11 @@
 #include <list>
 #include <memory>
 #include "Token.h"
+#include "TokenExpression.h"
 
 class TokenList : public Token {
 public:	
-	TokenList(const std::list<std::shared_ptr<const Token>> &tokens);
+	TokenList(const std::list<std::shared_ptr<Token>> &tokens);
 	
 	virtual std::string getText() const;
 	virtual std::string getLocation() const;
@@ -15,6 +16,9 @@ public:
 	virtual size_t getBeginPos() const;
 	virtual size_t getEndPos() const;
 
+	virtual void replaceToken(TokenExpression expression, 
+		std::function<std::shared_ptr<Token> (const std::list<std::shared_ptr<Token>> &)> creator);
+	
 protected:
-	const std::list<std::shared_ptr<const Token>> tokens;
+	const std::list<std::shared_ptr<Token>> tokens;
 };
