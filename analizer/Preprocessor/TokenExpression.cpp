@@ -55,4 +55,5 @@ bool TokenExpression::isMatched() const
 void TokenExpression::reset()
 {
 	position = 0;
+	quantity = 0;
 }

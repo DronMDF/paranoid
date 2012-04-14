@@ -99,6 +99,12 @@ void File::forEachLine(function<void (const shared_ptr<const Line> &)> lineparse
 void File::replaceToken(TokenExpression expression, 
 	function<shared_ptr<Token> (const list<shared_ptr<Token>> &)> creator)
 {
+	BOOST_FOREACH(auto &token, tokens) {
+		if (auto tokenlist = dynamic_pointer_cast<TokenList>(token)) {
+			tokenlist->replaceToken(expression, creator);
+		}
+	}
+	
 	auto lookup = tokens.begin();
 	while (lookup != tokens.end()) {
 		expression.reset();
@@ -139,12 +145,6 @@ void File::replaceToken(TokenExpression expression,
 				lookup = ++begin;
 			}
 			break;
-		}
-	}
-	
-	BOOST_FOREACH(auto &token, tokens) {
-		if (auto tokenlist = dynamic_pointer_cast<TokenList>(token)) {
-			tokenlist->replaceToken(expression, creator);
 		}
 	}
 }
