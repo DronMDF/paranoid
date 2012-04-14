@@ -23,7 +23,7 @@ using boost::for_each;
 using boost::is_any_of;
 
 File::File(const string &filename)
-	: TokenList({}), filename(filename), tokens(), included_from()
+	: TokenList({}), filename(filename), included_from()
 {
 }
 
@@ -73,14 +73,6 @@ void File::includedFrom(const shared_ptr<const TokenInclude> &token)
 	included_from.push_back(token);
 }
 
-void File::replaceTokens(tokens_iterator begin, tokens_iterator end, const shared_ptr<Token> &token)
-{
-	tokens.erase(begin, end);
-	if (token) {
-		tokens.insert(end, token);
-	}
-}
-
 void File::forEachLine(function<void (const shared_ptr<const Line> &)> lineparser) const
 {
 	ifstream file(filename);
@@ -92,59 +84,6 @@ void File::forEachLine(function<void (const shared_ptr<const Line> &)> lineparse
 			if (!line.empty()) {
 				lineparser(make_shared<Line>(i, line, this));
 			}
-		}
-	}
-}
-
-void File::replaceToken(TokenExpression expression, 
-	function<shared_ptr<Token> (const list<shared_ptr<Token>> &)> creator)
-{
-	BOOST_FOREACH(auto &token, tokens) {
-		if (auto tokenlist = dynamic_pointer_cast<TokenList>(token)) {
-			tokenlist->replaceToken(expression, creator);
-		}
-	}
-	
-	auto lookup = tokens.begin();
-	while (lookup != tokens.end()) {
-		expression.reset();
-		
-		auto begin = lookup;
-		while (begin != tokens.end()) {
-			if (expression.match(*begin)) {
-				break;
-			}
-			++begin;
-		}
-		
-		if (begin == tokens.end()) {
-			return;
-		}
-
-		auto end = begin;
-		++end;
-		
-		if (expression.isMatched()) {
-			const list<shared_ptr<Token>> replaced(begin, end);
-			replaceTokens(begin, end, creator(replaced));
-			lookup = end;
-			continue;
-		}
-		
-		while (end != tokens.end()) {
-			if (expression.match(*end)) {
-				++end;
-				continue;
-			}
-			
-			if (expression.isMatched()) {
-				const list<shared_ptr<Token>> replaced(begin, end);
-				replaceTokens(begin, end, creator(replaced));
-				lookup = end;
-			} else {
-				lookup = ++begin;
-			}
-			break;
 		}
 	}
 }
