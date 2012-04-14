@@ -20,5 +20,11 @@ public:
 		std::function<std::shared_ptr<Token> (const std::list<std::shared_ptr<Token>> &)> creator);
 	
 protected:
-	const std::list<std::shared_ptr<Token>> tokens;
+	std::list<std::shared_ptr<Token>> tokens;
+	
+private:
+	void replaceTokens(std::list<std::shared_ptr<Token>>::iterator begin, 
+		std::list<std::shared_ptr<Token>>::iterator end,
+		const std::shared_ptr<Token> &token);
+
 };

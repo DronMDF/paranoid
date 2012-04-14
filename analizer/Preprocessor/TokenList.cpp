@@ -1,6 +1,7 @@
 
 #include <boost/foreach.hpp>
 #include "TokenList.h"
+#include "TokenPredicate.h"
 
 using namespace std;
 
@@ -51,4 +52,61 @@ size_t TokenList::getEndPos() const
 void TokenList::replaceToken(TokenExpression expression, 
 	function<shared_ptr<Token> (const list<shared_ptr<Token>> &)> creator)
 {
+	auto lookup = tokens.begin();
+	while (lookup != tokens.end()) {
+		expression.reset();
+		
+		auto begin = lookup;
+		while (begin != tokens.end()) {
+			if (expression.match(*begin)) {
+				break;
+			}
+			++begin;
+		}
+		
+		if (begin == tokens.end()) {
+			return;
+		}
+
+		auto end = begin;
+		++end;
+		
+		if (expression.isMatched()) {
+			const list<shared_ptr<Token>> replaced(begin, end);
+			replaceTokens(begin, end, creator(replaced));
+			lookup = end;
+			continue;
+		}
+		
+		while (end != tokens.end()) {
+			if (expression.match(*end)) {
+				++end;
+				continue;
+			}
+			
+			if (expression.isMatched()) {
+				const list<shared_ptr<Token>> replaced(begin, end);
+				replaceTokens(begin, end, creator(replaced));
+				lookup = end;
+			} else {
+				lookup = ++begin;
+			}
+			break;
+		}
+	}
+	
+	BOOST_FOREACH(auto &token, tokens) {
+		if (auto tokenlist = dynamic_pointer_cast<TokenList>(token)) {
+			tokenlist->replaceToken(expression, creator);
+		}
+	}
+}
+
+void TokenList::replaceTokens(list<shared_ptr<Token>>::iterator begin, 
+		list<shared_ptr<Token>>::iterator end, const shared_ptr<Token> &token)
+{
+	tokens.erase(begin, end);
+	if (token) {
+		tokens.insert(end, token);
+	}
 }

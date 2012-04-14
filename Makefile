@@ -15,7 +15,7 @@ paranoid: .obj/paranoid.o .obj/analizer.o
 	${CXX} -o $@ .obj/paranoid.o .obj/analizer.o \
 		-lboost_filesystem-mt
 
-test: .obj/test.o .obj/analizer.o
+test: .obj/analizer.o .obj/test.o 
 	${CXX} -o $@ .obj/test.o .obj/analizer.o \
 		-lboost_unit_test_framework-mt -lboost_filesystem-mt
 
