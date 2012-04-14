@@ -23,7 +23,7 @@ using boost::for_each;
 using boost::is_any_of;
 
 File::File(const string &filename)
-	: filename(filename), tokens(), included_from()
+	: TokenList({}), filename(filename), tokens(), included_from()
 {
 }
 

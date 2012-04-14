@@ -7,7 +7,7 @@
 
 class TokenList : public Token {
 public:	
-	TokenList(const std::list<std::shared_ptr<Token>> &tokens);
+	explicit TokenList(const std::list<std::shared_ptr<Token>> &tokens);
 	
 	virtual std::string getText() const;
 	virtual std::string getLocation() const;
@@ -26,5 +26,4 @@ private:
 	void replaceTokens(std::list<std::shared_ptr<Token>>::iterator begin, 
 		std::list<std::shared_ptr<Token>>::iterator end,
 		const std::shared_ptr<Token> &token);
-
 };

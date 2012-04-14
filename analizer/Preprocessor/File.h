@@ -1,17 +1,18 @@
 
 #pragma once
-
 #include <list>
 #include <memory>
 #include <string>
 #include "TokenExpression.h"
+#include "TokenList.h"
 
 class Line;
 class Preprocessor;
 class Token;
 class TokenInclude;
 
-class File {
+// TODO: protected inheritance cause error in FileStub
+class File : protected TokenList {
 public:
 	File(const std::string &filename);
 	virtual ~File();
