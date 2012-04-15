@@ -1,4 +1,5 @@
 
+#include <algorithm>
 #include <boost/foreach.hpp>
 #include "TokenList.h"
 #include "TokenPredicate.h"
@@ -109,4 +110,9 @@ void TokenList::replaceTokens(list<shared_ptr<Token>>::iterator begin,
 	if (token) {
 		tokens.insert(end, token);
 	}
+}
+
+void TokenList::forEachToken(function<void (const shared_ptr<const Token> &)> func) const
+{
+	for_each(tokens.begin(), tokens.end(), func);
 }

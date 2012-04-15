@@ -2,6 +2,11 @@
 #include <boost/test/unit_test.hpp>
 #include <Preprocessor/TokenList.h>
 #include <Preprocessor/TokenWord.h>
+#include <Preprocessor/TokenSpace.h>
+#include <Preprocessor/TokenNewline.h>
+#include <Preprocessor/TokenPredicate.h>
+
+#include "../Assertions.h"
 #include "../FileStub.h"
 #include "../TokenStub.h"
 
@@ -42,4 +47,29 @@ BOOST_AUTO_TEST_CASE(testTwoInList)
 	BOOST_REQUIRE_EQUAL(token_list.getEndPos(), 8);
 }
 
+void CUSTOM_REQUIRE_EQUAL_TOKENS_TEXT(const TokenList &token_list, const list<string> &expected)
+{
+	list<string> actual;
+	token_list.forEachToken([&actual](const shared_ptr<const Token> &t){ 
+		actual.push_back(t->getText());
+	});
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(actual, expected);
+}
+
+BOOST_AUTO_TEST_CASE(ShouldReplaceTokens)
+{
+	TokenList token_list({
+		make_shared<TokenStub>("#define"),
+		make_shared<TokenSpace>(shared_ptr<Line>(), 0, 0),
+		make_shared<TokenStub>("a"),
+		make_shared<TokenSpace>(shared_ptr<Line>(), 0, 0),
+		make_shared<TokenStub>("0"),
+		make_shared<TokenNewline>(shared_ptr<Line>())
+	});
+
+	token_list.replaceToken({"#define", isSpace, Some(Not(isEol))},
+		[](const list<shared_ptr<Token>> &l){ return make_shared<TokenList>(l); });
+
+	CUSTOM_REQUIRE_EQUAL_TOKENS_TEXT(token_list, { "#define a 0", "\n" });
+}
 BOOST_AUTO_TEST_SUITE_END()
