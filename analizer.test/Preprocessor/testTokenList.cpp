@@ -1,11 +1,11 @@
 
 #include <boost/test/unit_test.hpp>
+#include <Preprocessor/TokenInclude.h>
 #include <Preprocessor/TokenList.h>
-#include <Preprocessor/TokenWord.h>
-#include <Preprocessor/TokenSpace.h>
 #include <Preprocessor/TokenNewline.h>
 #include <Preprocessor/TokenPredicate.h>
-
+#include <Preprocessor/TokenSpace.h>
+#include <Preprocessor/TokenWord.h>
 #include "../Assertions.h"
 #include "../FileStub.h"
 #include "../TokenStub.h"
@@ -58,6 +58,7 @@ void CUSTOM_REQUIRE_EQUAL_TOKENS_TEXT(const TokenList &token_list, const list<st
 
 BOOST_AUTO_TEST_CASE(ShouldReplaceTokens)
 {
+	// Given
 	TokenList token_list({
 		make_shared<TokenStub>("#define"),
 		make_shared<TokenSpace>(shared_ptr<Line>(), 0, 0),
@@ -66,10 +67,31 @@ BOOST_AUTO_TEST_CASE(ShouldReplaceTokens)
 		make_shared<TokenStub>("0"),
 		make_shared<TokenNewline>(shared_ptr<Line>())
 	});
-
+	// When
 	token_list.replaceToken({"#define", isSpace, Some(Not(isEol))},
 		[](const list<shared_ptr<Token>> &l){ return make_shared<TokenList>(l); });
-
+	// Then
 	CUSTOM_REQUIRE_EQUAL_TOKENS_TEXT(token_list, { "#define a 0", "\n" });
 }
+
+BOOST_AUTO_TEST_CASE(ShouldReplaceTokenInBracket)
+{
+	// Given
+	TokenList token_list({
+		make_shared<TokenStub>("#include"),
+		make_shared<TokenSpace>(shared_ptr<Line>(), 0, 0),
+		make_shared<TokenStub>("<"),
+		make_shared<TokenStub>("stdio"),
+		make_shared<TokenStub>("."),
+		make_shared<TokenStub>("h"),
+		make_shared<TokenStub>(">"),
+		make_shared<TokenNewline>(shared_ptr<Line>())
+	});
+	// When
+	token_list.replaceToken({"#include", Optional(Some(isSpace)), "<", Some(Not(">")), ">"},
+		[](const list<shared_ptr<Token>> &l){ return make_shared<TokenInclude>(l); });
+	// Then
+	CUSTOM_REQUIRE_EQUAL_TOKENS_TEXT(token_list, { "#include <stdio.h>", "\n" });
+}
+
 BOOST_AUTO_TEST_SUITE_END()
