@@ -25,8 +25,7 @@ public:
 	void includedFrom(const std::shared_ptr<const TokenInclude> &token);
 
 	using TokenList::replaceToken;
-	// TODO: перенести в TokenList
-	virtual void forEachToken(std::function<void (const std::shared_ptr<const Token> &)> func) const;
+	using TokenList::forEachToken;
 	
 private:
 	const std::string filename;

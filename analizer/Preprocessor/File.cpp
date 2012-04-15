@@ -1,11 +1,6 @@
 
 #include <fstream>
-#include <algorithm>
-#include <boost/algorithm/string/classification.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
-#include <boost/range/algorithm/find_if.hpp>
-#include <boost/range/algorithm/for_each.hpp>
 #include "File.h"
 #include "Line.h"
 #include "TokenDirective.h"
@@ -18,9 +13,6 @@
 using namespace std;
 using namespace std::placeholders;
 using boost::filesystem::is_regular_file;
-using boost::find_if;
-using boost::for_each;
-using boost::is_any_of;
 
 File::File(const string &filename)
 	: TokenList({}), filename(filename), included_from()
@@ -46,18 +38,12 @@ string File::getFileName() const
 	return filename;
 }
 
-void File::forEachToken(function<void (const shared_ptr<const Token> &)> func) const
-{
-	for_each(tokens, func);
-}
-
 void File::tokenize()
 {
 	auto add_token = [&](const shared_ptr<Token> &t) { tokens.push_back(t); };
 	Tokenizer tokenizer(add_token);
 
 	forEachLine([&tokenizer](const shared_ptr<const Line> &line) { tokenizer.parse(line); });
-	
 	
 	typedef const list<shared_ptr<Token>> tokenlist;
 	replaceToken({"\\", isEol}, // Cut escaped endline
