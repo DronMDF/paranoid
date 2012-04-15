@@ -11,8 +11,7 @@ class Preprocessor;
 class Token;
 class TokenInclude;
 
-// TODO: protected inheritance cause error in FileStub
-class File : protected TokenList {
+class File : private TokenList {
 public:
 	File(const std::string &filename);
 	virtual ~File();

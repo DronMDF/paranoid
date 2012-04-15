@@ -20,7 +20,7 @@ BOOST_AUTO_TEST_CASE(testTransformDefine)
 	Analizer analizer;
 	analizer.transformFile(file);
 	
-	BOOST_REQUIRE_EQUAL(file->getTokensText().front(), "#define a 0");
+	CUSTOM_EQUAL_FILE_TOKENS_TEXT(*file, { "#define a 0", "\n" });
 }
 
 BOOST_AUTO_TEST_SUITE_END()

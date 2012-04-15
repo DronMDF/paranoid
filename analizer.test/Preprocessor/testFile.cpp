@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_CASE(testTokenize)
 	FileStub file("testFile.cpp", {"012345"});
 	file.tokenize();
 	
-	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(file.getTokensText(), { "012345", "\n" });
+	CUSTOM_EQUAL_FILE_TOKENS_TEXT(file, { "012345", "\n" });
 }
 
 BOOST_AUTO_TEST_CASE(testTokenize2)
@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE(testTokenize2)
 	FileStub file("testFile.cpp", {"aaa bbb"});
 	file.tokenize();
 	
-	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(file.getTokensText(), { "aaa", " ", "bbb", "\n" });
+	CUSTOM_EQUAL_FILE_TOKENS_TEXT(file, { "aaa", " ", "bbb", "\n" });
 }
 
 BOOST_AUTO_TEST_CASE(testEscapedNewline)
@@ -54,8 +54,7 @@ BOOST_AUTO_TEST_CASE(testEscapedNewline)
 	FileStub file("testFile.cpp", {"#define a \\", "(foo)"});
 	file.tokenize();
 	
-	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(file.getTokensText(), 
-		{ "#define", " ", "a", " ", "(", "foo", ")", "\n" });
+	CUSTOM_EQUAL_FILE_TOKENS_TEXT(file, { "#define", " ", "a", " ", "(", "foo", ")", "\n" });
 }
 
 BOOST_AUTO_TEST_CASE(testIncludeFrom)
@@ -77,7 +76,7 @@ BOOST_AUTO_TEST_CASE(testFileTokenReplace)
 	file.replaceToken({"#define", isSpace, Some(Not(isEol))},
 		[](const list<shared_ptr<Token>> &l){ return make_shared<TokenList>(l); });
 
-	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(file.getTokensText(), { "#define a 0", "\n" });
+	CUSTOM_EQUAL_FILE_TOKENS_TEXT(file, { "#define a 0", "\n" });
 }
 
 BOOST_AUTO_TEST_CASE(testFileTokenReplace2)
@@ -87,7 +86,7 @@ BOOST_AUTO_TEST_CASE(testFileTokenReplace2)
 	file.replaceToken({"#include", Optional(Some(isSpace)), "<", Some(Not(">")), ">"},
 		[](const list<shared_ptr<Token>> &l){ return make_shared<TokenInclude>(l); });
 
-	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(file.getTokensText(), { "#include <stdio.h>", "\n" });
+	CUSTOM_EQUAL_FILE_TOKENS_TEXT(file, { "#include <stdio.h>", "\n" });
 }
 
 BOOST_AUTO_TEST_CASE(ShouldReplaceTokensRecursively)
@@ -109,7 +108,7 @@ BOOST_AUTO_TEST_CASE(ShouldReplaceTokensRecursively)
 	file.replaceToken({"b"}, [](const tokenlist_t &){ return make_shared<TokenStub>("x"); });
 	
 	// Then
-	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(file.getTokensText(), { "axc" });
+	CUSTOM_EQUAL_FILE_TOKENS_TEXT(file, { "axc" });
 }
 
 BOOST_AUTO_TEST_SUITE_END()

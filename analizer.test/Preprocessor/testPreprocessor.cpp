@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE(testTokenize)
 	list<string> expected = { "int", " ", "main", "(", "int", " ", "argc", ",", " ", 
 		"char", " ", "*", "*", "argv", ")", " ", "{", "\n", 
 		" ", "return", " ", "0", ";", "\n", " ", "}", "\n" };
-	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(file->getTokensText(), expected);
+	CUSTOM_EQUAL_FILE_TOKENS_TEXT(*file, expected);
 }
 
 BOOST_AUTO_TEST_CASE(testInclude)

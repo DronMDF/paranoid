@@ -14,6 +14,15 @@ using namespace std;
 
 BOOST_AUTO_TEST_SUITE(suiteTokenList)
 
+void CUSTOM_EQUAL_TOKENLIST_TOKENS_TEXT(const TokenList &token_list, const list<string> &expected)
+{
+	list<string> actual;
+	token_list.forEachToken([&actual](const shared_ptr<const Token> &t){ 
+		actual.push_back(t->getText());
+	});
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(actual, expected);
+}
+
 BOOST_AUTO_TEST_CASE(testGetFileName)
 {
 	const FileStub file("test.cpp", {});
@@ -47,15 +56,6 @@ BOOST_AUTO_TEST_CASE(testTwoInList)
 	BOOST_REQUIRE_EQUAL(token_list.getEndPos(), 8);
 }
 
-void CUSTOM_REQUIRE_EQUAL_TOKENS_TEXT(const TokenList &token_list, const list<string> &expected)
-{
-	list<string> actual;
-	token_list.forEachToken([&actual](const shared_ptr<const Token> &t){ 
-		actual.push_back(t->getText());
-	});
-	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(actual, expected);
-}
-
 BOOST_AUTO_TEST_CASE(ShouldReplaceTokens)
 {
 	// Given
@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE(ShouldReplaceTokens)
 	token_list.replaceToken({"#define", isSpace, Some(Not(isEol))},
 		[](const list<shared_ptr<Token>> &l){ return make_shared<TokenList>(l); });
 	// Then
-	CUSTOM_REQUIRE_EQUAL_TOKENS_TEXT(token_list, { "#define a 0", "\n" });
+	CUSTOM_EQUAL_TOKENLIST_TOKENS_TEXT(token_list, { "#define a 0", "\n" });
 }
 
 BOOST_AUTO_TEST_CASE(ShouldReplaceTokenInBracket)
@@ -91,7 +91,7 @@ BOOST_AUTO_TEST_CASE(ShouldReplaceTokenInBracket)
 	token_list.replaceToken({"#include", Optional(Some(isSpace)), "<", Some(Not(">")), ">"},
 		[](const list<shared_ptr<Token>> &l){ return make_shared<TokenInclude>(l); });
 	// Then
-	CUSTOM_REQUIRE_EQUAL_TOKENS_TEXT(token_list, { "#include <stdio.h>", "\n" });
+	CUSTOM_EQUAL_TOKENLIST_TOKENS_TEXT(token_list, { "#include <stdio.h>", "\n" });
 }
 
 BOOST_AUTO_TEST_CASE(ShouldReplaceTokensRecursively)
@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_CASE(ShouldReplaceTokensRecursively)
 	token_list.replaceToken({"b"}, 
 		[](const list<shared_ptr<Token>> &){ return make_shared<TokenStub>("x"); });
 	// Then
-	CUSTOM_REQUIRE_EQUAL_TOKENS_TEXT(token_list, { "axc" });
+	CUSTOM_EQUAL_TOKENLIST_TOKENS_TEXT(token_list, { "axc" });
 }
 
 BOOST_AUTO_TEST_SUITE_END()
