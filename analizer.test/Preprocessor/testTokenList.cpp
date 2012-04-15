@@ -94,4 +94,22 @@ BOOST_AUTO_TEST_CASE(ShouldReplaceTokenInBracket)
 	CUSTOM_REQUIRE_EQUAL_TOKENS_TEXT(token_list, { "#include <stdio.h>", "\n" });
 }
 
+BOOST_AUTO_TEST_CASE(ShouldReplaceTokensRecursively)
+{
+	// Given
+	list<shared_ptr<Token>> tokens = {
+		make_shared<TokenStub>("a"),
+		make_shared<TokenStub>("b"),
+		make_shared<TokenStub>("c")
+	};
+	TokenList token_list({
+		make_shared<TokenList>(tokens)
+	});
+	// When
+	token_list.replaceToken({"b"}, 
+		[](const list<shared_ptr<Token>> &){ return make_shared<TokenStub>("x"); });
+	// Then
+	CUSTOM_REQUIRE_EQUAL_TOKENS_TEXT(token_list, { "axc" });
+}
+
 BOOST_AUTO_TEST_SUITE_END()
