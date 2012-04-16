@@ -9,6 +9,22 @@ TokenExpression::TokenExpression(const initializer_list<TokenPredicate> &expr)
 {
 }
 
+unsigned TokenExpression::requiredPosition(const shared_ptr<const Token> &token, unsigned position) const
+{
+	if (predicates[position].isOptional() and position + 1 < predicates.size()) {
+		auto rpos = requiredPosition(token, position + 1);
+		if (rpos > position) {
+			return rpos;
+		}
+	}
+	
+	if (predicates[position](token)) {
+		return position;
+	}
+	
+	return 0;
+}
+
 // This is not good solution, mutable state :(
 // Need to keep state outside of expression...
 bool TokenExpression::match(const shared_ptr<const Token> &token)
@@ -16,6 +32,12 @@ bool TokenExpression::match(const shared_ptr<const Token> &token)
 	if (position >= predicates.size()) {
 		// This is successefull false
 		return false;
+	}
+	
+	auto rpos = requiredPosition(token, position);
+	if (rpos > 0) {
+		position = rpos;
+		quantity = 0;
 	}
 	
 	if (predicates[position](token)) {

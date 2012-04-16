@@ -20,4 +20,6 @@ private:
 	const std::vector<TokenPredicate> predicates;
 	unsigned position;
 	unsigned quantity;
+	
+	unsigned requiredPosition(const std::shared_ptr<const Token> &token, unsigned position) const;
 };

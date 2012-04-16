@@ -111,4 +111,26 @@ BOOST_AUTO_TEST_CASE(ShouldReplaceTokensRecursively)
 	CUSTOM_EQUAL_TOKENLIST_TOKENS_TEXT(token_list, { "axc" });
 }
 
+// BOOST_AUTO_TEST_CASE(ShouldReplaceAllDepth)
+// {
+// 	// Given
+// 	TokenList token_list({
+// 		make_shared<TokenStub>("{"),
+// 		make_shared<TokenStub>("{"),
+// 		make_shared<TokenStub>("b"),
+// 		make_shared<TokenStub>("}"),
+// 		make_shared<TokenStub>("}")
+// 	});
+// 	// When
+// 	token_list.replaceToken({"{", Some(Not("{")), "}"}, [](const list<shared_ptr<Token>> &l) {
+// 		// Decorated list...
+// 		list<shared_ptr<Token>> il(l);
+// 		il.push_front(make_shared<TokenStub>("("));
+// 		il.push_back(make_shared<TokenStub>(")"));
+// 		return make_shared<TokenList>(il); 
+// 	});
+// 	// Then
+// 	BOOST_REQUIRE_EQUAL(token_list.getText(), "({({b})})");
+// }
+
 BOOST_AUTO_TEST_SUITE_END()

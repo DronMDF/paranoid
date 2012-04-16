@@ -120,4 +120,22 @@ BOOST_AUTO_TEST_CASE(testSomeOptional)
 	BOOST_REQUIRE(tex.isMatched());
 }
 
+BOOST_AUTO_TEST_CASE(ShouldMatchSomeNot)
+{
+	TokenExpression tex({"{", Optional(Some(Not("{"))), "}"});
+	BOOST_REQUIRE(tex.match(make_shared<TokenStub>("{")));
+	BOOST_REQUIRE(tex.match(make_shared<TokenStub>("}")));
+	BOOST_REQUIRE(tex.isMatched());
+	
+	tex.reset();
+	BOOST_REQUIRE(tex.match(make_shared<TokenStub>("{")));
+	BOOST_REQUIRE(tex.match(make_shared<TokenStub>("x")));
+	BOOST_REQUIRE(tex.match(make_shared<TokenStub>("}")));
+	BOOST_REQUIRE(tex.isMatched());
+
+	tex.reset();
+	BOOST_REQUIRE(tex.match(make_shared<TokenStub>("{")));
+	BOOST_REQUIRE(!tex.match(make_shared<TokenStub>("{")));
+}
+
 BOOST_AUTO_TEST_SUITE_END()
