@@ -1,6 +1,5 @@
 
 #include <boost/test/unit_test.hpp>
-#include <Preprocessor/TokenInclude.h>
 #include <Preprocessor/TokenList.h>
 #include <Preprocessor/TokenNewline.h>
 #include <Preprocessor/TokenPredicate.h>
@@ -89,7 +88,7 @@ BOOST_AUTO_TEST_CASE(ShouldReplaceTokenInBracket)
 	});
 	// When
 	token_list.replaceToken({"#include", Optional(Some(isSpace)), "<", Some(Not(">")), ">"},
-		[](const list<shared_ptr<Token>> &l){ return make_shared<TokenInclude>(l); });
+		[](const list<shared_ptr<Token>> &l){ return make_shared<TokenList>(l); });
 	// Then
 	CUSTOM_EQUAL_TOKENLIST_TOKENS_TEXT(token_list, { "#include <stdio.h>", "\n" });
 }

@@ -16,4 +16,7 @@ public:
 	
 private:
 	std::shared_ptr<const File> file;
+
+	virtual void replaceToken(TokenExpression expression, 
+		std::function<std::shared_ptr<Token> (const std::list<std::shared_ptr<Token>> &)> creator);
 };
