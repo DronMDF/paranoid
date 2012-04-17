@@ -18,7 +18,6 @@ public:
 	bool isMatched() const;
 	void reset();
 	
-	// stateless api
 	template<typename TI>
 	std::tuple<bool, TI> match(TI begin, const TI &end) const {
 		BOOST_FOREACH(auto &predicate, predicates) {

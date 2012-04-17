@@ -149,4 +149,61 @@ BOOST_AUTO_TEST_CASE(ShouldMatchWithEmptyPattern)
 	BOOST_REQUIRE(get<0>(result));
 }
 
+BOOST_AUTO_TEST_CASE(ShouldMatchWithNewlineEscape)
+{
+	TokenExpression tex({"\\", isEol});
+	list<shared_ptr<const Token>> sequence = { 
+		make_shared<TokenStub>("\\"), 
+		make_shared<TokenNewline>(shared_ptr<Line>()) 
+	};
+	// When
+	auto result = tex.match(sequence.begin(), sequence.end());
+	// Then
+	BOOST_REQUIRE(get<0>(result));
+	BOOST_REQUIRE(get<1>(result) == sequence.end());
+}
+
+BOOST_AUTO_TEST_CASE(ShouldNotMatch)
+{
+	TokenExpression tex({Not("a")});
+	auto sequence = { make_shared<TokenStub>("a") };
+	// When
+	auto result = tex.match(sequence.begin(), sequence.end());
+	// Then
+	BOOST_REQUIRE(!get<0>(result));
+}
+
+BOOST_AUTO_TEST_CASE(ShouldMatchWithBraces)
+{
+	TokenExpression tex({"{", Optional(Some(Not(Or("{", "}")))), "}"});
+	auto sequence = { 
+		make_shared<TokenStub>("{"), 
+		make_shared<TokenStub>("a"), 
+		make_shared<TokenStub>("b"), 
+		make_shared<TokenStub>("c"), 
+		make_shared<TokenStub>("}") 
+	};
+	// When
+	auto result = tex.match(sequence.begin(), sequence.end());
+	// Then
+	BOOST_REQUIRE(get<0>(result));
+	BOOST_REQUIRE(get<1>(result) == sequence.end());
+}
+
+BOOST_AUTO_TEST_CASE(ShouldNotMatchWithInnerBraces)
+{
+	TokenExpression tex({"{", Optional(Some(Not(Or("{", "}")))), "}"});
+	auto sequence = { 
+		make_shared<TokenStub>("{"), 
+		make_shared<TokenStub>("a"), 
+		make_shared<TokenStub>("{"), 
+		make_shared<TokenStub>("c"), 
+		make_shared<TokenStub>("}") 
+	};
+	// When
+	auto result = tex.match(sequence.begin(), sequence.end());
+	// Then
+	BOOST_REQUIRE(!get<0>(result));
+}
+
 BOOST_AUTO_TEST_SUITE_END()
