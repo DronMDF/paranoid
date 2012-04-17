@@ -138,4 +138,15 @@ BOOST_AUTO_TEST_CASE(ShouldMatchSomeNot)
 	BOOST_REQUIRE(!tex.match(make_shared<TokenStub>("{")));
 }
 
+BOOST_AUTO_TEST_CASE(ShouldMatchWithEmptyPattern)
+{
+	// Given
+	TokenExpression tex({});
+	list<shared_ptr<const Token>> sequence = {};
+	// When
+	auto result = tex.match(sequence.begin(), sequence.end());
+	// Then
+	BOOST_REQUIRE(get<0>(result));
+}
+
 BOOST_AUTO_TEST_SUITE_END()
