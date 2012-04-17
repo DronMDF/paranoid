@@ -31,6 +31,7 @@ private:
 TokenPredicate Not(const TokenPredicate &predicate);
 TokenPredicate Some(const TokenPredicate &predicate);
 TokenPredicate Optional(const TokenPredicate &predicate);
+TokenPredicate Or(const TokenPredicate &predicate1, const TokenPredicate &predicate2);
 
 template<typename T>
 class TokenPredicateTyped : public TokenPredicateImpl {

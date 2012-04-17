@@ -86,6 +86,31 @@ public:
 	}
 };
 
+/// TokenPredicateOr
+class TokenPredicateOr : public TokenPredicateImpl {
+private:
+	const TokenPredicate predicate1;
+	const TokenPredicate predicate2;
+public:
+	TokenPredicateOr(const TokenPredicate &predicate1, const TokenPredicate &predicate2)
+		: predicate1(predicate1), predicate2(predicate2)
+	{
+	}
+
+	virtual bool match(const shared_ptr<const Token> &token) const {
+		if (predicate1(token)) { return true; }
+		return predicate2(token);
+	}
+
+	virtual bool isSome() const {
+		return predicate1.isSome() and predicate2.isSome();
+	}
+
+	virtual bool isOptional() const {
+		return predicate1.isOptional() and predicate2.isOptional();
+	}
+};
+
 /// TokenPredicate
 TokenPredicate::TokenPredicate(const TokenPredicate &predicate)
 	: impl(predicate.impl)
@@ -126,6 +151,11 @@ TokenPredicate Some(const TokenPredicate &predicate) {
 TokenPredicate Optional(const TokenPredicate &predicate) {
 	return TokenPredicate(make_shared<TokenPredicateOptional>(predicate));
 }
+
+TokenPredicate Or(const TokenPredicate &predicate1, const TokenPredicate &predicate2) {
+	return TokenPredicate(make_shared<TokenPredicateOr>(predicate1, predicate2));
+}
+
 
 const TokenPredicate isSpace = isType<TokenSpace>();
 const TokenPredicate isWord = isType<TokenWord>();

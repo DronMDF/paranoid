@@ -47,4 +47,12 @@ BOOST_AUTO_TEST_CASE(TypedPredicateShouldBeTrue)
 	BOOST_REQUIRE(!predicate(make_shared<TokenList>(list<shared_ptr<Token>>())));
 }
 
+BOOST_AUTO_TEST_CASE(OrShouldReturnTrueIfAnyIsTrue)
+{
+	auto predicate = Or("{", "}");
+	BOOST_REQUIRE(predicate(make_shared<TokenStub>("{")));
+	BOOST_REQUIRE(predicate(make_shared<TokenStub>("}")));
+}
+
+
 BOOST_AUTO_TEST_SUITE_END()
