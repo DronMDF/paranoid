@@ -142,7 +142,7 @@ BOOST_AUTO_TEST_CASE(ShouldMatchWithNewlineEscape)
 {
 	// Given
 	TokenExpression tex({"\\", isEol});
-	list<shared_ptr<const Token>> sequence = { 
+	list<shared_ptr<Token>> sequence = { 
 		make_shared<TokenStub>("\\"), 
 		make_shared<TokenNewline>(shared_ptr<Line>()) 
 	};
@@ -153,9 +153,9 @@ BOOST_AUTO_TEST_CASE(ShouldMatchWithNewlineEscape)
 	BOOST_REQUIRE(get<1>(result) == sequence.end());
 }
 
-list<shared_ptr<const Token>> makeTokenList(const list<string> &texts)
+list<shared_ptr<Token>> makeTokenList(const list<string> &texts)
 {
-	list<shared_ptr<const Token>> tokens;
+	list<shared_ptr<Token>> tokens;
 	transform(texts.begin(), texts.end(), back_inserter(tokens),
 		[](const string &t){ return make_shared<TokenStub>(t); });
 	return tokens;
@@ -204,6 +204,17 @@ BOOST_AUTO_TEST_CASE(ShouldNotMatchWithInnerBraces)
 	auto result = tex.match(sequence.begin(), sequence.end());
 	// Then
 	BOOST_REQUIRE(!get<0>(result));
+}
+
+BOOST_AUTO_TEST_CASE(ShouldSkipOptional)
+{
+	// Given
+	TokenExpression tex({"{", Optional("}"), "}"});
+	auto sequence = makeTokenList({"{", "}", "x"});
+	// When
+	auto result = tex.match(sequence.begin(), sequence.end());
+	// Then
+	BOOST_REQUIRE(get<0>(result));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

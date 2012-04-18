@@ -4,6 +4,7 @@
 #include <initializer_list>
 #include <memory>
 #include <vector>
+#include <list>
 #include <boost/foreach.hpp>
 #include "TokenPredicate.h"
 
@@ -18,25 +19,28 @@ public:
 	bool isMatched() const;
 	void reset();
 	
-	template<typename TI>
-	std::tuple<bool, TI> match(TI begin, const TI &end) const {
+	std::tuple<bool, std::list<std::shared_ptr<Token>>::iterator> match(
+		const std::list<std::shared_ptr<Token>>::iterator &begin, 
+		const std::list<std::shared_ptr<Token>>::iterator &end) const 
+	{
+		std::list<std::shared_ptr<Token>>::iterator current = begin;
 		BOOST_FOREACH(auto &predicate, predicates) {
-			if (begin == end) {
-				return make_tuple(false, begin);
+			if (current == end) {
+				return make_tuple(false, current);
 			}
 			
-			if (!predicate(*begin)) {
+			if (!predicate(*current)) {
 				if (predicate.isOptional()) {
 					continue;
 				}
-				return make_tuple(false, begin);
+				return make_tuple(false, current);
 			}
 			
 			do {
-				++begin;
-			} while (predicate.isSome() and begin != end and predicate(*begin));
+				++current;
+			} while (predicate.isSome() and current != end and predicate(*current));
 		}
-		return make_tuple(true, begin);
+		return make_tuple(true, current);
 	}
 private:
 	const std::vector<TokenPredicate> predicates;
