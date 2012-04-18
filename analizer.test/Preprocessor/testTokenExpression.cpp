@@ -138,19 +138,9 @@ BOOST_AUTO_TEST_CASE(ShouldMatchSomeNot)
 	BOOST_REQUIRE(!tex.match(make_shared<TokenStub>("{")));
 }
 
-BOOST_AUTO_TEST_CASE(ShouldMatchWithEmptyPattern)
-{
-	// Given
-	TokenExpression tex({});
-	list<shared_ptr<const Token>> sequence = {};
-	// When
-	auto result = tex.match(sequence.begin(), sequence.end());
-	// Then
-	BOOST_REQUIRE(get<0>(result));
-}
-
 BOOST_AUTO_TEST_CASE(ShouldMatchWithNewlineEscape)
 {
+	// Given
 	TokenExpression tex({"\\", isEol});
 	list<shared_ptr<const Token>> sequence = { 
 		make_shared<TokenStub>("\\"), 
@@ -163,10 +153,30 @@ BOOST_AUTO_TEST_CASE(ShouldMatchWithNewlineEscape)
 	BOOST_REQUIRE(get<1>(result) == sequence.end());
 }
 
+list<shared_ptr<const Token>> makeTokenList(const list<string> &texts)
+{
+	list<shared_ptr<const Token>> tokens;
+	transform(texts.begin(), texts.end(), back_inserter(tokens),
+		[](const string &t){ return make_shared<TokenStub>(t); });
+	return tokens;
+}
+
+BOOST_AUTO_TEST_CASE(ShouldMatchWithEmptyPattern)
+{
+	// Given
+	TokenExpression tex({});
+	auto sequence = makeTokenList({});
+	// When
+	auto result = tex.match(sequence.begin(), sequence.end());
+	// Then
+	BOOST_REQUIRE(get<0>(result));
+}
+
 BOOST_AUTO_TEST_CASE(ShouldNotMatch)
 {
+	// Given
 	TokenExpression tex({Not("a")});
-	auto sequence = { make_shared<TokenStub>("a") };
+	auto sequence = makeTokenList({"a"});
 	// When
 	auto result = tex.match(sequence.begin(), sequence.end());
 	// Then
@@ -175,14 +185,9 @@ BOOST_AUTO_TEST_CASE(ShouldNotMatch)
 
 BOOST_AUTO_TEST_CASE(ShouldMatchWithBraces)
 {
+	// Given
 	TokenExpression tex({"{", Optional(Some(Not(Or("{", "}")))), "}"});
-	auto sequence = { 
-		make_shared<TokenStub>("{"), 
-		make_shared<TokenStub>("a"), 
-		make_shared<TokenStub>("b"), 
-		make_shared<TokenStub>("c"), 
-		make_shared<TokenStub>("}") 
-	};
+	auto sequence = makeTokenList({"{", "a", "b", "c", "}"});
 	// When
 	auto result = tex.match(sequence.begin(), sequence.end());
 	// Then
@@ -192,14 +197,9 @@ BOOST_AUTO_TEST_CASE(ShouldMatchWithBraces)
 
 BOOST_AUTO_TEST_CASE(ShouldNotMatchWithInnerBraces)
 {
+	// Given
 	TokenExpression tex({"{", Optional(Some(Not(Or("{", "}")))), "}"});
-	auto sequence = { 
-		make_shared<TokenStub>("{"), 
-		make_shared<TokenStub>("a"), 
-		make_shared<TokenStub>("{"), 
-		make_shared<TokenStub>("c"), 
-		make_shared<TokenStub>("}") 
-	};
+	auto sequence = makeTokenList({"{", "a", "{", "c", "}"});
 	// When
 	auto result = tex.match(sequence.begin(), sequence.end());
 	// Then
