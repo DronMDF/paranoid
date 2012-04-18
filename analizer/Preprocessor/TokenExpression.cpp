@@ -83,22 +83,51 @@ void TokenExpression::reset()
 tuple<bool, TokenExpression::token_list_iterator> TokenExpression::match(
 	const token_list_iterator &begin, const token_list_iterator &end) const
 {
+	return matchIn(begin, end, 0);
+}
+
+tuple<bool, TokenExpression::token_list_iterator> TokenExpression::matchIn(
+	const token_list_iterator &begin, const token_list_iterator &end, unsigned psi) const
+{
 	token_list_iterator current = begin;
-	BOOST_FOREACH(auto &predicate, predicates) {
+	unsigned matched = 0;
+	for (unsigned i = psi; i < predicates.size();) {
 		if (current == end) {
 			return make_tuple(false, current);
 		}
 		
-		if (!predicate(*current)) {
-			if (predicate.isOptional()) {
-				continue;
+		auto &predicate = predicates[i];
+		if (predicate.isOptional()) {
+			if (predicate(*current)) {
+				auto next = current;
+				++next;
+				auto result = matchIn(next, end, i);
+				if (get<0>(result)) {
+					return result;
+				}
 			}
-			return make_tuple(false, current);
+			
+			++i;
+			continue;
 		}
 		
-		do {
+		if (!predicate(*current)) {
+			if (matched == 0) {
+				return make_tuple(false, current);
+			}
+			
+			++i;
+			matched = 0;
 			++current;
-		} while (predicate.isSome() and current != end and predicate(*current));
+			continue;
+		}
+		
+		++current;
+		++matched;
+		if (!predicate.isSome()) {
+			++i;
+			matched = 0;
+		}
 	}
 	
 	return make_tuple(true, current);

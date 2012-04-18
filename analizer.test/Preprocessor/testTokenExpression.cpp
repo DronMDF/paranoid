@@ -206,6 +206,17 @@ BOOST_AUTO_TEST_CASE(ShouldNotMatchWithInnerBraces)
 	BOOST_REQUIRE(!get<0>(result));
 }
 
+BOOST_AUTO_TEST_CASE(ShouldIgnoreLastOptional)
+{
+	// Given
+	TokenExpression tex({"{", Optional("}")});
+	auto sequence = makeTokenList({"{"});
+	// When
+	auto result = tex.match(sequence.begin(), sequence.end());
+	// Then
+	BOOST_REQUIRE(get<0>(result));
+}
+
 BOOST_AUTO_TEST_CASE(ShouldSkipOptional)
 {
 	// Given

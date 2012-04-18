@@ -31,4 +31,7 @@ private:
 	unsigned quantity;
 	
 	unsigned requiredPosition(const std::shared_ptr<const Token> &token, unsigned position) const;
+
+	std::tuple<bool, token_list_iterator> matchIn(const token_list_iterator &begin,
+		const token_list_iterator &end, unsigned psi) const;
 };
