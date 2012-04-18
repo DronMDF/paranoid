@@ -86,48 +86,89 @@ tuple<bool, TokenExpression::token_list_iterator> TokenExpression::match(
 	return matchIn(begin, end, 0);
 }
 
+// opt	some	match	action
+// f	f	f	fail
+// f	t	f	mc ? tok++ : fail
+// t	t	f	mc ? recur(tok++, pred) or pred++ : tok++
+// t	f	f	pred++
+// 
+// t	f	t	recur(tok++, pred++) or pred++
+// f	f	t	tok++, pred++
+// t	t	t	mc++, recur(tok++, pred) or tok++
+// f	t	t	mc++, tok++
+// 
+// at pred end: success
+// at tok end: fail
+
 tuple<bool, TokenExpression::token_list_iterator> TokenExpression::matchIn(
 	const token_list_iterator &begin, const token_list_iterator &end, unsigned psi) const
 {
 	token_list_iterator current = begin;
-	unsigned matched = 0;
+	unsigned mc = 0;
 	for (unsigned i = psi; i < predicates.size();) {
+		auto &predicate = predicates[i];
 		if (current == end) {
+			if (predicate.isOptional()) {
+				++i;
+				continue;
+			}
 			return make_tuple(false, current);
 		}
 		
-		auto &predicate = predicates[i];
-		if (predicate.isOptional()) {
-			if (predicate(*current)) {
+		if (!predicate(*current)) {
+			if (!predicate.isOptional()) {
+				if (!predicate.isSome() or mc == 0) {
+					return make_tuple(false, current);
+				}
+			} else {
+				if (predicate.isSome()) {
+					if (mc == 0) {
+						mc = 0;
+						++i;
+						continue;
+					}
+					
+					auto next = current;
+					auto result = matchIn(++next, end, i);
+					if (get<0>(result)) {
+						return result;
+					}
+				} 
+			}
+			mc = 0;
+			++i;
+			continue;
+		}
+		
+		if (!predicate.isSome()) {
+			if (predicate.isOptional()) {
 				auto next = current;
-				++next;
-				auto result = matchIn(next, end, i);
+				auto result = matchIn(++next, end, i + 1);
 				if (get<0>(result)) {
 					return result;
 				}
+			} else {
+				++current;
 			}
-			
+			mc = 0;
 			++i;
 			continue;
 		}
 		
-		if (!predicate(*current)) {
-			if (matched == 0) {
-				return make_tuple(false, current);
+		if (predicate.isOptional()) {
+			auto next = current;
+			auto result = matchIn(++next, end, i);
+			if (get<0>(result)) {
+				return result;
 			}
 			
+			mc = 0;
 			++i;
-			matched = 0;
-			++current;
 			continue;
 		}
 		
+		++mc;
 		++current;
-		++matched;
-		if (!predicate.isSome()) {
-			++i;
-			matched = 0;
-		}
 	}
 	
 	return make_tuple(true, current);
