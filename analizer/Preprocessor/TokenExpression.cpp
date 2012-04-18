@@ -79,3 +79,27 @@ void TokenExpression::reset()
 	position = 0;
 	quantity = 0;
 }
+
+tuple<bool, TokenExpression::token_list_iterator> TokenExpression::match(
+	const token_list_iterator &begin, const token_list_iterator &end) const
+{
+	token_list_iterator current = begin;
+	BOOST_FOREACH(auto &predicate, predicates) {
+		if (current == end) {
+			return make_tuple(false, current);
+		}
+		
+		if (!predicate(*current)) {
+			if (predicate.isOptional()) {
+				continue;
+			}
+			return make_tuple(false, current);
+		}
+		
+		do {
+			++current;
+		} while (predicate.isSome() and current != end and predicate(*current));
+	}
+	
+	return make_tuple(true, current);
+}

@@ -19,29 +19,12 @@ public:
 	bool isMatched() const;
 	void reset();
 	
-	std::tuple<bool, std::list<std::shared_ptr<Token>>::iterator> match(
-		const std::list<std::shared_ptr<Token>>::iterator &begin, 
-		const std::list<std::shared_ptr<Token>>::iterator &end) const 
-	{
-		std::list<std::shared_ptr<Token>>::iterator current = begin;
-		BOOST_FOREACH(auto &predicate, predicates) {
-			if (current == end) {
-				return make_tuple(false, current);
-			}
-			
-			if (!predicate(*current)) {
-				if (predicate.isOptional()) {
-					continue;
-				}
-				return make_tuple(false, current);
-			}
-			
-			do {
-				++current;
-			} while (predicate.isSome() and current != end and predicate(*current));
-		}
-		return make_tuple(true, current);
-	}
+private:
+	typedef std::list<std::shared_ptr<Token>>::iterator token_list_iterator;
+	
+public:
+	std::tuple<bool, token_list_iterator> match(const token_list_iterator &begin,
+		const token_list_iterator &end) const;
 private:
 	const std::vector<TokenPredicate> predicates;
 	unsigned position;
