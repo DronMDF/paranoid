@@ -107,18 +107,17 @@ tuple<bool, TokenExpression::token_list_iterator> TokenExpression::matchIn(
 	unsigned mc = 0;
 	for (unsigned i = psi; i < predicates.size();) {
 		const auto predicate = predicates[i];
-		const auto is_optional = predicate.isOptional();
+		const bool is_optional = predicate.isOptional();
+		const bool is_some = predicate.isSome();
 		if (current == end) {
-			if (is_optional) {
+			if (is_optional or (is_some and mc > 0)) {
 				++i;
 				continue;
 			}
 			return make_tuple(false, current);
 		}
 
-		const auto is_match = predicate(*current);
-		const auto is_some = predicate.isSome();
-
+		const bool is_match = predicate(*current);
 		if (is_optional) {
 			if (is_match or (!is_match and is_some and mc > 0)) {
 				// Check next or this predicate on next token
@@ -139,13 +138,16 @@ tuple<bool, TokenExpression::token_list_iterator> TokenExpression::matchIn(
 			return make_tuple(false, current);
 		}
 		
-		++current;
-		if (is_some) {
+		if (is_match) {
+			++current;
+		}
+		
+		if (is_match and is_some) {
 			++mc;
 		} else {
 			mc = 0;
 			++i;
-		} 
+		}
 	}
 	
 	return make_tuple(true, current);

@@ -170,6 +170,7 @@ BOOST_AUTO_TEST_CASE(ShouldMatchWithEmptyPattern)
 	auto result = tex.match(sequence.begin(), sequence.end());
 	// Then
 	BOOST_REQUIRE(get<0>(result));
+	BOOST_REQUIRE(get<1>(result) == sequence.end());
 }
 
 BOOST_AUTO_TEST_CASE(ShouldNotMatch)
@@ -215,6 +216,7 @@ BOOST_AUTO_TEST_CASE(ShouldIgnoreLastOptional)
 	auto result = tex.match(sequence.begin(), sequence.end());
 	// Then
 	BOOST_REQUIRE(get<0>(result));
+	BOOST_REQUIRE(get<1>(result) == sequence.end());
 }
 
 BOOST_AUTO_TEST_CASE(ShouldSkipOptional)
@@ -226,6 +228,7 @@ BOOST_AUTO_TEST_CASE(ShouldSkipOptional)
 	auto result = tex.match(sequence.begin(), sequence.end());
 	// Then
 	BOOST_REQUIRE(get<0>(result));
+	BOOST_REQUIRE_EQUAL((*get<1>(result))->getText(), "x");
 }
 
 BOOST_AUTO_TEST_CASE(ShouldParseOnlyOneOptional)
@@ -237,6 +240,18 @@ BOOST_AUTO_TEST_CASE(ShouldParseOnlyOneOptional)
 	auto result = tex.match(sequence.begin(), sequence.end());
 	// Then
 	BOOST_REQUIRE(!get<0>(result));
+}
+
+BOOST_AUTO_TEST_CASE(ShouldMatchSomeNotEndl)
+{
+	// Given
+	TokenExpression tex({Some(Not("x"))});
+	auto sequence = makeTokenList({"a", "b", "c", "x"});
+	// When
+	auto result = tex.match(sequence.begin(), sequence.end());
+	// Then
+	BOOST_REQUIRE(get<0>(result));
+	BOOST_REQUIRE_EQUAL((*get<1>(result))->getText(), "x");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

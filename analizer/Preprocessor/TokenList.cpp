@@ -61,44 +61,14 @@ void TokenList::replaceToken(TokenExpression expression,
 
 	auto lookup = tokens.begin();
 	while (lookup != tokens.end()) {
-		expression.reset();
-		
-		auto begin = lookup;
-		while (begin != tokens.end()) {
-			if (expression.match(*begin)) {
-				break;
-			}
-			++begin;
-		}
-		
-		if (begin == tokens.end()) {
-			return;
-		}
-
-		auto end = begin;
-		++end;
-		
-		if (expression.isMatched()) {
-			const list<shared_ptr<Token>> replaced(begin, end);
-			replaceTokens(begin, end, creator(replaced));
+		auto result = expression.match(lookup, tokens.end());
+		if (get<0>(result)) {
+			const auto end = get<1>(result);
+			const list<shared_ptr<Token>> replaced(lookup, end);
+			replaceTokens(lookup, end, creator(replaced));
 			lookup = end;
-			continue;
-		}
-		
-		while (end != tokens.end()) {
-			if (expression.match(*end)) {
-				++end;
-				continue;
-			}
-			
-			if (expression.isMatched()) {
-				const list<shared_ptr<Token>> replaced(begin, end);
-				replaceTokens(begin, end, creator(replaced));
-				lookup = end;
-			} else {
-				lookup = ++begin;
-			}
-			break;
+		} else {
+			++lookup;
 		}
 	}
 }
