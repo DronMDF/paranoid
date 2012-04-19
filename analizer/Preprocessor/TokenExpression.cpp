@@ -119,6 +119,15 @@ tuple<bool, TokenExpression::token_list_iterator> TokenExpression::matchIn(
 		const auto is_match = predicate(*current);
 		const auto is_some = predicate.isSome();
 
+		if (is_optional) {
+			if ((!is_match and !is_some) or (!is_match and is_some and mc == 0)) {
+				// Next predicate on this token
+				++i;
+				mc = 0;
+				continue;
+			}
+		}
+		
 		if (!is_match) {
 			if (!is_optional) {
 				if (!is_some or mc == 0) {
@@ -126,12 +135,6 @@ tuple<bool, TokenExpression::token_list_iterator> TokenExpression::matchIn(
 				}
 			} else {
 				if (is_some) {
-					if (mc == 0) {
-						mc = 0;
-						++i;
-						continue;
-					}
-					
 					auto next = current;
 					auto result = matchIn(++next, end, i);
 					if (get<0>(result)) {
@@ -139,9 +142,6 @@ tuple<bool, TokenExpression::token_list_iterator> TokenExpression::matchIn(
 					}
 				} 
 			}
-			mc = 0;
-			++i;
-			continue;
 		}
 		
 		if (!is_some) {
