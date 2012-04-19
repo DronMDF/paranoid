@@ -228,4 +228,15 @@ BOOST_AUTO_TEST_CASE(ShouldSkipOptional)
 	BOOST_REQUIRE(get<0>(result));
 }
 
+BOOST_AUTO_TEST_CASE(ShouldParseOnlyOneOptional)
+{
+	// Given
+	TokenExpression tex({"{", Optional("x"), "}"});
+	auto sequence = makeTokenList({"{", "x", "x", "}"});
+	// When
+	auto result = tex.match(sequence.begin(), sequence.end());
+	// Then
+	BOOST_REQUIRE(!get<0>(result));
+}
+
 BOOST_AUTO_TEST_SUITE_END()
