@@ -106,22 +106,26 @@ tuple<bool, TokenExpression::token_list_iterator> TokenExpression::matchIn(
 	token_list_iterator current = begin;
 	unsigned mc = 0;
 	for (unsigned i = psi; i < predicates.size();) {
-		auto &predicate = predicates[i];
+		const auto predicate = predicates[i];
+		const auto is_optional = predicate.isOptional();
 		if (current == end) {
-			if (predicate.isOptional()) {
+			if (is_optional) {
 				++i;
 				continue;
 			}
 			return make_tuple(false, current);
 		}
-		
-		if (!predicate(*current)) {
-			if (!predicate.isOptional()) {
-				if (!predicate.isSome() or mc == 0) {
+
+		const auto is_match = predicate(*current);
+		const auto is_some = predicate.isSome();
+
+		if (!is_match) {
+			if (!is_optional) {
+				if (!is_some or mc == 0) {
 					return make_tuple(false, current);
 				}
 			} else {
-				if (predicate.isSome()) {
+				if (is_some) {
 					if (mc == 0) {
 						mc = 0;
 						++i;
@@ -140,8 +144,8 @@ tuple<bool, TokenExpression::token_list_iterator> TokenExpression::matchIn(
 			continue;
 		}
 		
-		if (!predicate.isSome()) {
-			if (predicate.isOptional()) {
+		if (!is_some) {
+			if (is_optional) {
 				auto next = current;
 				auto result = matchIn(++next, end, i + 1);
 				if (get<0>(result)) {
@@ -155,7 +159,7 @@ tuple<bool, TokenExpression::token_list_iterator> TokenExpression::matchIn(
 			continue;
 		}
 		
-		if (predicate.isOptional()) {
+		if (is_optional) {
 			auto next = current;
 			auto result = matchIn(++next, end, i);
 			if (get<0>(result)) {
