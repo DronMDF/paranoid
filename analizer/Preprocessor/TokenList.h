@@ -16,7 +16,7 @@ public:
 	virtual size_t getBeginPos() const;
 	virtual size_t getEndPos() const;
 
-	virtual void replaceToken(TokenExpression expression, 
+	virtual void replaceToken(const TokenExpression &expression, 
 		std::function<std::shared_ptr<Token> (const std::list<std::shared_ptr<Token>> &)> creator);
 	
 	void forEachToken(std::function<void (const std::shared_ptr<const Token> &)> func) const;

@@ -50,7 +50,7 @@ size_t TokenList::getEndPos() const
 	return tokens.empty() ? 0 : tokens.back()->getEndPos();
 }
 
-void TokenList::replaceToken(TokenExpression expression, 
+void TokenList::replaceToken(const TokenExpression &expression, 
 	function<shared_ptr<Token> (const list<shared_ptr<Token>> &)> creator)
 {
 	BOOST_FOREACH(auto &token, tokens) {
@@ -59,16 +59,16 @@ void TokenList::replaceToken(TokenExpression expression,
 		}
 	}
 
-	auto lookup = tokens.begin();
-	while (lookup != tokens.end()) {
-		auto result = expression.match(lookup, tokens.end());
+	auto begin = tokens.begin();
+	while (begin != tokens.end()) {
+		auto result = expression.match(begin, tokens.end());
 		if (get<0>(result)) {
 			const auto end = get<1>(result);
-			const list<shared_ptr<Token>> replaced(lookup, end);
-			replaceTokens(lookup, end, creator(replaced));
-			lookup = end;
+			const list<shared_ptr<Token>> replaced(begin, end);
+			replaceTokens(begin, end, creator(replaced));
+			begin = end;
 		} else {
-			++lookup;
+			++begin;
 		}
 	}
 }

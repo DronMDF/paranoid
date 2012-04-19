@@ -57,7 +57,7 @@ string TokenInclude::getHeaderName() const
 	return "";
 }
 
-void TokenInclude::replaceToken(TokenExpression,
+void TokenInclude::replaceToken(const TokenExpression &,
 	function<shared_ptr<Token> (const list<shared_ptr<Token>> &)>)
 {
 }
