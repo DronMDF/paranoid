@@ -120,12 +120,25 @@ tuple<bool, TokenExpression::token_list_iterator> TokenExpression::matchIn(
 		const auto is_some = predicate.isSome();
 
 		if (is_optional) {
-			if ((!is_match and !is_some) or (!is_match and is_some and mc == 0)) {
+			if (!is_match and (!is_some or (is_some and mc == 0))) {
 				// Next predicate on this token
 				++i;
 				mc = 0;
 				continue;
 			}
+			
+			// TODO: mc in recursion
+			// Check next or this predicate on next token
+			auto next = current;
+			auto result = matchIn(++next, end, (!is_some) ? i + 1 : i);
+			if (get<0>(result)) {
+				return result;
+			}
+			
+			// Next predicate on this token
+			++i;
+			mc = 0;
+			continue;
 		}
 		
 		if (!is_match) {
@@ -133,39 +146,11 @@ tuple<bool, TokenExpression::token_list_iterator> TokenExpression::matchIn(
 				if (!is_some or mc == 0) {
 					return make_tuple(false, current);
 				}
-			} else {
-				if (is_some) {
-					auto next = current;
-					auto result = matchIn(++next, end, i);
-					if (get<0>(result)) {
-						return result;
-					}
-				} 
 			}
 		}
 		
 		if (!is_some) {
-			if (is_optional) {
-				auto next = current;
-				auto result = matchIn(++next, end, i + 1);
-				if (get<0>(result)) {
-					return result;
-				}
-			} else {
-				++current;
-			}
-			mc = 0;
-			++i;
-			continue;
-		}
-		
-		if (is_optional) {
-			auto next = current;
-			auto result = matchIn(++next, end, i);
-			if (get<0>(result)) {
-				return result;
-			}
-			
+			++current;
 			mc = 0;
 			++i;
 			continue;
