@@ -121,7 +121,6 @@ tuple<bool, TokenExpression::token_list_iterator> TokenExpression::matchIn(
 
 		if (is_optional) {
 			if (is_match or (!is_match and is_some and mc > 0)) {
-				// TODO: mc in recursion
 				// Check next or this predicate on next token
 				auto next = current;
 				auto result = matchIn(++next, end, (!is_some) ? i + 1 : i);
@@ -136,23 +135,17 @@ tuple<bool, TokenExpression::token_list_iterator> TokenExpression::matchIn(
 			continue;
 		}
 		
-		if (!is_match) {
-			if (!is_optional) {
-				if (!is_some or mc == 0) {
-					return make_tuple(false, current);
-				}
-			}
+		if (!is_match and !is_optional and (!is_some or mc == 0)) {
+			return make_tuple(false, current);
 		}
 		
-		if (!is_some) {
-			++current;
+		++current;
+		if (is_some) {
+			++mc;
+		} else {
 			mc = 0;
 			++i;
-			continue;
-		}
-		
-		++mc;
-		++current;
+		} 
 	}
 	
 	return make_tuple(true, current);
