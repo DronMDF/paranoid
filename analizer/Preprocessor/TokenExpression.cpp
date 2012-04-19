@@ -120,19 +120,14 @@ tuple<bool, TokenExpression::token_list_iterator> TokenExpression::matchIn(
 		const auto is_some = predicate.isSome();
 
 		if (is_optional) {
-			if (!is_match and (!is_some or (is_some and mc == 0))) {
-				// Next predicate on this token
-				++i;
-				mc = 0;
-				continue;
-			}
-			
-			// TODO: mc in recursion
-			// Check next or this predicate on next token
-			auto next = current;
-			auto result = matchIn(++next, end, (!is_some) ? i + 1 : i);
-			if (get<0>(result)) {
-				return result;
+			if (is_match or (!is_match and is_some and mc > 0)) {
+				// TODO: mc in recursion
+				// Check next or this predicate on next token
+				auto next = current;
+				auto result = matchIn(++next, end, (!is_some) ? i + 1 : i);
+				if (get<0>(result)) {
+					return result;
+				}
 			}
 			
 			// Next predicate on this token
