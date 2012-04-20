@@ -15,3 +15,9 @@ string TokenDirective::getText() const
 {
 	return tokens.front()->getText() + tokens.back()->getText();
 }
+
+void TokenDirective::replaceToken(const TokenExpression &, 
+	function<shared_ptr<Token> (const list<shared_ptr<Token>> &)>)
+{
+	// No action
+}

@@ -6,8 +6,11 @@
 #include "TokenExpression.h"
 
 class TokenList : public Token {
+private:
+	typedef std::shared_ptr<Token> token_ptr;
+	
 public:	
-	explicit TokenList(const std::list<std::shared_ptr<Token>> &tokens);
+	explicit TokenList(const std::list<token_ptr> &tokens);
 	
 	virtual std::string getText() const;
 	virtual std::string getLocation() const;
@@ -17,15 +20,16 @@ public:
 	virtual size_t getEndPos() const;
 
 	virtual void replaceToken(const TokenExpression &expression, 
-		std::function<std::shared_ptr<Token> (const std::list<std::shared_ptr<Token>> &)> creator);
+		std::function<token_ptr (const std::list<token_ptr> &)> creator);
 	
 	void forEachToken(std::function<void (const std::shared_ptr<const Token> &)> func) const;
 	
 protected:
-	std::list<std::shared_ptr<Token>> tokens;
+	std::list<token_ptr> tokens;
 	
 private:
-	void replaceTokens(std::list<std::shared_ptr<Token>>::iterator begin, 
-		std::list<std::shared_ptr<Token>>::iterator end,
-		const std::shared_ptr<Token> &token);
+	void replaceTokens(std::list<token_ptr>::iterator begin, 
+		std::list<token_ptr>::iterator end, const token_ptr &token);
+	bool replaceTokenPass(const TokenExpression &expression, 
+		std::function<token_ptr (const std::list<token_ptr> &)> creator);
 };

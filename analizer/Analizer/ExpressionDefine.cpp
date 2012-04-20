@@ -47,3 +47,9 @@ set<string> ExpressionDefine::getDeclaredNames() const
 	++token; // <space>
 	return { (*token)->getText() };
 }
+
+void ExpressionDefine::replaceToken(const TokenExpression &/*expression*/, 
+	function<shared_ptr<Token> (const list<shared_ptr<Token>> &)> /*creator*/)
+{
+	// TODO: This action only on expression
+}

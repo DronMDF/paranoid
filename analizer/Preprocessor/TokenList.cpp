@@ -6,7 +6,7 @@
 
 using namespace std;
 
-TokenList::TokenList(const list<shared_ptr<Token>> &tokens)
+TokenList::TokenList(const list<token_ptr> &tokens)
 	: tokens(tokens)
 {
 }
@@ -51,30 +51,43 @@ size_t TokenList::getEndPos() const
 }
 
 void TokenList::replaceToken(const TokenExpression &expression, 
-	function<shared_ptr<Token> (const list<shared_ptr<Token>> &)> creator)
+	function<token_ptr (const list<token_ptr> &)> creator)
 {
+	// Deep replacement in other TokenList
 	BOOST_FOREACH(auto &token, tokens) {
 		if (auto tokenlist = dynamic_pointer_cast<TokenList>(token)) {
 			tokenlist->replaceToken(expression, creator);
 		}
 	}
 
+	// Cycle as long as all matches will not be replaced
+	while(replaceTokenPass(expression, creator)) { 
+	}
+}
+
+bool TokenList::replaceTokenPass(const TokenExpression &expression, 
+	function<token_ptr (const list<token_ptr> &)> creator)
+{
+	bool is_replaced = false;
 	auto begin = tokens.begin();
 	while (begin != tokens.end()) {
 		auto result = expression.match(begin, tokens.end());
 		if (get<0>(result)) {
 			const auto end = get<1>(result);
-			const list<shared_ptr<Token>> replaced(begin, end);
+			const list<token_ptr> replaced(begin, end);
 			replaceTokens(begin, end, creator(replaced));
 			begin = end;
+			is_replaced = true;
 		} else {
 			++begin;
 		}
 	}
+	
+	return is_replaced;
 }
 
-void TokenList::replaceTokens(list<shared_ptr<Token>>::iterator begin, 
-		list<shared_ptr<Token>>::iterator end, const shared_ptr<Token> &token)
+void TokenList::replaceTokens(list<token_ptr>::iterator begin, 
+		list<token_ptr>::iterator end, const token_ptr &token)
 {
 	tokens.erase(begin, end);
 	if (token) {
