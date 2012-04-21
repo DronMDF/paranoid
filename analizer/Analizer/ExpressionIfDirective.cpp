@@ -35,3 +35,8 @@ set<string> ExpressionIfDirective::getDeclaredNames() const
 {
 	return {};
 }
+
+string ExpressionIfDirective::getDirective() const
+{
+	return tokens.front()->getText();
+}
