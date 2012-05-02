@@ -9,4 +9,9 @@ public:
 	virtual std::set<std::string> getDeclaredNames() const;
 	
 	std::string getIncludeGuardName() const;
+	
+private:
+	std::string getIfndefVariable() const;
+	std::string getDefinedVariable() const;
 };
+
