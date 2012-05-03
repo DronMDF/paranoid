@@ -22,7 +22,7 @@ public:
 	virtual void replaceToken(const TokenExpression &expression, 
 		std::function<token_ptr (const std::list<token_ptr> &)> creator);
 	
-	void forEachToken(std::function<void (const std::shared_ptr<const Token> &)> func) const;
+	virtual void forEachToken(std::function<void (const std::shared_ptr<const Token> &)> func) const;
 	
 protected:
 	std::list<token_ptr> tokens;
