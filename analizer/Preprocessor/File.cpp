@@ -59,6 +59,11 @@ void File::includedFrom(const shared_ptr<const TokenInclude> &token)
 	included_from.push_back(token);
 }
 
+void File::forEachToken(function<void (const shared_ptr<const Token> &)> func) const
+{
+	TokenList::forEachToken(func);
+}
+
 void File::forEachLine(function<void (const shared_ptr<const Line> &)> lineparser) const
 {
 	ifstream file(filename);

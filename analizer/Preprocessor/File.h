@@ -5,13 +5,14 @@
 #include <string>
 #include "TokenExpression.h"
 #include "TokenList.h"
+#include "IncludedFile.h"
 
 class Line;
 class Preprocessor;
 class Token;
 class TokenInclude;
 
-class File : private TokenList {
+class File : virtual public IncludedFile, private TokenList {
 public:
 	File(const std::string &filename);
 	virtual ~File();
@@ -23,9 +24,9 @@ public:
 	
 	void includedFrom(const std::shared_ptr<const TokenInclude> &token);
 
+	virtual void forEachToken(std::function<void (const std::shared_ptr<const Token> &)> func) const;
+			
 	using TokenList::replaceToken;
-	using TokenList::forEachToken;
-	
 private:
 	const std::string filename;
 	std::list<std::shared_ptr<const Token>> included_from;

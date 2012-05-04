@@ -18,12 +18,12 @@ TokenInclude::TokenInclude(const list<shared_ptr<Token>> &tokens)
 {
 }
 
-void TokenInclude::include(const shared_ptr<const File> &f)
+void TokenInclude::include(const shared_ptr<const IncludedFile> &f)
 {
 	file = f;
 }
 
-shared_ptr<const File> TokenInclude::getIncludedFile() const
+shared_ptr<const IncludedFile> TokenInclude::getIncludedFile() const
 {
 	return file;
 }
@@ -61,3 +61,4 @@ void TokenInclude::replaceToken(const TokenExpression &,
 	function<shared_ptr<Token> (const list<shared_ptr<Token>> &)>)
 {
 }
+

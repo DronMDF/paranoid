@@ -2,7 +2,6 @@
 export OBJDIR=.obj
 
 export CXX=g++
-export CXX=clang++
 export CXXFLAGS=-std=c++0x -Wall -Wextra -Weffc++ -O2 -g0 -Ianalizer
 export CXXFLAGS=-std=c++0x -Wall -Wextra -Weffc++ -O0 -ggdb3 -Ianalizer
 
