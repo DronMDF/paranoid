@@ -25,7 +25,7 @@ BOOST_AUTO_TEST_CASE(ShouldPreventRecursion)
 	auto file = make_shared<TestIncludedFile>(token);
 	token->include(file);
 	//When
-	IncludeUsageProxy proxy(token);
+	IncludeUsageProxy proxy(token, file);
 	// Then exited
 }
 

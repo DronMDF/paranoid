@@ -12,14 +12,15 @@ AnalizeInclude::AnalizeInclude()
 {
 }
 
-void AnalizeInclude::checkToken(const shared_ptr<const Token> &token)
+void AnalizeInclude::checkToken(const shared_ptr<const Token> &token, 
+	const shared_ptr<const IncludedFile> &file)
 {
 	if (isSpace(token) || isEol(token)) {
 		return;
 	}
 
 	if (auto include = dynamic_pointer_cast<const TokenInclude>(token)) {
-		includes.push_back(IncludeUsageProxy(include));
+		includes.push_back(IncludeUsageProxy(include, file));
 		return;
 	}
 	

@@ -45,7 +45,7 @@ void Analizer::checkUsedIncludeInFile(const shared_ptr<const File> &file)
 {
 	AnalizeInclude helper;
 
-	file->forEachToken(bind(&AnalizeInclude::checkToken, &helper, _1));
+	file->forEachToken(bind(&AnalizeInclude::checkToken, &helper, _1, file));
 
 	BOOST_FOREACH(const auto &i, helper.getUnused()) {
 		errors.push_back(Error(i, "Unused include"));

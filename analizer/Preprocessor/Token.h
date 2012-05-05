@@ -4,6 +4,7 @@
 #include <string>
 
 class Line;
+class File;
 
 class Token {
 public:
