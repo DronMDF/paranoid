@@ -8,6 +8,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 #include <Analizer/Analizer.h>
+#include <Analizer/AnalizeIncludeGuard.h>
 #include <Preprocessor/Error.h>
 #include <Preprocessor/ErrorFormatter.h>
 #include <Preprocessor/File.h>
@@ -45,8 +46,14 @@ void checkSource(const vector<const char *> &args)
 		
 		Analizer analizer;
 		pp.forEachFile(bind(&Analizer::transformFile, &analizer, _1));
-		pp.forEachFile(bind(&Analizer::checkUsedIncludeInFile, &analizer, _1));
 		
+		list<Error> errors;
+		pp.forEachFile(AnalyzeIncludeGuard<back_insert_iterator<list<Error>>>(back_inserter(errors)));
+		BOOST_FOREACH(const auto &e, errors) {
+			cerr << ErrorFormatter(e) << endl;
+		}
+		
+		pp.forEachFile(bind(&Analizer::checkUsedIncludeInFile, &analizer, _1));
 		BOOST_FOREACH(const auto &e, analizer.getResult()) {
 			cerr << ErrorFormatter(e) << endl;
 		}
