@@ -16,6 +16,7 @@
 #include "AnalizeInclude.h"
 #include "ExpressionDefine.h"
 #include "ExpressionIfDirective.h"
+#include "ExpressionIfBlock.h"
 
 using namespace std;
 using namespace std::placeholders;
@@ -39,6 +40,11 @@ void Analizer::transformFile(const shared_ptr<File> &file) const
 		[](tokenlist &t){ return make_shared<ExpressionIfDirective>(t); });
 	file->replaceToken({"#ifndef", Some(Not(isEol))},
 		[](tokenlist &t){ return make_shared<ExpressionIfDirective>(t); });
+	// TODO: elseif is Expression
+	// TODO: endl and space collapse
+	file->replaceToken({ isType<ExpressionIfDirective>(), 
+			Optional(Some(Not(isType<ExpressionIfDirective>()))), "#endif"},
+		[](tokenlist &t){ return make_shared<ExpressionIfBlock>(t); });
 }
 
 void Analizer::checkUsedIncludeInFile(const shared_ptr<const File> &file)
