@@ -47,7 +47,7 @@ string ExpressionIfBlock::getIfndefVariable() const
 string ExpressionIfBlock::getDefinedVariable() const
 {
 	BOOST_FOREACH(const auto &token, tokens) {
-		if (isSpace(token)) {
+		if (isSpace(token) || isEol(token)) {
 			continue;
 		}
 		
