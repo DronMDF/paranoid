@@ -13,7 +13,7 @@ ExpressionIfBlock::ExpressionIfBlock(const list<shared_ptr<Token>> &tokens)
 set<string> ExpressionIfBlock::getUsedNames() const
 {
 	// TODO: Accumulate names from subexpressions
-	return {};
+	return {"*"};
 }
 
 set<string> ExpressionIfBlock::getDeclaredNames() const

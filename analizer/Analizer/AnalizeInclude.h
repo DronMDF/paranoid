@@ -16,4 +16,5 @@ public:
 	
 private:
 	std::list<IncludeUsageProxy> includes;
+	bool has_tokens;
 };

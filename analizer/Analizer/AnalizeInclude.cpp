@@ -8,7 +8,7 @@
 using namespace std;
 
 AnalizeInclude::AnalizeInclude()
-	: includes()
+	: includes(), has_tokens(false)
 {
 }
 
@@ -24,6 +24,7 @@ void AnalizeInclude::checkToken(const shared_ptr<const Token> &token,
 		return;
 	}
 	
+	has_tokens = true;
 	if (auto exp = dynamic_pointer_cast<const Expression>(token)) {
 		BOOST_FOREACH(const auto &name, exp->getUsedNames()) {
 			BOOST_FOREACH(auto &inc, includes) {
@@ -41,6 +42,11 @@ void AnalizeInclude::checkToken(const shared_ptr<const Token> &token,
 
 list<shared_ptr<const Token>> AnalizeInclude::getUnused() const
 {
+	if (!has_tokens) {
+		// Proxy include has not show error
+		return {};
+	}
+	
 	list<shared_ptr<const Token>> unused;
 	
 	BOOST_FOREACH(const auto &ip, includes) {

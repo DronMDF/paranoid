@@ -16,19 +16,25 @@ ExpressionIfDirective::ExpressionIfDirective(const list<shared_ptr<Token>> &toke
 set<string> ExpressionIfDirective::getUsedNames() const
 {
 	auto token = tokens.begin();
+	
 	if ((*token)->getText() == "#ifdef" or (*token)->getText() == "#ifndef") {
 		++token;
 		BOOST_ASSERT(isSpace(*token) or (*token)->getText() == " ");
+		++token;
+		return { (*token)->getText() };
+	}
 
+	if ((*token)->getText() == "#if") {
+		++token;
+		BOOST_ASSERT(isSpace(*token) or (*token)->getText() == " ");
 		++token;
 		if (all((*token)->getText(), is_digit())) {
 			return {};
 		}
-		
-		return { (*token)->getText() };
 	}
-
-	return {};
+	
+	// TODO: parse expressions
+	return {"*"};
 }
 
 set<string> ExpressionIfDirective::getDeclaredNames() const

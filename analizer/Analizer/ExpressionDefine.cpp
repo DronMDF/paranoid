@@ -28,6 +28,12 @@ set<string> ExpressionDefine::getUsedNames() const
 	++token; // #define
 	++token; // <space>
 	++token; // <name>
+	
+	if ((*token)->getText() == "(") {
+		// TODO: Get names from macro
+		return {"*"};
+	}
+	
 	++token; // <space>
 	
 	set<string> names;

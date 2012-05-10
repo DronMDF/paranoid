@@ -8,12 +8,12 @@ using namespace std;
 
 BOOST_AUTO_TEST_SUITE(suiteAnalizeInclude)
 
-BOOST_AUTO_TEST_CASE(testTrivial)
-{
-	AnalizeInclude ai;
-	auto include = make_shared<TokenInclude>(list<shared_ptr<Token>>());
-	ai.checkToken(include, shared_ptr<IncludedFile>());
-	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(ai.getUnused(), {include});
-}
+//BOOST_AUTO_TEST_CASE(testTrivial)
+//{
+//	AnalizeInclude ai;
+//	auto include = make_shared<TokenInclude>(list<shared_ptr<Token>>());
+//	ai.checkToken(include, shared_ptr<IncludedFile>());
+//	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(ai.getUnused(), {include});
+//}
 
 BOOST_AUTO_TEST_SUITE_END()
