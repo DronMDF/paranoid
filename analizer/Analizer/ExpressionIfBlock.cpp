@@ -1,4 +1,5 @@
 
+#include <boost/assert.hpp>
 #include "ExpressionDefine.h"
 #include "ExpressionIfBlock.h"
 #include "ExpressionIfDirective.h"
@@ -20,6 +21,19 @@ set<string> ExpressionIfBlock::getDeclaredNames() const
 {
 	// TODO: Accumulate names from subexpressions
 	return {};
+}
+
+size_t ExpressionIfBlock::getEndPos() const
+{
+	BOOST_ASSERT(!tokens.empty());
+	// Identity by condition
+	return tokens.front()->getEndPos();
+}
+
+string ExpressionIfBlock::getText() const
+{
+	BOOST_ASSERT(!tokens.empty());
+	return tokens.front()->getText();
 }
 
 string ExpressionIfBlock::getIfndefVariable() const

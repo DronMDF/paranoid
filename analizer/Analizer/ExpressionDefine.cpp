@@ -29,6 +29,10 @@ set<string> ExpressionDefine::getUsedNames() const
 	++token; // <space>
 	++token; // <name>
 	
+	if (token == tokens.end()) {
+		return {};
+	}
+	
 	if ((*token)->getText() == "(") {
 		// TODO: Get names from macro
 		return {"*"};

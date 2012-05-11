@@ -43,7 +43,7 @@ void Analizer::transformFile(const shared_ptr<File> &file) const
 	// TODO: elseif is Expression
 	// TODO: endl and space collapse
 	file->replaceToken({ isType<ExpressionIfDirective>(), 
-			Optional(Some(Not(isType<ExpressionIfDirective>()))), "#endif"},
+			Optional(Some(Not(Or(isType<ExpressionIfDirective>(), "#endif")))), "#endif"},
 		[](tokenlist &t){ return make_shared<ExpressionIfBlock>(t); });
 }
 
