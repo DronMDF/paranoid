@@ -3,6 +3,7 @@ export OBJDIR=.obj
 
 export CXX=g++
 export CXXFLAGS=-std=c++0x -Wall -Wextra -Weffc++ -O2 -g0 -Ianalizer
+#export CXXFLAGS=-std=c++0x -Wall -Wextra -Weffc++ -O0 -ggdb3 -Ianalizer
 
 all: paranoid
 
@@ -11,28 +12,28 @@ check: test paranoid
 	./test --random=1
 	functional.test/runner.py $(realpath paranoid)
 
-paranoid: .obj/paranoid.o .obj/analizer.o
-	${CXX} -o $@ .obj/paranoid.o .obj/analizer.o \
-		-lboost_filesystem-mt
+paranoid: ${OBJDIR}/paranoid.o ${OBJDIR}/analizer.o
+	${CXX} -o $@ ${OBJDIR}/paranoid.o ${OBJDIR}/analizer.o \
+		-lboost_filesystem-mt -lboost_system-mt
 
-test: .obj/test.o .obj/analizer.o
-	${CXX} -o $@ .obj/test.o .obj/analizer.o \
-		-lboost_unit_test_framework-mt -lboost_filesystem-mt
+test: ${OBJDIR}/analizer.o ${OBJDIR}/test.o 
+	${CXX} -o $@ ${OBJDIR}/test.o ${OBJDIR}/analizer.o \
+		-lboost_unit_test_framework-mt -lboost_filesystem-mt -lboost_system-mt
 
 selftest: paranoid
 	find analizer analizer.test paranoid.cpp -name "*.cpp" -print \
 		-exec ./paranoid ${CXXFLAGS} {} \;
 
-.PHONY: .obj/analizer.o
-.obj/analizer.o : ${OBJDIR}
+${OBJDIR}/analizer.o : ${OBJDIR}
 	./script/build.py $@ analizer
 
-.PHONY: .obj/test.o
-.obj/test.o : ${OBJDIR}
+${OBJDIR}/test.o : ${OBJDIR}
 	./script/build.py $@ analizer.test
 
 # This is not auto dependences builds
-.obj/paranoid.o : paranoid.cpp ${OBJDIR}
+# $CXX $CXXFLAGS -E -MM -MT ${OBJDIR}/paranoid.o paranoid.cpp
+	
+${OBJDIR}/paranoid.o : paranoid.cpp ${OBJDIR}
 	${CXX} ${CXXFLAGS} -c -o $@ $<
 
 ${OBJDIR}:

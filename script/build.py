@@ -24,13 +24,13 @@ def depends(source, target):
 	return result.replace(':', ' ').replace('\\', ' ').split()[1:]
 
 def compile(object, source):
-	print ("Compile %s -> %s" % (source, object))
+	print ("Compile %s" % source)
 	cmd = ' '.join([ os.getenv('CXX', 'g++'), os.getenv('CXXFLAGS', ''), "-c -o", object, source ])
 	subprocess.check_call(cmd.split(), stdout = sys.stdout, stderr = sys.stderr)
 
 def ld(bundle, objects):
 	objlist = list(objects)
-	print ("Linking %s -> %s" % ("%u objects" % len(objlist), bundle))
+	print ("Linking %s" % ("%u objects" % len(objlist)))
 	cmd = ' '.join([ os.getenv('LD', 'ld'), os.getenv('LDFLAGS', ''), "-r -o", bundle] + objlist)
 	subprocess.check_call(cmd.split(), stdout = sys.stdout, stderr = sys.stderr)
 

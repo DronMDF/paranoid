@@ -13,17 +13,17 @@ using boost::starts_with;
 using boost::trim_copy_if;
 using boost::join;
 
-TokenInclude::TokenInclude(const list<shared_ptr<const Token>> &tokens)
+TokenInclude::TokenInclude(const list<shared_ptr<Token>> &tokens)
 	: TokenList(tokens), file()
 {
 }
 
-void TokenInclude::include(const shared_ptr<const File> &f)
+void TokenInclude::include(const shared_ptr<const IncludedFile> &f)
 {
 	file = f;
 }
 
-shared_ptr<const File> TokenInclude::getIncludedFile() const
+shared_ptr<const IncludedFile> TokenInclude::getIncludedFile() const
 {
 	return file;
 }
@@ -56,3 +56,9 @@ string TokenInclude::getHeaderName() const
 
 	return "";
 }
+
+void TokenInclude::replaceToken(const TokenExpression &,
+	function<shared_ptr<Token> (const list<shared_ptr<Token>> &)>)
+{
+}
+

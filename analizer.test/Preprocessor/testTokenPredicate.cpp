@@ -5,6 +5,7 @@
 #include <Preprocessor/TokenNewline.h>
 #include <Preprocessor/TokenPredicate.h>
 #include <Preprocessor/TokenSpace.h>
+#include <Preprocessor/TokenList.h>
 #include "../TokenStub.h"
 
 using namespace std;
@@ -38,5 +39,20 @@ BOOST_AUTO_TEST_CASE(testIsEol)
 	BOOST_REQUIRE(isEol(make_shared<TokenNewline>(line_ptr)));
 	BOOST_REQUIRE(!isEol(make_shared<TokenStub>("text")));
 }
+
+BOOST_AUTO_TEST_CASE(TypedPredicateShouldBeTrue)
+{
+	auto predicate = isType<TokenStub>();
+	BOOST_REQUIRE(predicate(make_shared<TokenStub>("stub")));
+	BOOST_REQUIRE(!predicate(make_shared<TokenList>(list<shared_ptr<Token>>())));
+}
+
+BOOST_AUTO_TEST_CASE(OrShouldReturnTrueIfAnyIsTrue)
+{
+	auto predicate = Or("{", "}");
+	BOOST_REQUIRE(predicate(make_shared<TokenStub>("{")));
+	BOOST_REQUIRE(predicate(make_shared<TokenStub>("}")));
+}
+
 
 BOOST_AUTO_TEST_SUITE_END()

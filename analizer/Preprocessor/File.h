@@ -1,17 +1,18 @@
 
 #pragma once
-
 #include <list>
 #include <memory>
 #include <string>
 #include "TokenExpression.h"
+#include "TokenList.h"
+#include "IncludedFile.h"
 
 class Line;
 class Preprocessor;
 class Token;
 class TokenInclude;
 
-class File {
+class File : virtual public IncludedFile, private TokenList {
 public:
 	File(const std::string &filename);
 	virtual ~File();
@@ -20,21 +21,15 @@ public:
 	
 	virtual std::string getLocation() const;
 	virtual std::string getFileName() const;
-	virtual void forEachToken(std::function<void (const std::shared_ptr<const Token> &)> func) const;
 	
 	void includedFrom(const std::shared_ptr<const TokenInclude> &token);
-	
-	void replaceToken(TokenExpression expression,
-		std::function<std::shared_ptr<const Token> (const std::list<std::shared_ptr<const Token>> &)> creator);
-	
+
+	virtual void forEachToken(std::function<void (const std::shared_ptr<const Token> &)> func) const;
+			
+	using TokenList::replaceToken;
 private:
 	const std::string filename;
-	typedef std::list<std::shared_ptr<const Token>> tokens_list;
-	typedef tokens_list::iterator tokens_iterator;
-	
-	tokens_list tokens;
-	tokens_list included_from;
+	std::list<std::shared_ptr<const Token>> included_from;
 	
 	virtual void forEachLine(std::function<void (const std::shared_ptr<const Line> &)> lineparser) const;
-	void replaceTokens(tokens_iterator begin, tokens_iterator end, const std::shared_ptr<const Token> &token);
 };

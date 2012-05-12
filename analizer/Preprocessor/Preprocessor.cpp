@@ -49,7 +49,7 @@ void Preprocessor::tokenize()
 	}
 }
 
-shared_ptr<Token> Preprocessor::createIncludeToken(const list<shared_ptr<const Token>> &tokens)
+shared_ptr<Token> Preprocessor::createIncludeToken(const list<shared_ptr<Token>> &tokens)
 {
 	auto token = make_shared<TokenInclude>(tokens);
 	const auto located_name = locate(token);

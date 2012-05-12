@@ -4,7 +4,7 @@
 
 using namespace std;
 
-TokenDirective::TokenDirective(const list<shared_ptr<const Token>> &tokens)
+TokenDirective::TokenDirective(const list<shared_ptr<Token>> &tokens)
 	: TokenList(tokens)
 {
 	BOOST_ASSERT(tokens.front()->getText() == "#");
@@ -14,4 +14,10 @@ TokenDirective::TokenDirective(const list<shared_ptr<const Token>> &tokens)
 string TokenDirective::getText() const
 {
 	return tokens.front()->getText() + tokens.back()->getText();
+}
+
+void TokenDirective::replaceToken(const TokenExpression &, 
+	function<shared_ptr<Token> (const list<shared_ptr<Token>> &)>)
+{
+	// No action
 }

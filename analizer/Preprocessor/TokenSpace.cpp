@@ -9,12 +9,10 @@ TokenSpace::TokenSpace(const shared_ptr<const Line> &line,
 		       string::size_type begin, string::size_type end)
 	: line(line), begin(begin), end(end)
 {
-	BOOST_ASSERT(line);
 	if (this->end == string::npos) {
+		BOOST_ASSERT(line);
 		this->end = line->getText().size();
 	}
-	BOOST_ASSERT(begin < this->end);
-	BOOST_ASSERT(this->end <= line->getText().size());
 }
 
 string TokenSpace::getText() const

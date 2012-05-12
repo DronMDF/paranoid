@@ -3,6 +3,7 @@
 #include <Preprocessor/File.h>
 #include <Preprocessor/Line.h>
 #include <Preprocessor/Token.h>
+#include "Assertions.h"
 
 struct FileStub : public File {
 	const std::list<std::string> lines;
@@ -17,13 +18,17 @@ struct FileStub : public File {
 		}
 	}
 	
-	std::list<std::string> getTokensText() const {
-		std::list<std::string> texts;
-		forEachToken([&texts](const std::shared_ptr<const Token> &t) { texts.push_back(t->getText()); });
-		return texts;
-	}
-
 	std::list<std::string> getExportedText() const {
 		return {};
 	}
 };
+
+static inline
+void CUSTOM_EQUAL_FILE_TOKENS_TEXT(const File &file, const std::list<std::string> &expected)
+{
+	std::list<std::string> actual;
+	file.forEachToken([&actual](const std::shared_ptr<const Token> &t) {
+		actual.push_back(t->getText());
+	});
+	CUSTOM_REQUIRE_EQUAL_COLLECTIONS(actual, expected);
+}

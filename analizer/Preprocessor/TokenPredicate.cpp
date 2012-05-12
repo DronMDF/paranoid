@@ -7,34 +7,31 @@
 
 using namespace std;
 
-class TokenPredicateImpl {
-public:
-	virtual ~TokenPredicateImpl();
-	virtual bool match(const std::shared_ptr<const Token> &token) const = 0;
-
-	virtual bool isSome() const{
-		return false;
-	}
-
-	virtual bool isOptional() const{
-		return false;
-	}
-};
-
+/// TokenPredicateImpl
 TokenPredicateImpl::~TokenPredicateImpl() = default;
 
+bool TokenPredicateImpl::isSome() const {
+	return false;
+}
+
+bool TokenPredicateImpl::isOptional() const {
+	return false;
+}
+
+/// TokenPredicateEqual
 class TokenPredicateEqual : public TokenPredicateImpl {
 private:
-	const std::string text;
+	const string text;
 public:
 	TokenPredicateEqual(const char *text) : text(text) {
 	}
 
-	virtual bool match(const std::shared_ptr<const Token> &token) const {
+	virtual bool match(const shared_ptr<const Token> &token) const {
 		return token->getText() == text;
 	}
 };
 
+/// TokenPredicateNot
 class TokenPredicateNot : public TokenPredicateImpl {
 private:
 	const TokenPredicate predicate;
@@ -47,6 +44,7 @@ public:
 	}
 };
 
+/// TokenPredicateSome
 class TokenPredicateSome : public TokenPredicateImpl {
 private:
 	const TokenPredicate predicate;
@@ -58,15 +56,16 @@ public:
 		return predicate(token);
 	}
 
-	virtual bool isSome() const{
+	virtual bool isSome() const {
 		return true;
 	}
 
-	virtual bool isOptional() const{
+	virtual bool isOptional() const {
 		return predicate.isOptional();
 	}
 };
 
+/// TokenPredicateOptional
 class TokenPredicateOptional : public TokenPredicateImpl {
 private:
 	const TokenPredicate predicate;
@@ -78,24 +77,41 @@ public:
 		return predicate(token);
 	}
 
-	virtual bool isSome() const{
+	virtual bool isSome() const {
 		return predicate.isSome();
 	}
 
-	virtual bool isOptional() const{
+	virtual bool isOptional() const {
 		return true;
 	}
 };
 
-template<typename T>
-class TokenPredicateTyped : public TokenPredicateImpl {
+/// TokenPredicateOr
+class TokenPredicateOr : public TokenPredicateImpl {
+private:
+	const TokenPredicate predicate1;
+	const TokenPredicate predicate2;
 public:
-	virtual bool match(const std::shared_ptr<const Token> &token) const {
-		return dynamic_cast<const T *>(token.get()) != 0;
+	TokenPredicateOr(const TokenPredicate &predicate1, const TokenPredicate &predicate2)
+		: predicate1(predicate1), predicate2(predicate2)
+	{
+	}
+
+	virtual bool match(const shared_ptr<const Token> &token) const {
+		if (predicate1(token)) { return true; }
+		return predicate2(token);
+	}
+
+	virtual bool isSome() const {
+		return predicate1.isSome() and predicate2.isSome();
+	}
+
+	virtual bool isOptional() const {
+		return predicate1.isOptional() and predicate2.isOptional();
 	}
 };
 
-// TokenPredicate impl
+/// TokenPredicate
 TokenPredicate::TokenPredicate(const TokenPredicate &predicate)
 	: impl(predicate.impl)
 {
@@ -123,7 +139,7 @@ bool TokenPredicate::isOptional() const {
 	return impl->isOptional();
 }
 
-// TokenPredicate generators
+/// TokenPredicate generators
 TokenPredicate Not(const TokenPredicate &predicate) {
 	return TokenPredicate(make_shared<TokenPredicateNot>(predicate));
 }
@@ -136,6 +152,11 @@ TokenPredicate Optional(const TokenPredicate &predicate) {
 	return TokenPredicate(make_shared<TokenPredicateOptional>(predicate));
 }
 
-const TokenPredicate isSpace(make_shared<TokenPredicateTyped<TokenSpace>>());
-const TokenPredicate isWord(make_shared<TokenPredicateTyped<TokenWord>>());
-const TokenPredicate isEol(make_shared<TokenPredicateTyped<TokenNewline>>());
+TokenPredicate Or(const TokenPredicate &predicate1, const TokenPredicate &predicate2) {
+	return TokenPredicate(make_shared<TokenPredicateOr>(predicate1, predicate2));
+}
+
+
+const TokenPredicate isSpace = isType<TokenSpace>();
+const TokenPredicate isWord = isType<TokenWord>();
+const TokenPredicate isEol = isType<TokenNewline>();

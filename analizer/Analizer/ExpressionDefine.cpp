@@ -8,8 +8,8 @@ using namespace std;
 using boost::is_digit;
 using boost::all;
 
-ExpressionDefine::ExpressionDefine(const list<shared_ptr<const Token>> &tokens)
-	: TokenList(tokens)
+ExpressionDefine::ExpressionDefine(const list<shared_ptr<Token>> &tokens)
+	: Expression(tokens)
 {
 }
 
@@ -28,6 +28,16 @@ set<string> ExpressionDefine::getUsedNames() const
 	++token; // #define
 	++token; // <space>
 	++token; // <name>
+	
+	if (token == tokens.end()) {
+		return {};
+	}
+	
+	if ((*token)->getText() == "(") {
+		// TODO: Get names from macro
+		return {"*"};
+	}
+	
 	++token; // <space>
 	
 	set<string> names;
@@ -46,4 +56,10 @@ set<string> ExpressionDefine::getDeclaredNames() const
 	++token; // #define
 	++token; // <space>
 	return { (*token)->getText() };
+}
+
+void ExpressionDefine::replaceToken(const TokenExpression &/*expression*/, 
+	function<shared_ptr<Token> (const list<shared_ptr<Token>> &)> /*creator*/)
+{
+	// TODO: This action only on expression
 }
