@@ -42,7 +42,7 @@ void Analizer::transformFile(const shared_ptr<File> &file) const
 		[](tokenlist &t){ return make_shared<ExpressionIfDirective>(t); });
 	// TODO: elseif is Expression
 	// TODO: endl and space collapse
-	file->replaceToken({ isType<ExpressionIfDirective>(), 
+	file->replaceToken({ isType<ExpressionIfDirective>(),
 			Optional(Some(Not(Or(isType<ExpressionIfDirective>(), "#endif")))), "#endif"},
 		[](tokenlist &t){ return make_shared<ExpressionIfBlock>(t); });
 }
@@ -62,3 +62,4 @@ list<Error> Analizer::getResult() const
 {
 	return errors;
 }
+

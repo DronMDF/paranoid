@@ -20,7 +20,7 @@ set<string> ExpressionIfBlock::getUsedNames() const
 set<string> ExpressionIfBlock::getDeclaredNames() const
 {
 	// TODO: Accumulate names from subexpressions
-	return {};
+	return {"*"};
 }
 
 size_t ExpressionIfBlock::getEndPos() const
