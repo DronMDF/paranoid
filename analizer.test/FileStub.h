@@ -11,6 +11,13 @@ struct FileStub : public File {
 		: File(filename), lines(lines) 
 	{
 	}
+	
+	FileStub(const std::list<std::shared_ptr<Token>> &tokens) 
+		: File("test"), lines()
+	{
+		this->tokens.insert(this->tokens.end(), tokens.begin(), tokens.end());
+	}
+	
 	void forEachLine(std::function<void (const std::shared_ptr<const Line> &)> lineparser) const {
 		unsigned n = 0;
 		BOOST_FOREACH(const auto &l, lines) {
