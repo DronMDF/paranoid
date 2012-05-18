@@ -1,5 +1,6 @@
 
 #include <boost/test/unit_test.hpp>
+#include <Analizer/ExpressionTransformer.h>
 #include <Preprocessor/TokenSpace.h>
 #include <Preprocessor/TokenNewline.h>
 #include "../FileStub.h"
@@ -8,11 +9,6 @@
 using namespace std;
 
 BOOST_AUTO_TEST_SUITE(suiteExpressionTransformer)
-
-class ExpressionTransformer {
-public:
-	void operator()(const std::shared_ptr<File> &) {};
-};
 
 BOOST_AUTO_TEST_CASE(ShouldTransformDefine)
 {
