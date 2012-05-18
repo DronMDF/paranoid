@@ -11,16 +11,4 @@ using namespace std;
 
 BOOST_AUTO_TEST_SUITE(suiteAnalizer)
 
-BOOST_AUTO_TEST_CASE(testTransformDefine)
-{
-	list<string> flines = { "#define a 0" };
-	auto file = make_shared<FileStub>("none", flines);
-	file->tokenize();
-	
-	Analizer analizer;
-	analizer.transformFile(file);
-	
-	CUSTOM_EQUAL_FILE_TOKENS_TEXT(*file, { "#define a 0", "\n" });
-}
-
 BOOST_AUTO_TEST_SUITE_END()
