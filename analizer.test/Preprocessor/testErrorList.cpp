@@ -18,8 +18,10 @@ BOOST_AUTO_TEST_CASE(ShouldKeepInsertedMessages)
 	el.insert(Error(make_shared<TokenStub>("next"), "next word error"));
 	//Then
 	string result;
-	el.forEachError([&result](const Error &e){ result += ErrorFormatter(e); });
-	BOOST_REQUIRE_EQUAL(result, "test: numbers error\nnext: next word error\n");
+	el.forEachError([&result](const Error &e){ result += ErrorFormatter(e) + "\n"; });
+	BOOST_REQUIRE_EQUAL(result, 
+		"test.cxx:10 error: numbers error\ntest\n~~~~\n"
+		"test.cxx:10 error: next word error\nnext\n~~~~\n");
 }
 
 BOOST_AUTO_TEST_SUITE_END();
