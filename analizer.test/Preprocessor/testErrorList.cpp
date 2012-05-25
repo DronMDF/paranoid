@@ -1,6 +1,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include <Preprocessor/Error.h>
+#include <Preprocessor/ErrorNote.h>
 #include <Preprocessor/ErrorFormatter.h>
 #include <Preprocessor/ErrorList.h>
 #include "../TokenStub.h"
@@ -22,6 +23,21 @@ BOOST_AUTO_TEST_CASE(ShouldKeepInsertedMessages)
 	BOOST_REQUIRE_EQUAL(result, 
 		"test.cxx:10 error: numbers error\ntest\n~~~~\n"
 		"test.cxx:10 error: next word error\nnext\n~~~~\n");
+}
+
+BOOST_AUTO_TEST_CASE(ShouldKeepErrorNote)
+{
+	// Given
+	ErrorList el;
+	//When
+	el.insert(Error(make_shared<TokenStub>("test"), "numbers error"));
+	el.insert(ErrorNote(make_shared<TokenStub>("here"), "previously declared here"));
+	//Then
+	string result;
+	el.forEachError([&result](const Error &e){ result += ErrorFormatter(e) + "\n"; });
+	BOOST_REQUIRE_EQUAL(result, 
+		"test.cxx:10 error: numbers error\ntest\n~~~~\n"
+		"test.cxx:10 note: previously declared here\nhere\n~~~~\n");
 }
 
 BOOST_AUTO_TEST_SUITE_END();

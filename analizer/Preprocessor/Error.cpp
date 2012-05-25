@@ -4,7 +4,12 @@
 
 using namespace std;
 
-Error::Error(const shared_ptr<const Token> &token, const string &message)
-	: token(token), message(message)
+Error::Error(const shared_ptr<const Token> &token, const string &message, const std::string &type)
+	: token(token), message(message), type(type)
 {
 }
+
+Error::~Error()
+{
+}
+
