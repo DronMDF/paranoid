@@ -12,7 +12,7 @@ class Preprocessor;
 class Token;
 class TokenInclude;
 
-class File : virtual public IncludedFile, private TokenList {
+class File : virtual public IncludedFile, protected TokenList {
 public:
 	File(const std::string &filename);
 	virtual ~File();

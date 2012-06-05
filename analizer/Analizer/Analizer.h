@@ -1,22 +1,16 @@
 
 #pragma once
-#include <map>
-#include <set>
 #include <memory>
 
 class File;
-class Error;
-class Token;
+class ErrorList;
 
 class Analizer {
 public:
-	Analizer();
+	Analizer(ErrorList *el);
 	
-	void transformFile(const std::shared_ptr<File> &file) const;
-	void checkUsedIncludeInFile(const std::shared_ptr<const File> &file);
-	
-	std::list<Error> getResult() const;
+	void operator()(const std::shared_ptr<const File> &file) const;	
 	
 private:
-	std::list<Error> errors;
+	ErrorList *el;
 };

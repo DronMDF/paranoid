@@ -18,6 +18,6 @@ std::string ErrorFormatter(const Error &error)
 	replace_copy_if(linetext, back_inserter(tokenmask), !is_space(), ' ');
 	auto len = error.token->getEndPos() - error.token->getBeginPos();
 	tokenmask.replace(error.token->getBeginPos(), len, len, '~');
-	return line->getLocation() + " error: " + error.message + "\n" 
-		+ linetext + '\n' + tokenmask;
+	return line->getLocation() + " " + error.type + ": " 
+		+ error.message + "\n" + linetext + '\n' + tokenmask;
 }
