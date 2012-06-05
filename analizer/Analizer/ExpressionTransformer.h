@@ -6,6 +6,6 @@ class File;
 
 class ExpressionTransformer {
 public:
-	void operator()(const std::shared_ptr<File> &) const;
+	void operator()(const std::shared_ptr<File> &file) const;
 };
 
