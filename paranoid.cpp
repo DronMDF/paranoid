@@ -12,6 +12,7 @@
 #include <Analizer/ExpressionTransformer.h>
 #include <Preprocessor/Error.h>
 #include <Preprocessor/ErrorFormatter.h>
+#include <Preprocessor/ErrorList.h>
 #include <Preprocessor/File.h>
 #include <Preprocessor/IncludeLocator.h>
 #include <Preprocessor/IncludePath.h>
