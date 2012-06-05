@@ -50,13 +50,11 @@ void checkSource(const vector<const char *> &args)
 		
 		ErrorList errors;
 		pp.forEachFile(AnalyzeIncludeGuard(&errors));
-		errors.forEachError([](const Error &e){ cerr << ErrorFormatter(e) << endl; });
 		
-		Analizer analizer;
+		Analizer analizer(&errors);
 		pp.forEachFile(bind(&Analizer::checkUsedIncludeInFile, &analizer, _1));
-		BOOST_FOREACH(const auto &e, analizer.getResult()) {
-			cerr << ErrorFormatter(e) << endl;
-		}
+
+		errors.forEachError([](const Error &e){ cerr << ErrorFormatter(e) << endl; });
 	}
 }
 

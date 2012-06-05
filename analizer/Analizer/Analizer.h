@@ -6,16 +6,17 @@
 
 class File;
 class Error;
+class ErrorList;
 class Token;
 
 class Analizer {
 public:
-	Analizer();
+	Analizer(ErrorList *el);
 	
 	void checkUsedIncludeInFile(const std::shared_ptr<const File> &file);
 	
 	std::list<Error> getResult() const;
 	
 private:
-	std::list<Error> errors;
+	ErrorList *el;
 };
